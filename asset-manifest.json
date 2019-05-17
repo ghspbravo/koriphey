@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/koriphey/static/css/main.654e7ff3.chunk.css",
+    "main.js": "/koriphey/static/js/main.8cd1b6fa.chunk.js",
+    "main.js.map": "/koriphey/static/js/main.8cd1b6fa.chunk.js.map",
+    "runtime~main.js": "/koriphey/static/js/runtime~main.4c9e406a.js",
+    "runtime~main.js.map": "/koriphey/static/js/runtime~main.4c9e406a.js.map",
+    "static/css/2.764ccc25.chunk.css": "/koriphey/static/css/2.764ccc25.chunk.css",
+    "static/js/2.cb03f833.chunk.js": "/koriphey/static/js/2.cb03f833.chunk.js",
+    "static/js/2.cb03f833.chunk.js.map": "/koriphey/static/js/2.cb03f833.chunk.js.map",
+    "index.html": "/koriphey/index.html",
+    "precache-manifest.6139aeac5dcba59edc49ac00d059543d.js": "/koriphey/precache-manifest.6139aeac5dcba59edc49ac00d059543d.js",
+    "service-worker.js": "/koriphey/service-worker.js",
+    "static/css/2.764ccc25.chunk.css.map": "/koriphey/static/css/2.764ccc25.chunk.css.map",
+    "static/css/main.654e7ff3.chunk.css.map": "/koriphey/static/css/main.654e7ff3.chunk.css.map",
+    "static/media/index.scss": "/koriphey/static/media/DroidSans.aef4495e.eot"
+  }
+}
