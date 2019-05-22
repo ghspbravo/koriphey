@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "d96991d635f3ae85f2dab44d636f1df4",
+    "revision": "fccf6daf24fa8ee086feceb4acea5eb9",
     "url": "/koriphey/index.html"
   },
   {
-    "revision": "db8dbdc876f1d4ba9263",
-    "url": "/koriphey/static/css/2.764ccc25.chunk.css"
+    "revision": "085290cba1196530420a",
+    "url": "/koriphey/static/css/2.148a570b.chunk.css"
   },
   {
-    "revision": "6a983a26edf542e9d4a5",
-    "url": "/koriphey/static/css/main.654e7ff3.chunk.css"
+    "revision": "6a7daa309b05c594f8e1",
+    "url": "/koriphey/static/css/main.877295d6.chunk.css"
   },
   {
-    "revision": "db8dbdc876f1d4ba9263",
-    "url": "/koriphey/static/js/2.cb03f833.chunk.js"
+    "revision": "085290cba1196530420a",
+    "url": "/koriphey/static/js/2.806fb838.chunk.js"
   },
   {
-    "revision": "6a983a26edf542e9d4a5",
-    "url": "/koriphey/static/js/main.8cd1b6fa.chunk.js"
+    "revision": "6a7daa309b05c594f8e1",
+    "url": "/koriphey/static/js/main.2a47c7ec.chunk.js"
   },
   {
     "revision": "f768937c358599e3d953",
@@ -46,5 +46,9 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "aef4495e061bfb9fc588a9cf968017f0",
     "url": "/koriphey/static/media/DroidSans.aef4495e.eot"
+  },
+  {
+    "revision": "94e89de4ea935299d7cfd7186dd1ffa2",
+    "url": "/koriphey/static/media/marker.94e89de4.svg"
   }
 ]);
