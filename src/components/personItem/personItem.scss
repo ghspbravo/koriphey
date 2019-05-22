@@ -1,0 +1,28 @@
+@import '../../styles/vars';
+@import '../../styles/mixins';
+
+.person {
+  &__photo {
+    margin-right: 17px;
+
+    img {
+      max-width: 187px;
+      @media (max-width: $m-xs-max) {
+        max-width: 95px;
+      }
+    }
+
+  }
+
+  &__info * {
+    @media (max-width: $m-xs-max) {
+      font-size: 12px;
+    }
+  }
+
+  &__content {
+    * {
+      @include nullMargins;
+    }
+  }
+}

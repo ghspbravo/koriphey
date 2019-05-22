@@ -1,0 +1,32 @@
+@import './vars';
+
+.search {
+  background-color: #fff;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+
+  &__icon {
+    width: 40px;
+    text-align: center;
+    color: $c-gray-dark;
+
+    i {
+      border-radius: 50%;
+      padding: 5px;
+    }
+
+    &:hover {
+      i {
+        background-color: lighten($color: $c-gray, $amount: 40);
+        transition: background-color $tr-standart;
+      }
+    }
+  }
+
+  & &__input {
+    border: none;
+    width: 100%;
+    height: 100%;
+  }
+}

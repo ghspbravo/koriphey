@@ -1,0 +1,31 @@
+@import '../../styles/vars';
+
+.notification {
+  .notification__icon {
+    position: relative;
+    font-size: 1.5rem;
+  }
+
+  &.has-notifications {
+
+    .notification__icon {
+      color: $c-orange;
+    }
+
+    .notification__badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+
+      background-color: $c-blue;
+      padding: 2px 5px;
+      border-radius: 8px;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+
+      font-size: 11px;
+      color: white;
+      user-select: none;
+    }
+
+  }
+}

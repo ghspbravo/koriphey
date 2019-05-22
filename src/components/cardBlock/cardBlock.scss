@@ -1,0 +1,51 @@
+@import '../../styles/vars';
+@import '../../styles/mixins';
+
+.card-block {
+  background-color: #fff;
+  box-shadow: $bshadow-block;
+  height: 100%;
+  border-radius: 3px;
+
+  @media (max-width: $m-xs-max) {
+    box-shadow: $bshadow-inside-block;
+    margin: 0 -15px;
+  }
+
+  &__header, &__inner {
+    padding: 15px 20px;
+
+    *:first-child {
+      margin-top: 0;
+    }
+    *:last-child {
+      margin-bottom: 0;
+    }
+
+    & > .no-padding {
+      margin-left: -20px;
+      margin-right: -20px;
+    }
+
+  }
+
+  // &__inner {
+  //   .list-card .list-card-item:last-child {
+  //     box-shadow: none;
+  //   }
+  // }
+
+  &__header {
+    position: relative;
+    @include boxShadow($bshadow-inside-block, 15px);
+  }
+
+  .card-injection {
+    margin-left: -20px;
+    margin-right: -20px;
+  }
+}
+
+.card-injection {
+  background-color: $c-bg;
+}

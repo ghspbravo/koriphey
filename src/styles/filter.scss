@@ -1,0 +1,17 @@
+@import './vars';
+
+.filter {
+  padding: 10px 0;
+
+  &__item {
+    display: block;
+    padding: 10px 25px;
+    &:hover, &.active {
+      background-color: #22515422;
+    }
+
+    &.active {
+      font-weight: bold;
+    }
+  }
+}

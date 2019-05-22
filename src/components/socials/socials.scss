@@ -1,0 +1,50 @@
+@import '../../styles/vars';
+@import '../../styles/mixins';
+
+$vk-color: #4A76A8;
+$fb-color: #425EAC;
+$insta-color: #DD4B38;
+
+.social-item {
+
+  &-vk, &-fb, &-insta {
+    position: relative;
+    border-radius: 50%;
+    width: 35px; height: 35px;
+    transition: background-color $tr-standart;
+    @include centered;
+
+    a {
+      line-height: 1;
+      @include link-expanded;
+    }
+  }
+
+  &-vk {
+    background-color: $vk-color;
+    color: white;
+
+    &:hover {
+      background-color: darken($color: $vk-color, $amount: 20);
+    }
+  }
+
+  &-fb {
+    background-color: $fb-color;
+    color: white;
+
+    &:hover {
+      background-color: darken($color: $fb-color, $amount: 20);
+    }
+  }
+
+  &-insta {
+    background-color: $insta-color;
+    color: white;
+
+    &:hover {
+      background-color: darken($color: $insta-color, $amount: 20);
+    }
+  }
+
+}

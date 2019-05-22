@@ -1,0 +1,48 @@
+@import '../../styles/vars';
+
+$barBg: #252D3308;
+$barFill: #22515433;
+
+.city-stats {
+  &-item {
+    margin: 5px 0;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__name {
+    color: $c-gray-dark;
+    float: left;
+  }
+
+  &__percent {
+    color: $c-gray;
+    float: right;
+  }
+
+  &__bar,
+  &__bar-filled {
+    height: 25px;
+    border-radius: 5px;
+  }
+
+  &__bar {
+    background-color: $barBg;
+    position: relative;
+    padding: 3px 5px;
+  }
+
+  &__bar-filled {
+    background-color: $barFill;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 2;
+  }
+}

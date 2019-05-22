@@ -1,0 +1,16 @@
+@import './vars';
+
+.navigation-section {
+  position: relative;
+  padding: 20px 0;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid $c-gray;
+  }
+}
+
+.navigation-item {
+  &.active {
+    color: $c-orange;
+  }
+}

@@ -1,0 +1,38 @@
+@import '../../styles/vars';
+
+$c-like: #FF4A4A;
+
+.feedback {
+
+  &-like,
+  &-comment {
+    display: flex;
+    align-items: center;
+
+    span {
+      color: $c-gray;
+      font-size: 14px;
+
+      @media (max-width: $m-xs-max) {
+        font-size: 12px;
+      }
+    }
+  }
+
+  &__icon {
+    margin-right: 10px;
+    font-size: 1.5rem;
+    color: $c-blue;
+
+    @media (max-width: $m-xs-max) {
+      font-size: 1.3rem;
+    }
+  }
+
+  &-like.liked {
+    .feedback__icon {
+      color: $c-like;
+    }
+  }
+
+}

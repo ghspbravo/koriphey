@@ -1,0 +1,81 @@
+@mixin centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin link-expanded {
+  &::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+}
+
+@mixin title {
+  font-size: 24px;
+  letter-spacing: 0.03em;
+
+  @media (max-width: $m-xs-max) {
+    font-size: 21px;
+  }
+}
+
+@mixin text-big {
+  font-size: 17px;
+  font-weight: bold;
+
+  @media (max-width: $m-xs-max) {
+    font-size: 15px;
+  }
+}
+
+@mixin text-small {
+  font-size: 14px;
+
+  @media (max-width: $m-xs-max) {
+    font-size: 12px;
+  }
+}
+
+@mixin text {
+  font-size: 16px;
+
+  @media (max-width: $m-xs-max) {
+    font-size: 14px;
+  }
+}
+
+@mixin boxShadow($bshadow, $pbottom) {
+  box-shadow: $bshadow-inside-block;
+  padding-bottom: $pbottom;
+
+  @media (max-width: $m-xs-max) {
+    position: relative;
+    padding-bottom: $pbottom + 5px;
+    box-shadow: none;
+
+    &:not(:last-child):after {
+      position: absolute;
+      content: '';
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background-color: $c-bg;
+    }
+  }
+}
+
+@mixin nullMargins {
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}

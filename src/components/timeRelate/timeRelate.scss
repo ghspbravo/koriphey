@@ -1,0 +1,10 @@
+@import '../../styles/vars';
+
+.time-relate {
+  font-size: 14px;
+  color: $c-gray;
+
+  @media (max-width: $m-sm-max) {
+    font-size: 12px; 
+   }
+}

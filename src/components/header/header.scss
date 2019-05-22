@@ -1,0 +1,168 @@
+@import '../../styles/vars';
+
+header {
+  height: $header-height;
+
+  @media (max-width: $m-sm-max) {
+    height: $header-height-mobile;
+  }
+}
+
+.header {
+  // position: fixed;
+  position: relative;
+  width: 100%;
+  @media (max-width: $m-sm-max) {
+    position: fixed;
+    top: 0;
+  }
+  z-index: 5;
+
+  background-color: $c-header;
+
+  &,
+  &-inner {
+    height: $header-height;
+
+    @media (max-width: $m-sm-max) {
+      height: $header-height-mobile;
+    }
+  }
+
+  &__logo {
+    position: relative;
+
+    max-width: 200px;
+    height: 100%;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+
+  // icons
+  .search__icon, &__navopen {
+    color: white;
+    opacity: 0.5;
+    font-size: 1.3rem;
+  }
+
+  &__search {
+    flex: 1 0;
+    max-width: 330px;
+    height: 40px;
+
+    .search__icon {
+      color: $c-gray;
+    }
+  }
+
+  &__navigation {
+    .navigation-item {
+      color: white;
+      opacity: 0.8;
+      transition: color $tr-standart;
+
+      &:not(:last-child) {
+        margin-right: 35px;
+
+        @media (max-width: $m-lg-max) {
+         margin-right: 25px; 
+        }
+
+        @media (max-width: $m-md-max) {
+         margin-right: 15px; 
+        }
+      }
+
+      &.active,
+      &:hover {
+        color: $c-orange;
+      }
+    }
+  }
+
+  &__notifications {
+    margin-right: 15px;
+
+    .notification {
+      color: white;
+    }
+  }
+
+  &__profile {
+
+    &-controls {
+      cursor: pointer;
+
+      position: relative;
+
+      color: white;
+      display: flex;
+      align-items: center;
+
+      &:hover {
+        i {
+          opacity: 1;
+        }
+      }
+
+      img {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+      }
+
+      i {
+        opacity: 0.5;
+        margin-left: 10px;
+      }
+
+    }
+  }
+
+}
+
+.profile-controls {
+  visibility: hidden;
+  opacity: 0;
+
+  &.expanded {
+    visibility: visible; 
+    opacity: 1;
+    transition: opacity $tr-standart;
+  }
+
+  position: absolute;
+  bottom: 0; right: 0;
+
+  width: 210px;
+
+  box-shadow: $bshadow-block;
+
+  transform: translateY(110%);
+
+  background-color: #fff;
+  padding: 10px 0;
+
+  &-section {
+    padding: 3px 0;
+    &:not(:last-child) {
+      border-bottom: 1px solid #252D3322;
+    }
+  }
+
+  .navigation-item {
+    display: block;
+    padding: 7px 20px;
+
+    color: black;
+
+    &.active,
+    &:hover {
+      background: linear-gradient(0deg, rgba(37, 45, 51, 0.04), rgba(37, 45, 51, 0.04)), #E5600022;
+    }
+  }
+}

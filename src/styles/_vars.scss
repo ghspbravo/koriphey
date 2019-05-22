@@ -1,0 +1,44 @@
+/* brand colors */
+$c-gray: #252d338c;
+$c-gray-dark: #252d33;
+$c-orange: #E56000;
+$c-blue: #225154;
+$c-dark-blue: #293b49f2;
+
+$c-bg: #F6F6F6;
+
+$c-text: #252d33ee;
+$c-button: #fffffff2;
+$c-link: $c-dark-blue;
+$c-header: $c-gray-dark;
+$c-like: #FF4A4A;
+
+// header layout
+$header-height: 80px;
+$header-height-mobile: 60px;
+
+/* fonts */
+$ff-main: 'Droid Sans', arial;
+
+/* responsive breakpoints */
+$m-xs-max: 575px;
+/* mobile */
+$m-sm-min: 576px;
+$m-sm-max: 767px;
+$m-md-min: 768px;
+/* tablet */
+$m-md-max: 991px;
+$m-lg-min: 992px;
+/* desktop */
+$m-lg-max: 1199px;
+$m-xl-min: 1200px;
+/* wide */
+
+$tr-standart: 0.3s ease-in;
+
+$bshadow-block: 0px 0px 4px rgba(0, 0, 0, 0.1);
+$bshadow-inside-block: 0px 6px 12px rgba(0, 0, 0, 0.05);
+
+$bshadow-auth: 0px 52px 50px rgba(0, 0, 0, 0.31);
+
+$bshadow-modal: 0px 0px 4px rgba(0, 0, 0, 0.25);

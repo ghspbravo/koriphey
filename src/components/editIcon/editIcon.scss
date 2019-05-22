@@ -1,0 +1,15 @@
+@import '../../styles/vars';
+
+.edit-icon {
+  i {
+    font-size: 18px;
+    color: #252D3344;
+  
+    transition: color $tr-standart;
+  }
+  &:hover {
+    i {
+      color: #252D33;
+    }
+  }
+}

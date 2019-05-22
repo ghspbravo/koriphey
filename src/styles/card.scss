@@ -1,0 +1,20 @@
+@import './vars';
+@import './mixins';
+
+.card {
+  padding: 25px;
+  @include boxShadow($bshadow-inside-block, 25px);
+}
+
+.card-auth {
+  box-shadow: $bshadow-auth;
+  padding: 40px 50px;
+  background-color: #fff;
+
+  @media (max-width: $m-xs-max) {
+    box-shadow: none;
+    margin-left: -15px;
+    margin-right: -15px;
+    padding: 15px;
+  }
+}
