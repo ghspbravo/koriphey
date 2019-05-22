@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "fccf6daf24fa8ee086feceb4acea5eb9",
+    "revision": "c67647350c61234c1dd083c7793f364b",
     "url": "/koriphey/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/koriphey/static/css/2.148a570b.chunk.css"
   },
   {
-    "revision": "6a7daa309b05c594f8e1",
+    "revision": "b02a32a1461b40895109",
     "url": "/koriphey/static/css/main.877295d6.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/koriphey/static/js/2.806fb838.chunk.js"
   },
   {
-    "revision": "6a7daa309b05c594f8e1",
-    "url": "/koriphey/static/js/main.2a47c7ec.chunk.js"
+    "revision": "b02a32a1461b40895109",
+    "url": "/koriphey/static/js/main.51beb2a7.chunk.js"
   },
   {
     "revision": "f768937c358599e3d953",
