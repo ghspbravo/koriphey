@@ -1,18 +1,18 @@
 {
   "files": {
-    "main.css": "/koriphey/static/css/main.877295d6.chunk.css",
-    "main.js": "/koriphey/static/js/main.51beb2a7.chunk.js",
-    "main.js.map": "/koriphey/static/js/main.51beb2a7.chunk.js.map",
+    "main.css": "/koriphey/static/css/main.ed421449.chunk.css",
+    "main.js": "/koriphey/static/js/main.02e65d71.chunk.js",
+    "main.js.map": "/koriphey/static/js/main.02e65d71.chunk.js.map",
     "runtime~main.js": "/koriphey/static/js/runtime~main.4c9e406a.js",
     "runtime~main.js.map": "/koriphey/static/js/runtime~main.4c9e406a.js.map",
     "static/css/2.148a570b.chunk.css": "/koriphey/static/css/2.148a570b.chunk.css",
-    "static/js/2.806fb838.chunk.js": "/koriphey/static/js/2.806fb838.chunk.js",
-    "static/js/2.806fb838.chunk.js.map": "/koriphey/static/js/2.806fb838.chunk.js.map",
+    "static/js/2.10c6b6f8.chunk.js": "/koriphey/static/js/2.10c6b6f8.chunk.js",
+    "static/js/2.10c6b6f8.chunk.js.map": "/koriphey/static/js/2.10c6b6f8.chunk.js.map",
     "index.html": "/koriphey/index.html",
-    "precache-manifest.f706d7fb75b665e6c6cee06a58094130.js": "/koriphey/precache-manifest.f706d7fb75b665e6c6cee06a58094130.js",
+    "precache-manifest.678546b9338cc907bab800875e6221df.js": "/koriphey/precache-manifest.678546b9338cc907bab800875e6221df.js",
     "service-worker.js": "/koriphey/service-worker.js",
     "static/css/2.148a570b.chunk.css.map": "/koriphey/static/css/2.148a570b.chunk.css.map",
-    "static/css/main.877295d6.chunk.css.map": "/koriphey/static/css/main.877295d6.chunk.css.map",
+    "static/css/main.ed421449.chunk.css.map": "/koriphey/static/css/main.ed421449.chunk.css.map",
     "static/media/index.scss": "/koriphey/static/media/DroidSans.aef4495e.eot",
     "static/media/marker.svg": "/koriphey/static/media/marker.94e89de4.svg"
   }

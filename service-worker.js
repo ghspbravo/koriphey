@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.0/workbox-sw.js");
 
 importScripts(
-  "/koriphey/precache-manifest.f706d7fb75b665e6c6cee06a58094130.js"
+  "/koriphey/precache-manifest.678546b9338cc907bab800875e6221df.js"
 );
 
 self.addEventListener('message', (event) => {

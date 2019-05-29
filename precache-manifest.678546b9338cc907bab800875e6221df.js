@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "c67647350c61234c1dd083c7793f364b",
+    "revision": "f681bea333189ff53e02b37086de36d8",
     "url": "/koriphey/index.html"
   },
   {
-    "revision": "085290cba1196530420a",
+    "revision": "b89f99386e9491957d7e",
     "url": "/koriphey/static/css/2.148a570b.chunk.css"
   },
   {
-    "revision": "b02a32a1461b40895109",
-    "url": "/koriphey/static/css/main.877295d6.chunk.css"
+    "revision": "a75bd50aeb315d0e6e8c",
+    "url": "/koriphey/static/css/main.ed421449.chunk.css"
   },
   {
-    "revision": "085290cba1196530420a",
-    "url": "/koriphey/static/js/2.806fb838.chunk.js"
+    "revision": "b89f99386e9491957d7e",
+    "url": "/koriphey/static/js/2.10c6b6f8.chunk.js"
   },
   {
-    "revision": "b02a32a1461b40895109",
-    "url": "/koriphey/static/js/main.51beb2a7.chunk.js"
+    "revision": "a75bd50aeb315d0e6e8c",
+    "url": "/koriphey/static/js/main.02e65d71.chunk.js"
   },
   {
     "revision": "f768937c358599e3d953",
