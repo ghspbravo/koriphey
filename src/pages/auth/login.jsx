@@ -1,15 +1,36 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { socialVkontakte, socialFacebook } from '../../components/socials/socials';
 
 import { useActions } from 'easy-peasy';
+import useInput from '../../hooks/useInput';
 
 export default function Login() {
-  const login = useActions(actions => actions.auth.login)
-  const loginHandler = () => {
-    localStorage.setItem("refresh", 'place for token')
-    login()
+  const login = useActions(actions => actions.auth.requestToken)
+  
+  const [processing, processingSet] = useState(false)
+
+  const loginHandler = async (e) => {
+    processingSet(true)
+
+    e.preventDefault()
+    const payload = { username, password }
+    const success = await login(payload)
+    processingSet(false)
+    if (success !== true) {
+      try {
+        if (success === 'not found') {
+          setAuthError('Пользователь с указанными данными не найден')
+        }
+      } catch (error) {
+        window.alert(error)
+      }
+
+    }
   }
+  const [authError, setAuthError] = useState('')
+  const { value: username, bind: usernameBind } = useInput('');
+  const { value: password, bind: passwordBind } = useInput('');
   return (
     <div className="container">
       <div className="mt-0 mt-md-5 mx-auto col-xl-5 col-lg-6 col-md-8 col-sm-10 px-0">
@@ -21,15 +42,16 @@ export default function Login() {
 
           <form onSubmit={loginHandler}>
             <div className="form-group mb-1">
-              <input className="w-100" placeholder="Email" type="text" />
+              <input required onBlur={() => setAuthError('')} {...usernameBind} className="w-100" placeholder="Email" type="text" />
             </div>
 
             <div className="form-group mb-1">
-              <input className="w-100" placeholder="Пароль" type="password" />
+              <input required onBlur={() => setAuthError('')} {...passwordBind} className="w-100" placeholder="Пароль" type="password" />
             </div>
+            <div className="form-error mb-1">{authError}</div>
             <Link to='/recover' className='light'>Забыли пароль?</Link>
 
-            <button className="mt-3 button_expanded">Войти</button>
+            <button disabled={processing} className="mt-3 button_expanded">{processing ? '...' : 'Войти'}</button>
           </form>
           <Link to='/register' className="button button_expanded button_secondary mt-1" >Зарегестрироваться</Link>
 

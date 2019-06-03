@@ -213,6 +213,8 @@ input[type=url],
 input[type=password],
 input[type=search],
 input[type=number],
+input[type=date],
+select,
 textarea {
   padding: 8px 15px;
   background-color: transparent;
@@ -238,10 +240,28 @@ textarea {
   }
 }
 
+.form-error {
+  font-size: 12px;
+  color: red;
+}
+
+.form-hint {
+  font-size: 12px;
+  color: rgb(184, 184, 184);
+}
+
+select {
+  height: 35px;
+}
+
 textarea {
   resize: vertical;
 }
 
 label {
   font-weight: bold;
+}
+
+.icon {
+  pointer-events: none;
 }

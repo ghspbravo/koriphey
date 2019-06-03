@@ -33,7 +33,8 @@ const logger = store => next => action => {
 const store = createStore(model, {
   initialState: {
     auth: {
-      isAuth: localStorage.getItem('refresh') ? true : false
+      isAuth: localStorage.getItem('token') ? true : false,
+      access: localStorage.getItem('token')
       // refresh: localStorage.getItem('refresh'),
     },
     // profile: {

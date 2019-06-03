@@ -7,7 +7,7 @@ export default function requestEdit() {
       <div className="row">
         <div className="col-lg-8 col-md-7">
           {cardBlock(
-            <h2>Создание запроса</h2>,
+            <h2>Редактирование запроса</h2>,
             <div>
               <div className="form-group mb-1">
                 <div className="mb-1">

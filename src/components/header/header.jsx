@@ -12,20 +12,20 @@ export default function Header() {
   const profileControls = useRef()
 
   const profileClickHandler = () => {
-    if (!profileControls.current.classList.contains('expanded')) {
+    try {if (!profileControls.current.classList.contains('expanded')) {
       profileControls.current.classList.add('expanded')
       window.addEventListener('click', clickOutsideControlsHandler)
     }
     else {
       profileControls.current.classList.remove('expanded')
       window.removeEventListener('click', clickOutsideControlsHandler)
-    }
+    }} catch (error) {console.error(error)}
   }
 
   const clickOutsideControlsHandler = e => {
-    if (e.target.closest('.header__profile-controls')) return
+    try {if (e.target.closest('.header__profile-controls')) return
     profileControls.current.classList.remove('expanded')
-    window.removeEventListener('click', clickOutsideControlsHandler)
+    window.removeEventListener('click', clickOutsideControlsHandler)} catch (error) {console.error(error)}
   }
 
   const mobileMenu = useRef()
@@ -46,9 +46,12 @@ export default function Header() {
 
   const logout = useActions(actions => actions.auth.logout)
   const logoutHandler = () => {
-    localStorage.removeItem("refresh")
     logout()
   }
+
+  const user = useStore(store => store.profile.user)
+
+
   return (
     <div className="header">
 
@@ -56,7 +59,7 @@ export default function Header() {
 
         <div className="header-inner row no-gutters align-items-center">
 
-          {isAuth &&
+          {isAuth && user.status === 1 &&
             <button onClick={isMobileMenuOpened ? mobileMenuCloseHandler : mobileMenuOpenHandler} className="header__navopen no-style d-md-none">
               <i className={`fas ${isMobileMenuOpened ? "fa-times" : "fa-bars"}`}></i>
             </button>}
@@ -75,13 +78,13 @@ export default function Header() {
               color: 'white',
               fontSize: '2rem',
               paddingTop: '15px'
-            }}>Logo</span>
+            }}>Корифей</span>
             {/* <img className="not-responsive" src="https://picsum.photos/150/50" alt="logo" /> */}
             <Link to="/" className="expanded" />
           </div>
 
           {isAuth
-            ?
+            ? user.status === 1 &&
             [<div key={0} className="header__search d-none d-md-flex search ml-xl-4 ml-md-2">
               <Link style={{ fontSize: "18px" }} to='/search'
                 className="search__icon no-style"><i className="fas fa-search"></i></Link>
@@ -92,7 +95,6 @@ export default function Header() {
               <NavLink className="navigation-item no-style" to='/people'>Люди</NavLink>
               <NavLink className="navigation-item no-style" to='/requests'>Запросы</NavLink>
               <NavLink className="navigation-item no-style" to='/news'>Новости</NavLink>
-              <NavLink className="navigation-item no-style" to='/demo'>Демо</NavLink>
             </nav>,
 
             <div key={2} className="header__profile d-none d-md-block ml-1 ml-lg-auto">
@@ -102,13 +104,13 @@ export default function Header() {
                 </div>
 
                 <div onClick={profileClickHandler} className="header__profile-controls">
-                  <img src="https://picsum.photos/50" alt="person thumbnail" />
+                  <img className='not-responsive' src={user && user.photo ? user.photo : "https://www.dacgllc.com/site/wp-content/uploads/2015/12/DACG_Web_AboutUs_PersonPlaceholder.png"} alt="person thumbnail" />
                   <i className="fas fa-angle-down"></i>
 
                   <div ref={profileControls} className="d-none d-md-block profile-controls">
 
                     <div className="profile-controls-section">
-                      <NavLink className="navigation-item no-style" to='/profile/1'>Мой профиль</NavLink>
+                      <NavLink className="navigation-item no-style" to='/profile/my'>Мой профиль</NavLink>
                       <NavLink className="navigation-item no-style" to='/requests/create'>Создать запрос</NavLink>
                     </div>
 
@@ -137,7 +139,26 @@ export default function Header() {
               <Link to='/login' className="button button_secondary ml-2">Войти</Link>
             </div>}
 
-          {isAuth &&
+          {isAuth && (user.status === 0 || user.status === 2)&&
+            <div className="ml-auto">
+              <div onClick={profileClickHandler} className="header__profile-controls">
+                <img className='not-responsive' src={user && user.photo ? user.photo : "https://www.dacgllc.com/site/wp-content/uploads/2015/12/DACG_Web_AboutUs_PersonPlaceholder.png"} alt="person thumbnail" />
+                <i className="fas fa-angle-down"></i>
+  
+                <div ref={profileControls} className="profile-controls">
+  
+                  <div className="profile-controls-section">
+                    <button onClick={logoutHandler} style={{
+                      textAlign: 'left',
+                      width: '100%'
+                    }} className="no-style navigation-item">Выход</button>
+                  </div>
+  
+                </div>
+              </div>
+            </div>}
+
+          {isAuth && user.status === 1 &&
             <div className="d-md-none">
               <Link to='/search' className="search__icon no-style"><i className="fas fa-search"></i></Link>
             </div>}

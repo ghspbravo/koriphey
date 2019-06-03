@@ -1,0 +1,48 @@
+@import '../../styles/vars';
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  visibility: hidden;
+  opacity: 0;
+
+  &.open {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity $tr-standart;
+  }
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 5;
+
+  background-color: #ffffffbb;
+
+  &__inner {
+    position: relative;
+    box-shadow: $bshadow-modal;
+    padding: 35px 25px;
+
+    width: 600px;
+    background-color: #fff;
+  }
+
+  &_small &__inner {
+    width: 400px;
+  }
+
+  &_large &__inner {
+    width: 800px;
+  }
+
+  &__close {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+  }
+}

@@ -1,26 +1,17 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Link } from "react-router-dom";
 import cardBlock from '../../components/cardBlock/cardBlock';
 import comment from '../../components/comment/comment';
 
 import './profile.scss'
 import { socialVkontakte, socialFacebook, socialInstagram } from '../../components/socials/socials';
+import editIcon from '../../components/editIcon/editIcon';
+
+import { useStore } from 'easy-peasy';
 import { ROLE_TYPES } from './constants';
 
-import { useActions } from 'easy-peasy';
-
-export default function Profile(router) {
-  const [user, setUser] = useState()
-
-  const getUserById = useActions(actions => actions.profile.getUserById)
-  useEffect(() => {
-    const userId = router.match.params.id
-    async function loadUserContent() {
-      const userContent = await getUserById(userId)
-      setUser(userContent)
-    }
-    loadUserContent()
-  }, [])
+export default function MyProfile() {
+  const user = useStore(store => store.profile.user)
   return (
     <div className="container">
       <div className="row">
@@ -29,25 +20,30 @@ export default function Profile(router) {
 
           <div className="row no-gutters profile-person">
             <div className="col-6 pr-1 profile-person__photo">
-              <img src={user && user.photo ? user.photo : 'https://www.dacgllc.com/site/wp-content/uploads/2015/12/DACG_Web_AboutUs_PersonPlaceholder.png'} alt="" />
+              <img src={user && user.photo ? user.photo : "https://www.dacgllc.com/site/wp-content/uploads/2015/12/DACG_Web_AboutUs_PersonPlaceholder.png"} alt="" />
             </div>
             <div className="col-6 pl-1">
               <h2 className="profile-person__name">{user && user.fio ? `${user.firstName} ${user.surName}` : '...'}</h2>
-              <Link className="profile-person__button button button_expanded" to={`/profile/${router.match.params.id}`}>Написать</Link>
-              <Link className="profile-person__button button button_expanded button_secondary mt-1" to={`/profile/${router.match.params.id}`}>Отзыв</Link>
+              <Link className="profile-person__button button button_expanded" to="/profile/requests">Мои запросы</Link>
+              <Link className="profile-person__button button button_expanded button_secondary mt-1" to="/requests/create">Создать запрос</Link>
             </div>
           </div>
 
           <div className="mt-2">
             {cardBlock(
-              <h2>Информация</h2>,
+              <div className="row no-gutters">
+                <h2 style={{ marginBottom: 0 }}>Информация</h2>
+                <div className="ml-auto">
+                  {editIcon('/profile/edit')}
+                </div>
+              </div>,
               <div className="pb-2">
                 {user && user.graduationYear
                   ? <div className="profile-info">
                     {/* <div className="row mb-2">
-                      <div className="profile-info__head col-6">Роль:</div>
-                      <div className="profile-info__content col-6">{ROLE_TYPES[user.type]}</div>
-                    </div> */}
+                        <div className="profile-info__head col-6">Роль:</div>
+                        <div className="profile-info__content col-6">{ROLE_TYPES[user.type]}</div>
+                      </div> */}
                     <div className="row mb-2">
                       <div className="profile-info__head col-6">Год выпуска:</div>
                       <div className="profile-info__content col-6">{user.graduationYear}</div>
@@ -117,20 +113,21 @@ export default function Profile(router) {
         </div>
 
         <div className="col-lg-8 mt-2 mt-lg-0">
-          <div className="mb-2">
-            {cardBlock(
-              <h2>О себе</h2>,
-              <div className="pb-2">
-                <p>{user && user.about}</p>
-              </div>
-            )}
-          </div>
+          {user && user.about &&
+            <div className="mb-2">
+              {cardBlock(
+                <h2>О себе</h2>,
+                <div className="pb-2">
+                  <p>{user.about}</p>
+                </div>
+              )}
+            </div>}
 
-          {user && user.utilities.length !== 0 &&
+          {user.utilities && user.utilities.length !== 0 &&
             <div className="mb-2">
               {cardBlock(
                 <h2>Что я могу предложить</h2>,
-                <div>
+                <div >
                   {user.utilities.map((suggest, index) => <div className="mb-2" key={index}>
                     <h3>{suggest.name}</h3>
                     <p>{suggest.comment}</p>

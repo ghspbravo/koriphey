@@ -4,7 +4,12 @@ import cardBlock from '../../components/cardBlock/cardBlock';
 import requestItem from '../../components/requestItem/requestItem';
 import newsItem from '../../components/newsItem/newsItem';
 
-export default function news() {
+import { useStore } from 'easy-peasy';
+import parse from 'html-react-parser'
+
+export default function News() {
+  const newsList = useStore(store => store.news.newsList)
+  const requestList = useStore(store => store.requests.requestList)
   return (
     <div className="container">
       <div className="row">
@@ -13,19 +18,24 @@ export default function news() {
             {cardBlock(
               <h2>Последние новости</h2>,
               <div className="list-card no-padding">
-                {Array(9).fill().map((item, index) => <div key={index} className="card">
-                  {newsItem(
-                      1,
-                      "О трудоустройстве",
-                      "Нью-Йорк идеален для работы и карьеры, я уже писал почему. До приезда сюда я работал и в офисе, и был полтора года на фрилансе и вот опять вернулся в офис. За этот год снова убедился, что я совсем не офисный человек. Потому на вершине успеха я решил...",
-                      "https://picsum.photos/700/350",
+                {newsList.length !== 0
+                  ? newsList.map((item, index) => <div key={index} className="card">
+                    {newsItem(
+                      item.id,
+                      item.title,
+                      item.announce ? <p>{item.announce}</p> : parse(item.content),
+                      item.imagePrewiew,
                       {
                         likesCount: 650,
                         commentsCount: 2
                       },
-                      new Date("2019-05-01")
+                      item.updatedAt
                     )}
-                </div>)}
+                  </div>)
+                  : <div className="px-2">
+                    <p>Loading...</p>
+                  </div>
+                }
               </div>
             )}
           </div>
@@ -36,18 +46,21 @@ export default function news() {
             {cardBlock(
               <h2>Последние запросы</h2>,
               <div className="list-card no-padding">
-                {Array(3).fill().map((item, index) => <div key={index} className="card">
+                {requestList && requestList.slice(0, 3).map((item, index) => <div key={index} className="card">
                   {requestItem(
                     {
-                      photo: "https://picsum.photos/50",
-                      name: "Елена Алексеевна",
-                      location: "Москва, Россия"
+                      id: item.user.id,
+                      photo: item.user.photo ? item.user.photo : "https://picsum.photos/50",
+                      name: `${item.user.firstName} ${item.user.surName}`,
+                      location: `${item.user.city && item.user.city.country.nameRU}, ${item.user.city && item.user.city.nameRU}`
                     },
                     {
-                      category: "путешествия",
-                      location: "Новосибирск"
+                      category: item.category.name,
+                      location: item.location
                     },
-                    "Ребята, буду в Новосибирске проездом. Посоветуйте, чем там можно заняться?.."
+                    item.text,
+                    item.album,
+                    item.id
                   )}
                 </div>)}
                 <div className="px-2 mt-2">

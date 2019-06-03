@@ -1,15 +1,27 @@
-import React from 'react'
+import React, { useState } from 'react'
 import cardBlock from '../components/cardBlock/cardBlock';
 
 import cityStats from '../components/cityStats/cityStats';
 import cityStatsMap from '../components/cityStats/cityStatsMap';
 
+import { useStore } from 'easy-peasy';
+
 import { WorkDoughnutChart, HobbiesDoughnutChart } from '../components/charts/charts'
 
 export default function Welcome() {
+  const isAuth = useStore(store => store.auth.isAuth)
+  const user = useStore(store => store.profile.user)
 
   return (
     <div className="container">
+      {isAuth && user &&  user.status === 0 &&
+        <div className="mb-1">
+          <p className="form-hint"><i className="fas fa-info-circle icon"></i> Ваша заявка на регистрацию обрабатывается. После подтверждения Вы получите доступ ко всем разделам сервиса</p>
+        </div>}
+      {isAuth && user &&  user.status === 2 &&
+        <div className="mb-1">
+          <p className="form-error"><i className="fas fa-info-circle icon"></i> Ваша заявка на регистрацию была отклонена. Обратитесь в поддержку для получения подробной информации</p>
+        </div>}
       <div className="row">
 
         <div className="col-lg-4">

@@ -3,7 +3,10 @@ import { Link } from 'react-router-dom'
 import cardBlock from '../../components/cardBlock/cardBlock';
 import requestItem from '../../components/requestItem/requestItem';
 
-export default function requests() {
+import { useStore } from 'easy-peasy';
+
+export default function Requests() {
+  const requestList = useStore(store => store.requests.requestList)
   return (
     <div className="container">
       <div className="row">
@@ -15,23 +18,29 @@ export default function requests() {
             </div>,
             <div className="no-padding">
               <div className="card-list row">
-                {Array(9).fill().map((item, index) => <div key={index} className="col-md-6">
+                {requestList.length !== 0
+                  ? requestList.map((item, index) => <div key={index} className="col-md-6">
                   <div className="card">
                     {requestItem(
                       {
-                        photo: "https://picsum.photos/50",
-                        name: "Елена Алексеевна",
-                        location: "Москва, Россия"
+                        id: item.user.id,
+                        photo: item.user.photo ? item.user.photo : "https://picsum.photos/50",
+                        name: `${item.user.firstName} ${item.user.surName}`,
+                        location: `${item.user.city && item.user.city.country.nameRU}, ${item.user.city && item.user.city.nameRU}`
                       },
                       {
-                        category: "путешествия",
-                        location: "Новосибирск"
+                        category: item.category.name,
+                        location: item.location
                       },
-                      "Ребята, буду в Новосибирске проездом. Посоветуйте, чем там можно заняться?..",
-                      "https://picsum.photos/150/50"
+                      item.text,
+                      item.album,
+                      item.id
                     )}
                   </div>
-                </div>)}
+                </div>)
+                : <div className="px-2">
+                  <p>Loading...</p>
+                </div> }
               </div>
             </div>)}
         </div>

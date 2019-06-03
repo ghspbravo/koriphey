@@ -3,9 +3,15 @@ import Chart from 'chart.js';
 // eslint-disable-next-line no-unused-vars
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
+import { useStore } from 'easy-peasy';
+
 const options = {
   legend: {
-    position: 'right'
+    position: 'right',
+    labels: {
+      boxWidth: 10,
+      fontSize: 10
+    }
   },
   tooltips: {
     enabled: false
@@ -20,40 +26,41 @@ const options = {
 }
 
 export function WorkDoughnutChart() {
+  const statistics = useStore(store => store.statistics.statistics)
+
   const workChart = useRef()
 
   useEffect(() => {
+    if (!(statistics && statistics.competenciesCount)) return
+
     const workDoughnutChart = new Chart(workChart.current, {
       type: 'doughnut',
       data: {
         datasets: [{
-          data: [51, 26, 12, 11],
+          data: statistics.competenciesCount.map(item => Math.round(item.count / statistics.totalCompetenciesCount * 100)),
           backgroundColor: [
             '#252D33',    // color for data at index 0
+            '#3C6374',
             '#E56000',   // color for data at index 1
             '#E5600066',  // color for data at index 2
             '#E5600022',  // color for data at index 3
             //...
           ],
           datalabels: {
-            color: ['white', 'white', 'black']
+            color: ['white', 'white', 'white', 'black']
           }
         }],
 
         // These labels appear in the legend and in the tooltips when hovering different arcs
-        labels: [
-          'Экономика',
-          'IT',
-          'Журналистика',
-          'Другое'
-        ]
+        labels: statistics.competenciesCount
+          .map(item => item.competence.slice(0, 20) + (item.competence.length <= 20 ? '' : '...'))
       },
       options: options
     });
     return () => {
       workDoughnutChart.destroy();
     }
-  }, [])
+  }, [statistics])
 
   return (
     <canvas ref={workChart}></canvas>
@@ -61,42 +68,40 @@ export function WorkDoughnutChart() {
 }
 
 export function HobbiesDoughnutChart() {
+  const statistics = useStore(store => store.statistics.statistics)
   const hobbiesChart = useRef()
 
   useEffect(() => {
+    if (!(statistics && statistics.hobbyCount)) return
+
     const hobbiesDoughnutChart = new Chart(hobbiesChart.current, {
       type: 'doughnut',
       data: {
         datasets: [{
-          data: [40, 26, 12, 11, 11],
+          data: statistics.hobbyCount.map(item => Math.round(item.count / statistics.totalHobbyCount * 100)),
           backgroundColor: [
             '#252D33',    // color for data at index 0
             '#3C6374',
             '#3C637433',   // color for data at index 1
             '#E5600022',  // color for data at index 3
+            '#E5600066',
             '#E56000',  // color for data at index 2
             //...
           ],
           datalabels: {
-            color: ['white', 'white', 'black', 'black', 'white']
+            color: ['white', 'white', 'black', 'black', 'black', 'white']
           }
         }],
 
         // These labels appear in the legend and in the tooltips when hovering different arcs
-        labels: [
-          'Путешествия',
-          'Спорт',
-          'Кулинария',
-          'Театр',
-          'Другое'
-        ]
+        labels: statistics.hobbyCount.map(item => item.hobby.slice(0, 20) + (item.hobby.length <= 20 ? '' : '...')),
       },
       options: options
     });
     return () => {
       hobbiesDoughnutChart.destroy();
     }
-  }, [])
+  }, [statistics])
 
   return (
     <canvas ref={hobbiesChart}></canvas>

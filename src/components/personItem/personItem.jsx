@@ -15,6 +15,7 @@ export default function personItem(id, name, location, info, photo) {
     <div className="person row no-gutters">
       <div className="person__photo">
         <img className="not-responsive" src={photo} alt="" />
+        <Link to={`/profile/${id}`} className="mt-2 expanded"></Link>
       </div>
 
       <div className="person__content col">
@@ -23,14 +24,15 @@ export default function personItem(id, name, location, info, photo) {
 
         <div className="person__info">
           <p className='small'><b>Выпуск: </b>{info.graduationYear}</p>
-          <p className='small'><b>Категории: </b>{info.categories}</p>
+          {info.categories &&
+            <p className='small'><b>Категории: </b>{info.categories}</p>}
         </div>
 
-        <Link to={`/profile/${id}`} className="mt-2 button d-none d-sm-inline-block">Написать</Link>
+        <Link to={`/profile/${id}`} className="mt-2 button d-none d-sm-inline-block">Подробнее</Link>
       </div>
 
       <div className="mt-2 d-sm-none col-12">
-        <Link to={`/profile/${id}`} className="button button_expanded">Написать</Link>
+        <Link to={`/profile/${id}`} className="button button_expanded">Подробнее</Link>
       </div>
     </div>
   )

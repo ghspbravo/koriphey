@@ -8,7 +8,7 @@ import mediaPerson from '../mediaPerson/mediaPerson';
  * @param {{category: string, location: string}} meta 
  * @param {string} content request description
  */
-export default function requestItem(person, meta, content, thumbnail) {
+export default function requestItem(person, meta, content, thumbnail, id) {
   return (
     <div className="request">
       {mediaPerson(
@@ -27,15 +27,15 @@ export default function requestItem(person, meta, content, thumbnail) {
         <div style={{ position: 'relative' }}>
           {thumbnail &&
             <img src={thumbnail} alt="thumbnail" />}
-          <Link className="expanded" to='/requests/1' />
+          <Link className="expanded" to={`/requests/${id}`} />
         </div>
       </div>
 
       <div className="mt-1">
-        <Link className="button button_expanded-xs" to='/requests/1'>Смотреть полностью</Link>
+        <Link className="button button_expanded-xs" to={`/requests/${id}`}>Смотреть полностью</Link>
       </div>
       <div className="mt-1">
-        <Link className="button button_expanded-xs button_secondary" to='/profile/1'>Ответить</Link>
+        <Link className="button button_expanded-xs button_secondary" to={`/profile/${person.id}`}>Ответить</Link>
       </div>
     </div>
   )

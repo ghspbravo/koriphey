@@ -3,7 +3,11 @@ import { Link } from 'react-router-dom'
 import personItem from '../../components/personItem/personItem';
 import cardBlock from '../../components/cardBlock/cardBlock';
 
-export default function peoples() {
+import { useStore } from 'easy-peasy';
+
+export default function Peoples() {
+  const userList = useStore(store => store.profile.userList)
+
   return (
     <div className="container">
       <div className="row">
@@ -16,20 +20,24 @@ export default function peoples() {
               </div>,
               <div className="no-padding">
                 <div className="card-list row">
-                  {Array(9).fill().map((item, index) => <div key={index} className="col-md-6">
-                    <div className="card">
-                      {personItem(
-                        1,
-                        "Елена Алексеева",
-                        "Москва, Россия",
-                        {
-                          graduationYear: 2012,
-                          categories: "Путешестия, Спорт, Иностранные языки"
-                        },
-                        "https://picsum.photos/200"
-                      )}
-                    </div>
-                  </div>)}
+                  {userList.length !== 0
+                    ? userList.map((item, index) => <div key={index} className="col-md-6">
+                      <div style={{height: '100%'}} className="card">
+                        {personItem(
+                          item.id,
+                          `${item.firstName} ${item.surName}`,
+                          `${item.city && item.city.country.nameRU}, ${item.city && item.city.nameRU}`,
+                          {
+                            graduationYear: item.graduationYear,
+                            categories: ""
+                          },
+                          item.photo ? item.photo : "https://picsum.photos/50",
+                        )}
+                      </div>
+                    </div>)
+                    : <div className="px-2">
+                      <p>Loading...</p>
+                    </div>}
                 </div>
               </div>)}
           </div>

@@ -1,11 +1,27 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import cardBlock from '../../components/cardBlock/cardBlock';
 import newsItem from '../../components/newsItem/newsItem';
 import { feedbackLike, feedbackComment } from '../../components/feedback/feedback';
 import timeRelate from '../../components/timeRelate/timeRelate';
 
-export default function newsSingle(router) {
+import { useStore, useActions } from 'easy-peasy';
+import parse from 'html-react-parser'
+
+export default function NewsSingle(router) {
+  const newsId = router.match.params.id
+
+  const newsList = useStore(store => store.news.newsList)
+
+  const getNewsContent = useActions(actions => actions.news.loadNewsItem)
+  const [news, setNews] = useState({})
+  useEffect(() => {
+    async function loadNewsContent() {
+      const newsContent = await getNewsContent(newsId)
+      setNews(newsContent)
+    }
+    loadNewsContent()
+  }, [])
 
   const title = "О трудоустройстве",
     content = "Нью-Йорк идеален для работы и карьеры, я уже писал почему. До приезда сюда я работал и в офисе, и был полтора года на фрилансе и вот опять вернулся в офис. За этот год снова убедился, что я совсем не офисный человек. Потому на вершине успеха я решил закончить свою карьеру веб-дизайнера. Работать только ради денег я не умею. Опыт работы тут бесценный, но когда для меня карьера перестала быть приоритетом я снова решил, что больше нет смысла сидеть в офисе, хоть даже и в Нью-Йорке.",
@@ -24,16 +40,16 @@ export default function newsSingle(router) {
               <button className="link" onClick={router.history.goBack}><i className="fas fa-angle-double-left"></i> Назад</button>,
               <div className="news">
                 <div className="news-title">
-                  <p className="big alternative">{title}</p>
+                  <p className="big alternative">{news && news.title ? news.title : '...'}</p>
                 </div>
 
                 <div className="news-body my-1">
-                  <p>{content}</p>
-
-                  {thumbnail &&
+                  {news.imagePrewiew &&
                     <div style={{ position: 'relative' }}>
-                      <img src={thumbnail} alt="" />
+                      <img src={news.imagePrewiew} alt="" />
                     </div>}
+
+                  {news && news.content ? parse(news.content) : '...'}
                 </div>
 
                 <div className="news-meta">
@@ -46,7 +62,7 @@ export default function newsSingle(router) {
                     </div>
 
                     <div className="ml-auto">
-                      {timeRelate(postDate)}
+                      {news && news.updatedAt ? timeRelate(news.updatedAt) : '...'}
                     </div>
                   </div>
                 </div>
@@ -61,12 +77,12 @@ export default function newsSingle(router) {
                 <div className="list-card">
                   {Array(3).fill().map((item, index) => <div key={index} className="card list-card-item">
                     <div className="comment">
-  
+
                       <div className="row no-gutters media-person">
                         <div className="media-person__photo">
                           <img className="not-responsive" src={thumbnail} alt="person" />
                         </div>
-  
+
                         <div className="comment__content col">
                           <div className="media-person__body">
                             <div className="media-person__name">
@@ -76,13 +92,13 @@ export default function newsSingle(router) {
                           <p>Самое главное, чему меня научил Александр, - это умение бороться, ведь в современной жизни без этого никуда! Школа, безусловно, закалила мой характер - теперь уже не страшны ни бессонные ночи, ни огромные задания.</p>
                         </div>
                       </div>
-  
+
                       <div className="row no-gutters">
                         <div className="ml-auto">
                           {timeRelate(postDate)}
                         </div>
                       </div>
-  
+
                     </div>
                   </div>
                   )}
@@ -90,11 +106,11 @@ export default function newsSingle(router) {
 
                 <div className="row align-items-center no-gutters mt-2 mx-2">
                   <div className="mr-1 media-person__photo d-none d-md-block">
-                    <img className="not-responsive" src={thumbnail} alt="person"/>
+                    <img className="not-responsive" src={thumbnail} alt="person" />
                   </div>
 
                   <div className="col">
-                    <textarea className="w-100" placeholder="Напишите комментарий" type="text"/>
+                    <textarea className="w-100" placeholder="Напишите комментарий" type="text" />
                   </div>
 
                   <button style={{
@@ -112,21 +128,25 @@ export default function newsSingle(router) {
             {cardBlock(
               <h2>Последние новости</h2>,
               <div className="list-card no-padding">
-                {Array(3).fill().map((item, index) => <div key={index} className="card">
-                  {newsItem(
-                    1,
-                    "О трудоустройстве",
-                    "Нью-Йорк идеален для работы и карьеры, я уже писал почему. До приезда сюда я работал и в офисе, и был полтора года на фрилансе и вот опять вернулся в офис. За этот год снова убедился, что я совсем не офисный человек. Потому на вершине успеха я решил...",
-                    "https://picsum.photos/700/350",
-                    {
-                      likesCount: 650,
-                      commentsCount: 2
-                    },
-                    new Date("2019-05-01")
-                  )}
-                </div>)}
+                {newsList.length !== 0
+                  ? newsList.slice(0, 3).map((item, index) => <div key={index} className="card">
+                    {newsItem(
+                      item.id,
+                      item.title,
+                      item.announce ? <p>{item.announce}</p> : parse(item.content),
+                      item.imagePreviewPath,
+                      {
+                        likesCount: 650,
+                        commentsCount: 2
+                      },
+                      item.updatedAt
+                    )}
+                  </div>)
+                  : <div className="px-2">
+                    <p>Loading...</p>
+                  </div>}
                 <div className="px-2 mt-2">
-                  <Link to='/requests'>Все запросы <i className="fas fa-angle-double-right"></i></Link>
+                  <Link to='/news'>Все новости <i className="fas fa-angle-double-right"></i></Link>
                 </div>
               </div>
             )}

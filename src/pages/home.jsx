@@ -7,7 +7,12 @@ import cityStatsMap from '../components/cityStats/cityStatsMap';
 import cityStats from '../components/cityStats/cityStats';
 import { WorkDoughnutChart, HobbiesDoughnutChart } from '../components/charts/charts';
 
-export default function home() {
+import { useStore } from 'easy-peasy';
+import parse from 'html-react-parser'
+
+export default function Home() {
+  const newsList = useStore(store => store.news.newsList)
+  const requestList = useStore(store => store.requests.requestList)
   return (
     <div className="container">
       <div className="col-12 mb-2 px-0">
@@ -45,20 +50,25 @@ export default function home() {
               {cardBlock(
                 <h2>Последние новости</h2>,
                 <div className="list-card no-padding">
-                  {Array(3).fill().map((item, index) => <div key={index} className="card">
-                    {
-                      newsItem(
-                        1,
-                        "О трудоустройстве",
-                        "Нью-Йорк идеален для работы и карьеры, я уже писал почему. До приезда сюда я работал и в офисе, и был полтора года на фрилансе и вот опять вернулся в офис. За этот год снова убедился, что я совсем не офисный человек. Потому на вершине успеха я решил...",
-                        "https://picsum.photos/700/350",
-                        {
-                          likesCount: 650,
-                          commentsCount: 2
-                        },
-                        new Date("2019-05-01")
-                      )}
-                  </div>)}
+                  {newsList.length !== 0
+                    ? newsList.slice(0, 3).map((item, index) => <div key={index} className="card">
+                      {
+                        newsItem(
+                          item.id,
+                          item.title,
+                          item.announce ? <p>{item.announce}</p> : parse(item.content),
+                          item.imagePrewiew,
+                          {
+                            likesCount: 650,
+                            commentsCount: 2
+                          },
+                          item.updatedAt
+                        )}
+                    </div>)
+                    : <div className="px-2">
+                      <p>Loading...</p>
+                    </div>
+                  }
                   <div className="px-2 mt-2">
                     <Link to='/news'>Все новости <i className="fas fa-angle-double-right"></i></Link>
                   </div>
@@ -73,18 +83,21 @@ export default function home() {
             {cardBlock(
               <h2>Последние запросы</h2>,
               <div className="list-card no-padding">
-                {Array(3).fill().map((item, index) => <div key={index} className="card">
+                {requestList && requestList.slice(0, 3).map((item, index) => <div key={index} className="card">
                   {requestItem(
                     {
-                      photo: "https://picsum.photos/50",
-                      name: "Елена Алексеевна",
-                      location: "Москва, Россия"
+                      id: item.user.id,
+                      photo: item.user.photo ? item.user.photo : "https://picsum.photos/50",
+                      name: `${item.user.firstName} ${item.user.surName}`,
+                      location: `${item.user.city && item.user.city.country.nameRU}, ${item.user.city && item.user.city.nameRU}`
                     },
                     {
-                      category: "путешествия",
-                      location: "Новосибирск"
+                      category: item.category.name,
+                      location: item.location
                     },
-                    "Ребята, буду в Новосибирске проездом. Посоветуйте, чем там можно заняться?.."
+                    item.text,
+                    item.album,
+                    item.id
                   )}
                 </div>)}
                 <div className="px-2 mt-2">

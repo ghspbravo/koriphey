@@ -3,7 +3,7 @@ import { Link, NavLink } from 'react-router-dom'
 import './mobileNavigation.scss'
 import mediaPerson from '../mediaPerson/mediaPerson';
 
-import { useActions } from 'easy-peasy';
+import { useStore, useActions } from 'easy-peasy';
 
 export default function MobileNavigation(ref, closeHandler) {
 
@@ -12,6 +12,9 @@ export default function MobileNavigation(ref, closeHandler) {
     localStorage.removeItem("refresh")
     logout()
   }
+
+  const user = useStore(store => store.profile.user)
+
   return (
     <div ref={ref} onClick={closeHandler} className="mobile-navigation-wrapper d-md-none">
       <div className="container px-0">
@@ -19,11 +22,11 @@ export default function MobileNavigation(ref, closeHandler) {
 
           <div className="navigation-section">
             {mediaPerson(
-              "https://picsum.photos/50",
-              "Денис Петров",
+              user.photo ? user.photo : "https://www.dacgllc.com/site/wp-content/uploads/2015/12/DACG_Web_AboutUs_PersonPlaceholder.png",
+              `${user.firstName} ${user.surName}`,
               <span>Мой профиль</span>
             )}
-            <Link className="expanded" to='/profile' />
+            <Link className="expanded" to='/profile/my' />
           </div>
           
           <nav className="navigation-section">
@@ -35,9 +38,6 @@ export default function MobileNavigation(ref, closeHandler) {
             </div>
             <div className="py-1" >
               <NavLink className="navigation-item no-style" to='/news'>Новости</NavLink>
-            </div>
-            <div className="py-1" >
-              <NavLink className="navigation-item no-style" to='/demo'>Демо</NavLink>
             </div>
           </nav>
 
