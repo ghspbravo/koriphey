@@ -1,16 +1,23 @@
-import React, { useState } from 'react'
+import React from 'react'
+import parse from 'html-react-parser'
+
 import cardBlock from '../components/cardBlock/cardBlock';
 
 import cityStats from '../components/cityStats/cityStats';
 import cityStatsMap from '../components/cityStats/cityStatsMap';
 
-import { useStore } from 'easy-peasy';
+import { useStore, useActions } from 'easy-peasy';
 
 import { WorkDoughnutChart, HobbiesDoughnutChart } from '../components/charts/charts'
+import useFetch from '../hooks/useFetch';
 
 export default function Welcome() {
   const isAuth = useStore(store => store.auth.isAuth)
   const user = useStore(store => store.profile.user)
+
+  const projectDescriptionRaw = useStore(store => store.settings.projectDescription)
+  const projectDescriptionLoad = useActions(actions => actions.settings.projectDescriptionLoad)
+  useFetch(projectDescriptionRaw, projectDescriptionLoad)
 
   return (
     <div className="container">
@@ -27,7 +34,7 @@ export default function Welcome() {
         <div className="col-xl-4">
           {cardBlock(
             <h2>Клуб выпускников</h2>,
-            <p>Эта платформа создана для сообщества выпускников <b>Гимназии «Корифей»</b>, чтобы помочь выпускникам разных лет знакомиться, обмениваться идеями и помогать друг другу в любой точке мира</p>
+            parse(projectDescriptionRaw)
           )}
         </div>
 

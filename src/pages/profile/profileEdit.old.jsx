@@ -10,21 +10,11 @@ import useFileInput from '../../hooks/useFileInput';
 
 import { useStore, useActions } from 'easy-peasy';
 
-import useHobbies from '../../hooks/useHobbies';
-import useSuggests from '../../hooks/useSuggests';
-import useCompetences from '../../hooks/useCompetences';
-import useLocation from '../../hooks/useLocation';
-import hobbiesEdit from '../../components/hobbies/hobbiesEdit';
-import competencesEdit from '../../components/competences/competencesEdit';
-import suggestsEdit from '../../components/suggests/suggestsEdit';
-import location from '../../components/location/location';
-
-import userThumb from '../../components/userThumb.png'
-
 export default function ProfileEdit() {
   const user = useStore(store => store.profile.user)
 
   const workYearInput = useRef()
+  // const graduateYearInput = useRef()
   // add input mask
   useEffect(() => {
     var workYearMask = workYearInput.current && IMask(workYearInput.current, {
@@ -33,8 +23,15 @@ export default function ProfileEdit() {
       to: new Date().getFullYear(),
       autofix: true,  // bound value
     });
+    // var graduateYearMask = graduateYearInput.current && IMask(graduateYearInput.current, {
+    //   mask: IMask.MaskedRange,
+    //   from: 1900,
+    //   to: new Date().getFullYear(),
+    //   autofix: true,  // bound value
+    // });
     return () => {
       workYearMask && workYearMask.destroy()
+      // graduateYearMask && graduateYearMask.destroy()
     }
   }, [])
 
@@ -63,14 +60,20 @@ export default function ProfileEdit() {
   const mobileNavigationChangeHandle = setMobileNavigation
 
   const workYearInputMobile = useRef()
+  // const graduateYearInputMobile = useRef()
   const renderCurrentMobileNavigationContent = () => {
-    // eslint-disable-next-line
     var workYearMask = workYearInputMobile.current && IMask(workYearInputMobile.current, {
       mask: IMask.MaskedRange,
       from: 1900,
       to: new Date().getFullYear(),
       autofix: true,  // bound value
     });
+    // var graduateYearMask = graduateYearInputMobile.current && IMask(graduateYearInputMobile.current, {
+    //   mask: IMask.MaskedRange,
+    //   from: 1900,
+    //   to: new Date().getFullYear(),
+    //   autofix: true,  // bound value
+    // });
     switch (mobileNavigation) {
       case MOBILE_NAVIGATION.main:
         return <div>
@@ -78,15 +81,26 @@ export default function ProfileEdit() {
             <div>
               <label className="d-block mb-1" htmlFor="mobile-person-city">Город проживания:</label>
             </div>
-            {location(
-              selectedCountryId,
-              countryChoiceHandler,
-              countriesList,
+            <div className="form-group mb-1">
+              <select id="mobile-person-city" value={selectedCountryId} onChange={countryChoiceHandler} className="w-100">
+                <option value="" defaultValue>Страна проживания</option>
+                {countriesList.length > 0 &&
+                  countriesList.map((item, index) => <option key={index} value={item.id}>
+                    {item.nameRU}
+                  </option>)}
+              </select>
+            </div>
 
-              cities,
-              cityId,
-              cityChoiceHandler
-            )}
+            {cities.length > 0 &&
+              <div className="form-group mb-1">
+                <select value={cityId} onChange={cityChoiceHandler} className="w-100">
+                  <option value="" defaultValue>Город проживания</option>
+                  {cities.length > 0 &&
+                    cities.map((item, index) => <option key={index} value={item.id}>
+                      {item.nameRU}
+                    </option>)}
+                </select>
+              </div>}
           </div>
           <div className="form-group mb-1">
             <div>
@@ -111,15 +125,22 @@ export default function ProfileEdit() {
         return <div>
           <div className="form-group mb-1">
             <div>
-              <label className="d-none d-lg-block">Сферы деятельности:</label>
+              <label className="d-none d-lg-block" htmlFor="mobile-person-competences">Сферы деятельности:</label>
             </div>
-            {competencesEdit(
-              competences,
-              competencesList,
-              competencesChangeHandler,
-              competencesRemoveHandler,
-              competensesErrorSet
-            )}
+            <select id="mobile-person-competences" onBlur={() => competensesErrorSet('')} required className="w-100" onChange={competencesChangeHandler}>
+              <option value="0">Выберите сферу деятельности*</option>
+              {competencesList.map((competence, index) => <option key={index} value={competence.id}>
+                {competence.name}
+              </option>)}
+            </select>
+
+
+            {competences.length !== 0 &&
+              competences.map((competence, index) => <div className="mt-1" key={index}>
+                {competence.name}
+                <button type='button' style={{ float: 'right' }} onClick={() => competencesRemoveHandler(competence)} className="no-style"><i className="fas fa-times"></i></button>
+              </div>)
+            }
 
             <div className="form-error">{competencesError}</div>
           </div>
@@ -166,15 +187,22 @@ export default function ProfileEdit() {
 
           <div className="form-group mb-1">
             <h3>Что Вы можете предложить другим выпускникам?</h3>
-            {suggestsEdit(
-              suggests,
-              suggestsList,
-              suggestsChangeHandler,
-              suggestsCommentChangeHandler,
-              suggestsRemoveHandler,
-              suggestsErrorSet
-            )}
+            <select onBlur={() => suggestsErrorSet('')} required className="w-100" onChange={suggestsChangeHandler}>
+              <option value="0">Выберите категорию*</option>
+              {suggestsList.map((suggest, index) => <option key={index} value={suggest.id}>
+                {suggest.name}
+              </option>)}
+            </select>
 
+            {suggests.length !== 0 &&
+              suggests.map((suggest, index) => <div className="mt-1" key={index}>
+                <div>
+                  {suggest.name}
+                  <button type='button' style={{ float: 'right' }} onClick={() => suggestsRemoveHandler(suggest)} className="no-style"><i className="fas fa-times"></i></button>
+                </div>
+                <input onChange={(e) => suggestsCommentChangeHandler(suggest, e)} defaultValue={suggest.comment} className="w-100" placeholder="Комментарий" type="text" />
+              </div>)
+            }
             <div className="form-error">{suggestsError}</div>
           </div>
 
@@ -190,14 +218,20 @@ export default function ProfileEdit() {
           </div>
 
           <div className="form-group mb-1">
-            <label>Хобби и увлечения</label>
-            {hobbiesEdit(
-              hobbies,
-              hobbiesList,
-              hobbiesChangeHandler,
-              hobbiesRemoveHandler,
-              hobbiesErrorSet
-            )}
+            <label htmlFor="mobile-person-hobbies">Хобби и увлечения</label>
+            <select id="mobile-person-hobbies" onBlur={() => hobbiesErrorSet('')} required className="w-100" onChange={hobbiesChangeHandler}>
+              <option value="0">Выберите хобби/увлечение*</option>
+              {hobbiesList.map((hobbie, index) => <option key={index} value={hobbie.id}>
+                {hobbie.name}
+              </option>)}
+            </select>
+
+            {hobbies.length !== 0 &&
+              hobbies.map((hobbie, index) => <div className="mt-1" key={index}>
+                {hobbie.name}
+                <button type='button' style={{ float: 'right' }} onClick={() => hobbiesRemoveHandler(hobbie)} className="no-style"><i className="fas fa-times"></i></button>
+              </div>)
+            }
 
             <div className="form-error">{hobbiesError}</div>
           </div>
@@ -207,7 +241,8 @@ export default function ProfileEdit() {
               <label className="d-block mr-1" style={{ cursor: 'pointer' }} htmlFor="mobile-person-photo"><img style={{ width: '40px', height: '35px' }} src={photo} alt="" /></label>
               <label style={{ fontWeight: 'normal' }} className="link" htmlFor="mobile-person-photo">Изменить фото</label>
             </div>
-            <input {...photoBind} accept="image/png, image/jpeg" className="d-none" type="file" name="mobile-person-photo" id="mobile-person-photo" />
+            <input {...photoBind} accept="image/png" className="d-none" type="file" name="mobile-person-photo" id="mobile-person-photo" />
+            <div className="form-hint">Поддерживаемые форматы: png</div>
           </div>
 
         </div>
@@ -218,8 +253,7 @@ export default function ProfileEdit() {
               <label className="d-block mb-1" htmlFor="mobile-person-password-old">Изменение пароля:</label>
             </div>
             <div className="form-group mb-1">
-              <input onBlur={() => oldPasswordErrorSet('')} {...oldPasswordBind} id="mobile-person-password-old" type="password" className="w-100" placeholder="Старый пароль" />
-              <div className="form-error">{oldPasswordError}</div>
+              <input {...oldPasswordBind} id="mobile-person-password-old" type="password" className="w-100" placeholder="Старый пароль" />
             </div>
             <div className="form-group mb-1">
               <input {...passwordBind} type="password" className="w-100" placeholder="Новый пароль" />
@@ -239,36 +273,45 @@ export default function ProfileEdit() {
     }
   }
 
+  // const { value: name, bind: nameBind } = useInput('');
+  // const [nameError, nameErrorSet] = useState('')
+  // const { value: email, bind: emailBind } = useInput('');
+  // const [emailError, emailErrorSet] = useState('')
+  // const { value: birthdate, bind: birthdateBind } = useInput('');
+  // const [birthdateError, birthdateErrorSet] = useState('')
+  // const { value: role, bind: roleBind } = useInput(0);
+  // const [roleError, roleErrorSet] = useState('')
   const { value: graduationYear, bind: graduationYearBind, setValue: setGraduationYear } = useInput('');
   const [graduationYearError, graduationYearErrorSet] = useState('')
   const { value: education, bind: educationBind, setValue: setEducation } = useInput('');
-  // const [educationYearError, educationYearErrorSet] = useState('')
+  const [educationYearError, educationYearErrorSet] = useState('')
   const { value: workPlace, bind: workPlaceBind, setValue: setWorkPlace } = useInput('');
-  // const [workPlaceError, workPlaceErrorSet] = useState('')
+  const [workPlaceError, workPlaceErrorSet] = useState('')
   const { value: workPosition, bind: workPositionBind, setValue: setWorkPosition } = useInput('');
-  // const [workPositionError, workPositionErrorSet] = useState('')
+  const [workPositionError, workPositionErrorSet] = useState('')
   const { value: workYears, bind: workYearsBind, setValue: setWorkYears } = useInput('');
-  // const [workYearsError, workYearsErrorSet] = useState('')
-  // const { value: currentActivity, bind: currentActivityBind, setValue: setCurrentActivity } = useInput('');
-  // const [currentActivityError, currentActivityErrorSet] = useState('')
+  const [workYearsError, workYearsErrorSet] = useState('')
+  const { value: currentActivity, bind: currentActivityBind, setValue: setCurrentActivity } = useInput('');
+  const [currentActivityError, currentActivityErrorSet] = useState('')
   const { value: socialVk, bind: socialVkBind, setValue: setSocialVk } = useInput('');
-  // const [socialVkError, socialVkErrorSet] = useState('')
+  const [socialVkError, socialVkErrorSet] = useState('')
   const { value: socialFb, bind: socialFbBind, setValue: setSocialFb } = useInput('');
-  // const [socialFbError, socialFbErrorSet] = useState('')
+  const [socialFbError, socialFbErrorSet] = useState('')
   const { value: socialInsta, bind: socialInstaBind, setValue: setSocialInsta } = useInput('');
-  // const [socialInstaError, socialInstaErrorSet] = useState('')
+  const [socialInstaError, socialInstaErrorSet] = useState('')
   const { value: oldPassword, bind: oldPasswordBind } = useInput('');
   const [oldPasswordError, oldPasswordErrorSet] = useState('')
   const { value: password, bind: passwordBind } = useInput('');
-  // const [passwordError, passwordErrorSet] = useState('')
+  const [passwordError, passwordErrorSet] = useState('')
   const { value: repeatPassword, bind: repeatPasswordBind } = useInput('');
   const { value: about, bind: aboutBind, setValue: setAbout } = useInput('');
   const [aboutError, aboutErrorSet] = useState('')
+  // const { value: interests, bind: interestsBind, setValue: setInterests } = useInput('');
+  // const [interestsError, interestsErrorSet] = useState('')
+  const { value: photoFile, previewFile: photo, bind: photoBind, setPreviewFile: setPhoto } = useFileInput(false, 'https://www.dacgllc.com/site/wp-content/uploads/2015/12/DACG_Web_AboutUs_PersonPlaceholder.png')
+  const [photoError, photoErrorSet] = useState('')
 
-  const { value: photoFile, previewFile: photo, bind: photoBind, setPreviewFile: setPhoto } = useFileInput(false, userThumb)
-  // const [photoError, photoErrorSet] = useState('')
 
-  // load existing user data
   useEffect(() => {
     if (!(user && user.email)) return
 
@@ -278,6 +321,7 @@ export default function ProfileEdit() {
     const workDateList = user.workExperiencies[0] && user.workExperiencies[0].start.match(/\d\d\d\d-\d\d-\d\d/)[0].split('-')
     setWorkYears(workDateList && workDateList[0] ? parseInt(workDateList[0]) : '')
     setEducation(user.education)
+    // setInterests(user.interests)
     setAbout(user.about)
     setPhoto(user.photo)
 
@@ -299,6 +343,7 @@ export default function ProfileEdit() {
     })
 
     suggestsSet([])
+
     user.utilities.length !== 0 && user.utilities.forEach(suggest => {
       const valueObj = {
         id: suggest.id,
@@ -323,14 +368,14 @@ export default function ProfileEdit() {
       })
     })
 
-    competencesSet([])
+    setCompetenses([])
     user.competencies.length !== 0 && user.competencies.forEach(competence => {
       const valueObj = {
         id: competence.id,
         name: competence.name
       }
 
-      competencesSet((prevState) => {
+      setCompetenses((prevState) => {
         return [...prevState, valueObj]
       })
     })
@@ -339,34 +384,229 @@ export default function ProfileEdit() {
       setSelectedCountryId(user.city.countryId)
       setCityId(user.city.id)
     }
-    // eslint-disable-next-line
+
+
   }, [user])
 
 
-  // HOBBIES
+  // CATALOGUE
+
+
+  const [hobbies, hobbiesSet] = useState([])
   const [hobbiesError, hobbiesErrorSet] = useState('')
-  const { hobbies, hobbiesSet, hobbiesList, hobbiesChangeHandler, hobbiesRemoveHandler } = useHobbies()
+  const [hobbiesList, hobbiesListSet] = useState([])
+  const fetchedHobbiesList = useStore(store => store.profile.hobbiesList)
+  const getHobbiesList = useActions(actions => actions.profile.getHobbiesList)
 
-  // SUGGESTS
+  // HOBBIES HANDLERS
+  // set loaded hobbies list
+  useEffect(() => {
+    hobbiesListSet(fetchedHobbiesList.filter((item) => {
+      let valid = true
+      hobbies.forEach(hobbie => {
+        if (item.id === parseInt(hobbie.id))
+          valid = false
+      })
+      return valid
+    }))
+  }, [fetchedHobbiesList])
+
+  const hobbiesChangeHandler = (e) => {
+    const valueObj = {
+      id: parseInt(e.target.value),
+      name: e.target.options[e.target.selectedIndex].text
+    }
+
+    hobbiesSet((prevState) => {
+      return [...prevState, valueObj]
+    })
+
+    e.target.value = 0
+  }
+
+  // update hobbies list on remove
+  useEffect(() => {
+    hobbiesListSet((prevState) => fetchedHobbiesList.filter((item) => {
+      let valid = true
+      hobbies.forEach(hobbie => {
+        if (item.id === parseInt(hobbie.id))
+          valid = false
+      })
+      return valid
+    }))
+  }, [hobbies])
+
+  const hobbiesRemoveHandler = (hobbie) => {
+
+    hobbiesSet((prevState) => prevState
+      .filter((item) => item.id !== parseInt(hobbie.id)))
+  }
+
+
+
+  const [suggests, suggestsSet] = useState([])
   const [suggestsError, suggestsErrorSet] = useState('')
-  const { suggests, suggestsSet, suggestsList, suggestsChangeHandler, suggestsCommentChangeHandler, suggestsRemoveHandler } = useSuggests()
+  const [suggestsList, suggestsListSet] = useState([])
+  const fetchedSuggestsList = useStore(store => store.profile.suggestsList)
+  const getSuggestsList = useActions(actions => actions.profile.getSuggestsList)
 
-  // COMPETENCES
+
+  // UTILITIES HANDLERS
+  // TODO: filter by ID not name
+  // set loaded utilities list
+  useEffect(() => {
+    suggestsListSet(fetchedSuggestsList.filter((item) => {
+      let valid = true
+      suggests.forEach(suggest => {
+        if (item.name === suggest.name)
+          // if (item.id === parseInt(suggest.id))
+          valid = false
+      })
+      return valid
+    }))
+
+  }, [fetchedSuggestsList, user])
+
+  const suggestsChangeHandler = (e) => {
+    const valueObj = {
+      id: parseInt(e.target.value),
+      name: e.target.options[e.target.selectedIndex].text,
+      comment: ''
+    }
+
+    suggestsSet((prevState) => {
+      return [...prevState, valueObj]
+    })
+
+    e.target.value = 0
+  }
+
+  // update suggests list on remove
+  useEffect(() => {
+    suggestsListSet((prevState) => fetchedSuggestsList.filter((item) => {
+      let valid = true
+      suggests.forEach(suggest => {
+        if (item.name === suggest.name)
+          // if (item.id === parseInt(suggest.id))
+          valid = false
+      })
+      return valid
+    }))
+  }, [suggests])
+
+  const suggestsRemoveHandler = (suggest) => {
+
+    suggestsSet((prevState) => prevState
+      // .filter((item) => item.id !== parseInt(suggest.id)))
+      .filter((item) => item.name !== suggest.name))
+  }
+
+  const suggestsCommentChangeHandler = (suggest, e) => {
+
+    suggest.comment = e.target.value
+  }
+
+
+
+  const [competences, setCompetenses] = useState([])
   const [competencesError, competensesErrorSet] = useState('')
-  const { competences, competencesSet, competencesList, competencesChangeHandler, competencesRemoveHandler } = useCompetences()
+  const [competencesList, setCompetensesList] = useState([])
+  const fetchedCompetencesList = useStore(store => store.profile.competencesList)
+  const getCompetencesList = useActions(actions => actions.profile.getCompetencesList)
 
-  // LOCATION
-  const { selectedCountryId, cityId, setSelectedCountryId, setCityId, countriesList, cities, countryChoiceHandler, cityChoiceHandler } = useLocation()
+
+  // COMPETENCES HANDLERS
+  // set loaded competences list
+  useEffect(() => {
+    setCompetensesList(fetchedCompetencesList)
+  }, [fetchedCompetencesList])
+
+  const competencesChangeHandler = (e) => {
+    const valueObj = {
+      id: parseInt(e.target.value),
+      name: e.target.options[e.target.selectedIndex].text
+    }
+
+    setCompetenses((prevState) => {
+      return [...prevState, valueObj]
+    })
+
+    e.target.value = 0
+  }
+
+  // update competences list on remove
+  useEffect(() => {
+    setCompetensesList((prevState) => fetchedCompetencesList.filter((item) => {
+      let valid = true
+      competences.forEach(competence => {
+        if (item.id === parseInt(competence.id))
+          valid = false
+      })
+      return valid
+    }))
+  }, [competences])
+
+  const competencesRemoveHandler = (competence) => {
+
+    setCompetenses((prevState) => prevState
+      .filter((item) => item.id !== parseInt(competence.id)))
+  }
 
 
-  // SUBMIT
+  // load lists for registration selects
+  useEffect(() => {
+    !countriesList.length &&
+      loadCountries()
+
+    !fetchedCompetencesList.length &&
+      getCompetencesList()
+
+    !fetchedHobbiesList.length &&
+      getHobbiesList()
+
+    !fetchedSuggestsList.length &&
+      getSuggestsList()
+  }, [])
+
+
+  const countriesList = useStore(store => store.locations.countriesList)
+  const loadCountries = useActions(actions => actions.locations.loadCountries)
+  const loadCities = useActions(actions => actions.locations.loadCities)
+
+  const [selectedCountryId, setSelectedCountryId] = useState()
+  const [cities, setCities] = useState([])
+
+  const [cityName, setCityName] = useState('')
+  const [cityId, setCityId] = useState()
+
+  // load city list 
+  useEffect(() => {
+    if (!selectedCountryId) return
+
+    setCities([])
+    loadCities(selectedCountryId).then(setCities)
+  }, [selectedCountryId])
+
+  const countryChoiceHandler = (e) => {
+    setSelectedCountryId(e.target.value)
+  }
+
+  const cityChoiceHandler = (e) => {
+    setCityId(e.target.value)
+    // setCityName('city')
+  }
+
+  const [processing, processingSet] = useState(false)
+
+  const [resetPasswordSuccess, setResetPasswordSuccess] = useState('')
+
+
   const updatePhoto = useActions(actions => actions.profile.loadPhoto)
   const resetPassword = useActions(actions => actions.profile.resetPassword)
   const updateUser = useActions(actions => actions.profile.updateUser)
 
   const [resultMessage, setResultMessage] = useState('')
 
-  const [processing, processingSet] = useState(false)
   const submitHandler = async e => {
     e.preventDefault()
     let isValid = true
@@ -383,6 +623,7 @@ export default function ProfileEdit() {
       education: education ? education : '',
       workPlace: workPlace ? workPlace : '',
       workPosition: workPosition ? workPosition : '',
+      currentActivity,
       socialVk: socialVk ? socialVk : '',
       socialInsta: socialInsta ? socialInsta : '',
       socialFb: socialFb ? socialFb : '',
@@ -405,30 +646,31 @@ export default function ProfileEdit() {
 
     }
 
-    // RESET PASSWORD
-    if (payload.oldPassword && payload.password) {
-      const changePasswordSuccess = await resetPassword({
-        oldPassword: payload.oldPassword,
-        newPassword: payload.password
-      })
-
-      if (changePasswordSuccess !== true) oldPasswordErrorSet('Указан неверный пароль')
-    }
-
-    // CHANGE PHOTO
-    if (user.photo !== photo) {
-      let photoFormData = new FormData();
-
-      photoFormData.append("photo", photoFile);
-      updatePhoto(photoFormData)
-    }
-
     if (submitSuccess === true) {
       setResultMessage('Данные обновлены')
       setTimeout(() => {
         setResultMessage('')
       }, 5000);
     }
+
+    if (payload.oldPassword && payload.password) {
+      const changePasswordSuccess = await resetPassword({
+        oldPassword: payload.oldPassword,
+        newPassword: payload.password
+      })
+
+      if (changePasswordSuccess === true) setResetPasswordSuccess('Пароль изменен')
+      else oldPasswordErrorSet('Указан неверный пароль')
+    }
+
+    if (user.photo !== photo) {
+      let photoFormData = new FormData();
+
+      photoFormData.append("photo", photoFile);
+
+      const success = updatePhoto(photoFormData)
+    }
+
     processingSet(false)
   }
 
@@ -446,15 +688,28 @@ export default function ProfileEdit() {
                     <label className="d-none d-lg-block" htmlFor="person-city">Город проживания:</label>
                   </div>
                   <div className="col-lg-6">
-                    {location(
-                      selectedCountryId,
-                      countryChoiceHandler,
-                      countriesList,
+                    <div className="form-group mb-1">
+                      <select value={selectedCountryId} onChange={countryChoiceHandler} className="w-100">
+                        <option value="" defaultValue>Страна проживания</option>
+                        {countriesList.length > 0 &&
+                          countriesList.map((item, index) => <option key={index} value={item.id}>
+                            {item.nameRU}
+                          </option>)}
+                      </select>
+                      <div className="form-hint">Начните вводить название при выборе</div>
+                    </div>
 
-                      cities,
-                      cityId,
-                      cityChoiceHandler
-                    )}
+                    {cities.length > 0 &&
+                      <div className="form-group mb-1">
+                        <select value={cityId} onChange={cityChoiceHandler} className="w-100">
+                          <option value="" defaultValue>Город проживания</option>
+                          {cities.length > 0 &&
+                            cities.map((item, index) => <option key={index} value={item.id}>
+                              {item.nameRU}
+                            </option>)}
+                        </select>
+                      </div>}
+                    {/* <input {...cityBind} placeholder="Город проживания" className="w-100" id='person-city' type="text" /> */}
                   </div>
                 </div>
 
@@ -467,6 +722,7 @@ export default function ProfileEdit() {
                       <option value="" defaultChecked>Выберите год выпуска*</option>
                       {Array(new Date().getFullYear() + 1 - 2004).fill().map((item, index) => <option key={index} value={2004 + index}>{2004 + index}</option>)}
                     </select>
+                    {/* <input onBlur={() => graduationYearErrorSet('')} ref={graduateYearInput} {...graduationYearBind} placeholder="Год выпуска" className="w-100" id='person-graduation-year' type="text" /> */}
                     <div className="form-error">{graduationYearError}</div>
                   </div>
                 </div>
@@ -485,13 +741,20 @@ export default function ProfileEdit() {
                     <label className="d-none d-lg-block" htmlFor="person-graduation">Сферы деятельности:</label>
                   </div>
                   <div className="col-lg-6">
-                    {competencesEdit(
-                      competences,
-                      competencesList,
-                      competencesChangeHandler,
-                      competencesRemoveHandler,
-                      competensesErrorSet
-                    )}
+                    <select onBlur={() => competensesErrorSet('')} required className="w-100" onChange={competencesChangeHandler}>
+                      <option value="0">Выберите сферу деятельности*</option>
+                      {competencesList.map((competence, index) => <option key={index} value={competence.id}>
+                        {competence.name}
+                      </option>)}
+                    </select>
+
+
+                    {competences.length !== 0 &&
+                      competences.map((competence, index) => <div className="mt-1" key={index}>
+                        {competence.name}
+                        <button type='button' style={{ float: 'right' }} onClick={() => competencesRemoveHandler(competence)} className="no-style"><i className="fas fa-times"></i></button>
+                      </div>)
+                    }
 
                     <div className="form-error">{competencesError}</div>
                   </div>
@@ -499,7 +762,7 @@ export default function ProfileEdit() {
 
                 <div className="row form-group mb-1">
                   <div className="col-lg-6">
-                    <label className="d-none d-lg-block" htmlFor="person-work">Место работы:</label>
+                    <label className="d-none d-lg-block" htmlFor="person-work">Текущее место работы:</label>
                   </div>
                   <div className="col-lg-6">
                     <input {...workPlaceBind} placeholder="Место работы" className="w-100" id='person-work' type="text" />
@@ -561,15 +824,22 @@ export default function ProfileEdit() {
               <div>
                 <div className="form-group">
                   <div className="form-group mb-1">
-                    {suggestsEdit(
-                      suggests,
-                      suggestsList,
-                      suggestsChangeHandler,
-                      suggestsCommentChangeHandler,
-                      suggestsRemoveHandler,
-                      suggestsErrorSet
-                    )}
+                    <select onBlur={() => suggestsErrorSet('')} required className="w-100" onChange={suggestsChangeHandler}>
+                      <option value="0">Выберите категорию*</option>
+                      {suggestsList.map((suggest, index) => <option key={index} value={suggest.id}>
+                        {suggest.name}
+                      </option>)}
+                    </select>
 
+                    {suggests.length !== 0 &&
+                      suggests.map((suggest, index) => <div className="mt-1" key={index}>
+                        <div>
+                          {suggest.name}
+                          <button type='button' style={{ float: 'right' }} onClick={() => suggestsRemoveHandler(suggest)} className="no-style"><i className="fas fa-times"></i></button>
+                        </div>
+                        <input onChange={(e) => suggestsCommentChangeHandler(suggest, e)} defaultValue={suggest.comment} className="w-100" placeholder="Комментарий" type="text" />
+                      </div>)
+                    }
                     <div className="form-error">{suggestsError}</div>
                   </div>
                 </div>
@@ -592,8 +862,7 @@ export default function ProfileEdit() {
               <h2>Изменение пароля</h2>,
               <div>
                 <div className="form-group mb-1">
-                  <input onBlur={() => oldPasswordErrorSet('')} {...oldPasswordBind} type="password" className="w-100" placeholder="Старый пароль" />
-                  <div className="form-error">{oldPasswordError}</div>
+                  <input {...oldPasswordBind} type="password" className="w-100" placeholder="Старый пароль" />
                 </div>
                 <div className="form-group mb-1">
                   <input {...passwordBind} type="password" className="w-100" placeholder="Новый пароль" />
@@ -622,20 +891,27 @@ export default function ProfileEdit() {
                     <div>
                       <label style={{ cursor: 'pointer' }} htmlFor="person-photo"><img src={photo} alt="" /></label>
                       <label style={{ fontWeight: 'normal' }} className="link" htmlFor="person-photo">Изменить фото</label>
-                      <input {...photoBind} accept="image/png, image/jpeg" className="d-none" type="file" name="person-photo" id="person-photo" />
+                      <input {...photoBind} accept="image/png" className="d-none" type="file" name="person-photo" id="person-photo" />
+                      <div className="form-hint">Поддерживаемые форматы: png</div>
                     </div>
                   </div>
                 </div>
                 <div>
                   <h3>Хобби и увлечения</h3>
                   <div className="form-group mb-1">
-                    {hobbiesEdit(
-                      hobbies,
-                      hobbiesList,
-                      hobbiesChangeHandler,
-                      hobbiesRemoveHandler,
-                      hobbiesErrorSet
-                    )}
+                    <select onBlur={() => hobbiesErrorSet('')} required className="w-100" onChange={hobbiesChangeHandler}>
+                      <option value="0">Выберите хобби/увлечение*</option>
+                      {hobbiesList.map((hobbie, index) => <option key={index} value={hobbie.id}>
+                        {hobbie.name}
+                      </option>)}
+                    </select>
+
+                    {hobbies.length !== 0 &&
+                      hobbies.map((hobbie, index) => <div className="mt-1" key={index}>
+                        {hobbie.name}
+                        <button type='button' style={{ float: 'right' }} onClick={() => hobbiesRemoveHandler(hobbie)} className="no-style"><i className="fas fa-times"></i></button>
+                      </div>)
+                    }
 
                     <div className="form-error">{hobbiesError}</div>
                   </div>

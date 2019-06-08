@@ -5,6 +5,7 @@ import requests from './models/requests'
 import locations from './models/locations'
 import profile from './models/profile'
 import statistics from './models/statistics'
+import settings from './models/settings'
 
 export const model = {
 	auth,
@@ -13,5 +14,6 @@ export const model = {
 	requests,
 	locations,
 	profile,
-	statistics
+	statistics,
+	settings
 }

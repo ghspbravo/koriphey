@@ -249,12 +249,14 @@ textarea {
 }
 
 .form-hint {
+  width: 100%;
   font-size: 12px;
   color: rgb(184, 184, 184);
 }
 
 select {
   height: 35px;
+  padding: 0;
 }
 
 textarea {

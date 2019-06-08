@@ -1,28 +1,8 @@
-import { action, thunk } from 'easy-peasy'
+import { thunk } from 'easy-peasy'
 
 export const register = {
 
   register: thunk(async (actions, payload, { dispatch }) => {
-    const data = {
-      email: payload.email,
-      fio: payload.name,
-      birthDate: payload.birthdate,
-      password: payload.password,
-      graduationYear: payload.graduationYear,
-      type: payload.role,
-      // work: payload.workPlace,
-      // position: payload.workPosition,
-      // workStart: payload.workYears,
-      // competencies: payload.competences,
-      // vkUrl: payload.socialVk,
-      // vkUrl: payload.socialFb,
-      // instagramUrl: payload.socialInsta,
-      // photo: payload.photoFile !== {} ? payload.photoFile : {},
-      // about: payload.about,
-      // offersToGraduates: payload.suggests,
-      // cityId: payload.cityId,
-    }
-
     const success = await fetch(process.env.REACT_APP_API + 'Account/Register', {
       method: 'post',
       headers: {

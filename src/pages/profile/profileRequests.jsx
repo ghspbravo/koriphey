@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import cardBlock from '../../components/cardBlock/cardBlock';
 import requestItem from '../../components/requestItem/requestItem';
 

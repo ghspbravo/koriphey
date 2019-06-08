@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Link } from 'react-router-dom'
 import cardBlock from '../../components/cardBlock/cardBlock';
 import requestItem from '../../components/requestItem/requestItem';
 
@@ -9,6 +8,10 @@ import formatDate from '../../functions/formatDate';
 import IMask from 'imask';
 
 import useInput from '../../hooks/useInput';
+import useLocation from '../../hooks/useLocation';
+import location from '../../components/location/location';
+import categories from '../../components/categories/categories';
+import useFetch from '../../hooks/useFetch';
 
 export default function Requests() {
   const requestList = useStore(store => store.requests.requestList)
@@ -32,43 +35,13 @@ export default function Requests() {
     })
   }, [])
 
+  // LOCATION
+  const { selectedCountryId, cityId, countriesList, cities, countryChoiceHandler, cityChoiceHandler, setCityId, setSelectedCountryId } = useLocation()
+
+  const { value: category, bind: categoryBind, reset: categoryReset } = useInput('');
   const requestCategoriesList = useActions(actions => actions.requests.loadCategories)
   const categoriesList = useStore(store => store.requests.categoriesList)
-
-  const countriesList = useStore(store => store.locations.countriesList)
-  const loadCountries = useActions(actions => actions.locations.loadCountries)
-  const loadCities = useActions(actions => actions.locations.loadCities)
-
-  useEffect(() => {
-    !countriesList.length &&
-      loadCountries()
-
-    !categoriesList.length &&
-      requestCategoriesList()
-
-  }, [])
-
-  const [selectedCountryId, setSelectedCountryId] = useState()
-  const [cities, setCities] = useState([])
-
-  const [cityId, setCityId] = useState()
-
-  const countryChoiceHandler = (e) => {
-    setSelectedCountryId(e.target.value)
-  }
-
-  const cityChoiceHandler = (e) => {
-    setCityId(e.target.value)
-  }
-
-  useEffect(() => {
-    if (!selectedCountryId) return
-
-    setCities([])
-    loadCities(selectedCountryId).then(setCities)
-  }, [selectedCountryId])
-
-  const { value: category, bind: categoryBind } = useInput('');
+  useFetch(categoriesList, requestCategoriesList)
 
   const [showFilterResults, showFilterResultsSet] = useState(false)
   const [filteredRequests, filteredRequestsSet] = useState([])
@@ -87,6 +60,13 @@ export default function Requests() {
     loadFilterRequests(payload).then(filteredRequestsSet)
   }
 
+  const resetHandler = () => {
+    showFilterResultsSet(false)
+    categoryReset()
+    setSelectedCountryId(0)
+    setCityId(0)
+  }
+
   return (
     <div className="container">
       <div className="row">
@@ -102,11 +82,11 @@ export default function Requests() {
                 {requestList.length !== 0
                   ? showFilterResults === false
                     ? requestList.map((item, index) => <div key={index} className="col-md-6">
-                      <div style={{height: '100%'}} className="card">
+                      <div style={{ height: '100%' }} className="card">
                         {requestItem(
                           {
                             id: item.user.id,
-                            photo: item.user.photo ? item.user.photo : "https://picsum.photos/50",
+                            photo: item.user.photo,
                             name: `${item.user.firstName} ${item.user.surName}`,
                             location: `${item.user.city && item.user.city.country.nameRU}, ${item.user.city && item.user.city.nameRU}`
                           },
@@ -127,7 +107,7 @@ export default function Requests() {
                           {requestItem(
                             {
                               id: item.user.id,
-                              photo: item.user.photo ? item.user.photo : "https://picsum.photos/50",
+                              photo: item.user.photo,
                               name: `${item.user.firstName} ${item.user.surName}`,
                               location: `${item.user.city && item.user.city.country.nameRU}, ${item.user.city && item.user.city.nameRU}`
                             },
@@ -159,38 +139,23 @@ export default function Requests() {
                 <p className="big">Локация</p>
 
                 <div>
-                  <div className="form-group mb-1">
-                    <select value={selectedCountryId} onChange={countryChoiceHandler} className="w-100">
-                      <option value="" defaultValue>Страна</option>
-                      {countriesList.length > 0 &&
-                        countriesList.map((item, index) => <option key={index} value={item.id}>
-                          {item.nameRU}
-                        </option>)}
-                    </select>
-                    <div className="form-hint">Начните вводить название при выборе</div>
-                  </div>
+                  {location(
+                    selectedCountryId,
+                    countryChoiceHandler,
+                    countriesList,
 
-                  {cities.length > 0 &&
-                    <div className="form-group mb-1">
-                      <select value={cityId} onChange={cityChoiceHandler} className="w-100">
-                        <option value="" defaultValue>Город</option>
-                        {cities.length > 0 &&
-                          cities.map((item, index) => <option key={index} value={item.id}>
-                            {item.nameRU}
-                          </option>)}
-                      </select>
-                    </div>}
+                    cities,
+                    cityId,
+                    cityChoiceHandler
+                  )}
                 </div>
 
                 <p className="big">Категория</p>
                 <div className="form-group mb-1">
-                  <select {...categoryBind} className="w-100" id="request-category">
-                    <option value="" defaultChecked>Выберите категорию</option>
-                    {categoriesList &&
-                      categoriesList.map(category => <option value={category.id}>{category.name}</option>)
-                    }
-                  </select>
-                  {/* <input id="request-category" className="w-100" placeholder="Категория" type="text" /> */}
+                  {categories(
+                    categoryBind,
+                    categoriesList
+                  )}
                 </div>
 
                 <div className="row no-gutters mt-1">
@@ -198,7 +163,7 @@ export default function Requests() {
                 </div>
 
                 <div className="row no-gutters mt-1">
-                  <button type="button" onClick={() => showFilterResultsSet(false)} className="ml-auto button_secondary">Сбросить</button>
+                  <button type="button" onClick={resetHandler} className="ml-auto button_secondary">Сбросить</button>
                 </div>
 
               </form>

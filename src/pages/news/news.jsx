@@ -54,7 +54,7 @@ export default function News() {
                   {requestItem(
                     {
                       id: item.user.id,
-                      photo: item.user.photo ? item.user.photo : "https://picsum.photos/50",
+                      photo: item.user.photo,
                       name: `${item.user.firstName} ${item.user.surName}`,
                       location: `${item.user.city && item.user.city.country.nameRU}, ${item.user.city && item.user.city.nameRU}`
                     },
@@ -64,7 +64,7 @@ export default function News() {
                       expiredAt: item.expiredAt && formatDate(item.expiredAt)
                     },
                     item.text,
-                    item.album && item.album.photos.length > 0 && item.album.photos[0].preview,
+                    item.album && item.album.photos.length > 0 && item.album.photos[0].fullPreview,
                     item.id
                   )}
                 </div>)}

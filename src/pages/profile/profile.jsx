@@ -5,9 +5,9 @@ import comment from '../../components/comment/comment';
 
 import './profile.scss'
 import { socialVkontakte, socialFacebook, socialInstagram } from '../../components/socials/socials';
-import { ROLE_TYPES } from './constants';
 
 import { useActions } from 'easy-peasy';
+import userThumb from '../../components/userThumb.png'
 
 export default function Profile(router) {
   const [user, setUser] = useState()
@@ -20,7 +20,7 @@ export default function Profile(router) {
       setUser(userContent)
     }
     loadUserContent()
-  }, [])
+  }, [getUserById, router.match.params.id])
   return (
     <div className="container">
       <div className="row">
@@ -29,7 +29,7 @@ export default function Profile(router) {
 
           <div className="row no-gutters profile-person">
             <div className="col-6 pr-1 profile-person__photo">
-              <img src={user && user.photo ? user.photo : 'https://www.dacgllc.com/site/wp-content/uploads/2015/12/DACG_Web_AboutUs_PersonPlaceholder.png'} alt="" />
+              <img src={user && user.photo ? user.photo : userThumb} alt="" />
             </div>
             <div className="col-6 pl-1">
               <h2 className="profile-person__name">{user && user.fio ? `${user.firstName} ${user.surName}` : '...'}</h2>
@@ -44,10 +44,6 @@ export default function Profile(router) {
               <div className="pb-2">
                 {user && user.graduationYear
                   ? <div className="profile-info">
-                    {/* <div className="row mb-2">
-                      <div className="profile-info__head col-6">Роль:</div>
-                      <div className="profile-info__content col-6">{ROLE_TYPES[user.type]}</div>
-                    </div> */}
                     <div className="row mb-2">
                       <div className="profile-info__head col-6">Год выпуска:</div>
                       <div className="profile-info__content col-6">{user.graduationYear}</div>

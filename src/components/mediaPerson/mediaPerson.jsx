@@ -1,6 +1,8 @@
 import React from 'react'
 import './mediaPerson.scss'
 
+import userThumb from '../userThumb.png'
+
 /**
  * 
  * @param {string} photoUrl 
@@ -11,7 +13,7 @@ export default function mediaPerson(photoUrl, name, content) {
   return (
     <div className="media-person">
       <div className="media-person__photo">
-        <img src={photoUrl} alt="person" />
+        <img src={photoUrl || userThumb} alt="person" />
       </div>
 
       <div className="media-person__body">

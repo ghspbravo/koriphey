@@ -47,8 +47,6 @@ function App(router) {
     if (!isAuth) return
     !Object.values(user).length && getUser()
 
-    // if (user)
-
     !newsList.length && loadNews()
     !requestList.length && loadRequests()
     !Object.values(userList).length && getUserList()
@@ -59,14 +57,14 @@ function App(router) {
     !Object.values(statistics).length && loadStatistics()
     // set moment locale globally
     moment.locale('ru');
-  }, [])
+  }, [loadStatistics, statistics])
 
   // redirect user depending on status
   useEffect(() => {
-    if (['/login', /*'/register'*/, '/recover', '/welcome'].includes(router.location.pathname)
+    if (['/login', /*'/register',*/ '/recover', '/welcome'].includes(router.location.pathname)
       && isAuth && user.status === 1) router.history.replace('/')
     if (!['/login', '/register', '/recover', '/welcome'].includes(router.location.pathname)
-      && (!isAuth || isAuth && (user.status === 0 || user.status === 2))) router.history.replace('/welcome')
+      && (!isAuth || (isAuth && (user.status === 0 || user.status === 2)))) router.history.replace('/welcome')
     // eslint-disable-next-line
   }, [router.location.pathname, isAuth, user])
 

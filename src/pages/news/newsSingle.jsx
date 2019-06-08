@@ -21,16 +21,8 @@ export default function NewsSingle(router) {
       setNews(newsContent)
     }
     loadNewsContent()
-  }, [newsId])
+  }, [newsId, getNewsContent])
 
-  const title = "О трудоустройстве",
-    content = "Нью-Йорк идеален для работы и карьеры, я уже писал почему. До приезда сюда я работал и в офисе, и был полтора года на фрилансе и вот опять вернулся в офис. За этот год снова убедился, что я совсем не офисный человек. Потому на вершине успеха я решил закончить свою карьеру веб-дизайнера. Работать только ради денег я не умею. Опыт работы тут бесценный, но когда для меня карьера перестала быть приоритетом я снова решил, что больше нет смысла сидеть в офисе, хоть даже и в Нью-Йорке.",
-    thumbnail = "https://picsum.photos/700/350",
-    feedback = {
-      likesCount: 650,
-      commentsCount: 2
-    },
-    postDate = new Date("2019-05-19")
   return (
     <div className="container">
       <div className="row">

@@ -1,50 +1,34 @@
-import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
 import personItem from '../../components/personItem/personItem';
 import cardBlock from '../../components/cardBlock/cardBlock';
 
 import { useActions, useStore } from 'easy-peasy';
 import useInput from '../../hooks/useInput';
+import useFetch from '../../hooks/useFetch';
 
 export default function Peoples() {
   const userList = useStore(store => store.profile.userList)
   const getFilterUserList = useActions(actions => actions.profile.getFilterUserList)
 
-  // CATALOGUE
 
-
-  const { value: hobbies, bind: hobbiesBind } = useInput('');
+  const { value: hobbies, bind: hobbiesBind, reset: hobbiesReset } = useInput('');
   const fetchedHobbiesList = useStore(store => store.profile.hobbiesList)
   const getHobbiesList = useActions(actions => actions.profile.getHobbiesList)
+  useFetch(fetchedHobbiesList, getHobbiesList)
 
-  const { value: suggests, bind: suggestsBind } = useInput('');
+  const { value: suggests, bind: suggestsBind, reset: suggestsReset } = useInput('');
   const fetchedSuggestsList = useStore(store => store.profile.suggestsList)
   const getSuggestsList = useActions(actions => actions.profile.getSuggestsList)
+  useFetch(fetchedSuggestsList, getSuggestsList)
 
-  const { value: competences, bind: competencesBind } = useInput('');
+  const { value: competences, bind: competencesBind, reset: competencesReset } = useInput('');
   const fetchedCompetencesList = useStore(store => store.profile.competencesList)
   const getCompetencesList = useActions(actions => actions.profile.getCompetencesList)
-
-
-  // load lists for registration selects
-  useEffect(() => {
-
-    !fetchedCompetencesList.length &&
-      getCompetencesList()
-
-    !fetchedHobbiesList.length &&
-      getHobbiesList()
-
-    !fetchedSuggestsList.length &&
-      getSuggestsList()
-  }, [])
-
+  useFetch(fetchedCompetencesList, getCompetencesList)
 
 
   const [showFilterResults, showFilterResultsSet] = useState(false)
   const [filteredPeople, filteredPeopleSet] = useState([])
-
-
   const submitHandler = e => {
     e.preventDefault()
 
@@ -54,6 +38,13 @@ export default function Peoples() {
     }
 
     getFilterUserList(payload).then(filteredPeopleSet)
+  }
+
+  const resetHandler = () => {
+    showFilterResultsSet(false)
+    hobbiesReset()
+    suggestsReset()
+    competencesReset()
   }
 
   return (
@@ -81,7 +72,7 @@ export default function Peoples() {
                               graduationYear: item.graduationYear,
                               categories: ""
                             },
-                            item.photo ? item.photo : "https://picsum.photos/50",
+                            item.photo,
                           )}
                         </div>
                       </div>)
@@ -96,7 +87,7 @@ export default function Peoples() {
                                 graduationYear: item.graduationYear,
                                 categories: ""
                               },
-                              item.photo ? item.photo : "https://picsum.photos/50",
+                              item.photo,
                             )}
                           </div>
                         </div>)
@@ -144,7 +135,7 @@ export default function Peoples() {
                 </div>
 
                 <div className="row no-gutters mt-1">
-                  <button type="button" onClick={() => showFilterResultsSet(false)} className="button_secondary ml-auto">Сбросить</button>
+                  <button type="button" onClick={resetHandler} className="button_secondary ml-auto">Сбросить</button>
                 </div>
 
               </form>

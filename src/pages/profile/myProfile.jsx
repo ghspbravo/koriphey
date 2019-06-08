@@ -8,7 +8,8 @@ import { socialVkontakte, socialFacebook, socialInstagram } from '../../componen
 import editIcon from '../../components/editIcon/editIcon';
 
 import { useStore } from 'easy-peasy';
-import { ROLE_TYPES } from './constants';
+
+import userThumb from '../../components/userThumb.png'
 
 export default function MyProfile() {
   const user = useStore(store => store.profile.user)
@@ -20,7 +21,7 @@ export default function MyProfile() {
 
           <div className="row no-gutters profile-person">
             <div className="col-6 pr-1 profile-person__photo">
-              <img src={user && user.photo ? user.photo : "https://www.dacgllc.com/site/wp-content/uploads/2015/12/DACG_Web_AboutUs_PersonPlaceholder.png"} alt="" />
+              <img src={user && user.photo ? user.photo : userThumb} alt="" />
             </div>
             <div className="col-6 pl-1">
               <h2 className="profile-person__name">{user && user.fio ? `${user.firstName} ${user.surName}` : '...'}</h2>
@@ -40,10 +41,6 @@ export default function MyProfile() {
               <div className="pb-2">
                 {user && user.graduationYear
                   ? <div className="profile-info">
-                    {/* <div className="row mb-2">
-                        <div className="profile-info__head col-6">Роль:</div>
-                        <div className="profile-info__content col-6">{ROLE_TYPES[user.type]}</div>
-                      </div> */}
                     <div className="row mb-2">
                       <div className="profile-info__head col-6">Год выпуска:</div>
                       <div className="profile-info__content col-6">{user.graduationYear}</div>

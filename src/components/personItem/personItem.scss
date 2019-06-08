@@ -4,14 +4,7 @@
 .person {
   &__photo {
     margin-right: 17px;
-
-    img {
-      max-width: 187px;
-      @media (max-width: $m-xs-max) {
-        max-width: 95px;
-      }
-    }
-
+    width: 50%;
   }
 
   &__info * {
@@ -21,6 +14,7 @@
   }
 
   &__content {
+    width: 40%;
     * {
       @include nullMargins;
     }

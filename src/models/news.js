@@ -19,20 +19,6 @@ export const news = {
     return success
   }),
 
-  toggleLike: thunk(async (actions, payload, { getStoreState }) => {
-    const success = await fetch(process.env.REACT_APP_API + `News/AddRemoveLike?newsId=${payload}`, {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${getStoreState().auth.access}`
-      },
-    }).then(response => response.json())
-      .catch(window.alert)
-
-    return success
-  }),
-
   loadNewsItem: thunk(async (actions, payload) => {
 
     const newsContent = await fetch(process.env.REACT_APP_API + `News/Details?id=${payload}`, {
@@ -58,20 +44,21 @@ export const news = {
     payload.forEach(news => state.newsList.push(news))
   }),
 
-  toggleLike: thunk(async (actions, payload) => {
+  toggleLike: thunk(async (actions, payload, { getStoreState }) => {
     const success = await fetch(process.env.REACT_APP_API + `News/AddRemoveLike?newsId=${payload}`, {
-      method: 'get',
+      method: 'post',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getStoreState().auth.access}`
       },
-    }).then(response => response.status)
-      .catch(console.error)
+    }).then(response => response.json())
+      .catch(window.alert)
 
     return success
   }),
 
-  commentNews: thunk(async (actions, payload) => {
+  commentNews: thunk(async (actions, payload, { getStoreState }) => {
     const data = {
       "newsId": payload.newsId,
       "text": payload.comment
@@ -80,7 +67,8 @@ export const news = {
       method: 'post',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getStoreState().auth.access}`
       },
       body: JSON.stringify(data)
     }).then(response => response.status)

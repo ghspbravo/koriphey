@@ -34,7 +34,7 @@ export default function requestItem(person, meta, content, thumbnail, id) {
         </div>
       </div>
 
-      <div className="mt-auto">
+      <div className="mt-2">
         <Link className="button button_expanded-xs" to={`/requests/${id}`}>Смотреть полностью</Link>
       </div>
       {person.id &&

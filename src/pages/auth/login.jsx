@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { socialVkontakte, socialFacebook } from '../../components/socials/socials';
+// import { socialVkontakte, socialFacebook } from '../../components/socials/socials';
 
 import { useActions } from 'easy-peasy';
 import useInput from '../../hooks/useInput';
@@ -55,7 +55,7 @@ export default function Login() {
           </form>
           <Link to='/register' className="button button_expanded button_secondary mt-1" >Зарегестрироваться</Link>
 
-          <div className="mt-3">
+          {/* <div className="mt-3">
             <p>Зарегестрироваться  с помощью соцсетей: </p>
             <div className="row no-gutters">
 
@@ -68,7 +68,7 @@ export default function Login() {
               </div>
 
             </div>
-          </div>
+          </div> */}
 
         </div>
       </div>

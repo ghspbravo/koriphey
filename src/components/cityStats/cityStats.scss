@@ -17,11 +17,18 @@ $barFill: #22515433;
   }
 
   &__name {
+    max-width: 70%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
     color: $c-gray-dark;
     float: left;
   }
 
   &__percent {
+    max-width: 30%;
+
     color: $c-gray;
     float: right;
   }

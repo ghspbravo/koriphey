@@ -11,11 +11,16 @@ import useFileInput from '../../hooks/useFileInput';
 import Modal from '../../components/modals/modal';
 
 import IMask from 'imask';
+import categories from '../../components/categories/categories';
+import location from '../../components/location/location';
+import useFetch from '../../hooks/useFetch';
+import useLocation from '../../hooks/useLocation';
 
 export default function RequestCreate() {
 
   const dateInput = useRef()
 
+  // date mask
   useEffect(() => {
     const dateMask = dateInput.current && new IMask(dateInput.current, {
       mask: Date,
@@ -33,50 +38,21 @@ export default function RequestCreate() {
     })
   }, [])
 
+  // LOCATION
+  const { selectedCountryId, cityId, countriesList, cities, countryChoiceHandler, cityChoiceHandler } = useLocation()
+
+  const { value: category, bind: categoryBind } = useInput('');
   const requestCategoriesList = useActions(actions => actions.requests.loadCategories)
   const categoriesList = useStore(store => store.requests.categoriesList)
-
-  const countriesList = useStore(store => store.locations.countriesList)
-  const loadCountries = useActions(actions => actions.locations.loadCountries)
-  const loadCities = useActions(actions => actions.locations.loadCities)
-
-  useEffect(() => {
-    !countriesList.length &&
-      loadCountries()
-
-    !categoriesList.length &&
-      requestCategoriesList()
-
-  }, [])
-
-  const [selectedCountryId, setSelectedCountryId] = useState()
-  const [cities, setCities] = useState([])
-
-  const [cityId, setCityId] = useState()
-
-  const countryChoiceHandler = (e) => {
-    setSelectedCountryId(e.target.value)
-  }
-
-  const cityChoiceHandler = (e) => {
-    setCityId(e.target.value)
-  }
-
-  useEffect(() => {
-    if (!selectedCountryId) return
-
-    setCities([])
-    loadCities(selectedCountryId).then(setCities)
-  }, [selectedCountryId])
+  useFetch(categoriesList, requestCategoriesList)
 
   const { value: content, bind: contentBind } = useInput('');
-  const { value: category, bind: categoryBind } = useInput('');
   const { value: expiredDate, bind: expiredDateBind } = useInput('');
   const { value: photoFile, previewFile: photo, bind: photoBind } = useFileInput({}, '')
 
+  // SUBMIT
   const createRequest = useActions(actions => actions.requests.createRequest)
 
-  // SUBMIT
   const [isSuccess, isSuccessSet] = useState(false)
   const [processing, processingSet] = useState(false)
   const submitHandler = async (e) => {
@@ -147,41 +123,25 @@ export default function RequestCreate() {
                   <div className="mb-1">
                     <label htmlFor="request-category">Категория<sup>*</sup></label>
                   </div>
-                  <select {...categoryBind} className="w-100" id="request-category">
-                    <option value="" defaultChecked>Выберите категорию</option>
-                    {categoriesList &&
-                      categoriesList.map(category => <option value={category.id}>{category.name}</option>)
-                    }
-                  </select>
-                  {/* <input id="request-category" className="w-100" placeholder="Категория" type="text" /> */}
+                  {categories(
+                    categoryBind,
+                    categoriesList
+                  )}
                 </div>
 
                 <div className="form-group mb-1">
                   <div className="mb-1">
                     <label htmlFor="request-location">Локация</label>
                   </div>
-                  <div className="form-group mb-1">
-                    <select value={selectedCountryId} onChange={countryChoiceHandler} className="w-100">
-                      <option value="" defaultValue>Страна</option>
-                      {countriesList.length > 0 &&
-                        countriesList.map((item, index) => <option key={index} value={item.id}>
-                          {item.nameRU}
-                        </option>)}
-                    </select>
-                    <div className="form-hint">Начните вводить название при выборе</div>
-                  </div>
+                  {location(
+                    selectedCountryId,
+                    countryChoiceHandler,
+                    countriesList,
 
-                  {cities.length > 0 &&
-                    <div className="form-group mb-1">
-                      <select value={cityId} onChange={cityChoiceHandler} className="w-100">
-                        <option value="" defaultValue>Город</option>
-                        {cities.length > 0 &&
-                          cities.map((item, index) => <option key={index} value={item.id}>
-                            {item.nameRU}
-                          </option>)}
-                      </select>
-                    </div>}
-                  {/* <input id="request-location" className="w-100" placeholder="Локация" type="text" /> */}
+                    cities,
+                    cityId,
+                    cityChoiceHandler
+                  )}
                 </div>
 
                 <div className="form-group">

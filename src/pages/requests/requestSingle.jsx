@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import cardBlock from '../../components/cardBlock/cardBlock';
 import requestItem from '../../components/requestItem/requestItem';
 import mediaPerson from '../../components/mediaPerson/mediaPerson';
-import editIcon from '../../components/editIcon/editIcon';
+// import editIcon from '../../components/editIcon/editIcon';
 
 import { useActions, useStore } from 'easy-peasy'
 import formatDate from '../../functions/formatDate';
@@ -22,7 +22,7 @@ export default function RequestSingle(router) {
     loadRequestItem(requestId).then(requestSet).then(() => {
       loadSimilarRequests(requestId).then(similarRequestSet)
     })
-  }, [requestId])
+  }, [requestId, loadRequestItem, loadSimilarRequests])
 
   return (
     <div className="container">
