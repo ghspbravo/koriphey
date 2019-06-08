@@ -12,7 +12,7 @@ import timeRelate from '../timeRelate/timeRelate';
  * @param {{likesCount: number, commentsCount: number}} feedback 
  * @param {Date} postDate 
  */
-export default function newsItem(id, title, content, thumbnail, feedback, postDate) {
+export default function newsItem(id, title, content, thumbnail, feedback, postDate, likeHandler) {
   return (
     <div className="news">
       <div className="news-title">
@@ -32,9 +32,9 @@ export default function newsItem(id, title, content, thumbnail, feedback, postDa
 
       <div className="news-meta">
         <div className="row no-gutters">
-          <div>
+          <button className="no-style" onClick={likeHandler}>
             {feedbackLike(feedback.likesCount)}
-          </div>
+          </button>
           <div className="ml-2">
             {feedbackComment(feedback.commentsCount)}
           </div>

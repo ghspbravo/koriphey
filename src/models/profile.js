@@ -110,8 +110,8 @@ export const profile = {
       return response.json()
     })
       .then(response => {
-        actions.getUser()
-        // actions.setUser(response)
+        // actions.getUser()
+        actions.setUser(response)
         return true
       })
       .catch(error => {
@@ -160,7 +160,7 @@ export const profile = {
   }),
 
   getUserList: thunk(async (actions, payload, { getStoreState }) => {
-    const status = await fetch(process.env.REACT_APP_API + 'User/List?page=1&count=20', {
+    const status = await fetch(process.env.REACT_APP_API + 'User/List?page=1&count=1000', {
       method: 'get',
       headers: {
         'Accept': 'application/json',
@@ -171,6 +171,21 @@ export const profile = {
       .then(data => {
         actions.appendInUserList(data)
       })
+      .catch(console.error)
+
+    return status
+
+  }),
+
+  getFilterUserList: thunk(async (actions, payload, { getStoreState }) => {
+    const status = await fetch(process.env.REACT_APP_API + `User/List?page=1&count=1000${payload.hobbies ? `&hobby=${payload.hobbies}` : ''}${payload.suggests ? `&utility=${payload.suggests}` : ''}${payload.competences ? `&competence=${payload.competences}` : ''}`, {
+      method: 'get',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getStoreState().auth.access}`
+      }
+    }).then(response => response.json())
       .catch(console.error)
 
     return status

@@ -97,6 +97,11 @@ a,
 
   transition: color $tr-standart;
 
+  &.disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
   &:not(.no-style):not(.button) {
     color: $c-link;
     text-decoration: underline;
@@ -167,7 +172,12 @@ input[type=submit] {
   &:focus {
     outline: none;
   }
-
+  &:disabled, &.disabled {
+    cursor: not-allowed;
+    color: white !important;
+    background-color: $c-gray !important;
+    pointer-events: none;
+  }
   // primary
   &:not(.no-style):not(.link) {
     padding: 10px 25px;
@@ -191,13 +201,6 @@ input[type=submit] {
       &:hover {
         background-color: lighten($color: $c-orange, $amount: 10);
       }
-    }
-
-    &:disabled {
-      cursor: not-allowed;
-      color: white;
-      background: $c-gray;
-      pointer-events: none;
     }
 
   }

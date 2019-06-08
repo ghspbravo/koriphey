@@ -1,11 +1,29 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import cardBlock from '../../components/cardBlock/cardBlock';
 import requestItem from '../../components/requestItem/requestItem';
 import mediaPerson from '../../components/mediaPerson/mediaPerson';
 import editIcon from '../../components/editIcon/editIcon';
 
-export default function requestSingle(router) {
+import { useActions, useStore } from 'easy-peasy'
+import formatDate from '../../functions/formatDate';
+
+export default function RequestSingle(router) {
+  const requestId = router.match.params.id
+  const user = useStore(store => store.profile.user)
+
+  const [request, requestSet] = useState([])
+  const loadRequestItem = useActions(actions => actions.requests.loadRequestItem)
+
+  const loadSimilarRequests = useActions(actions => actions.requests.loadSimilarRequests)
+  const [similarRequest, similarRequestSet] = useState([])
+
+  useEffect(() => {
+    loadRequestItem(requestId).then(requestSet).then(() => {
+      loadSimilarRequests(requestId).then(similarRequestSet)
+    })
+  }, [requestId])
+
   return (
     <div className="container">
       <div className="row">
@@ -18,26 +36,32 @@ export default function requestSingle(router) {
                   position: 'absolute',
                   top: '5px', right: '5px'
                 }}>
-                  {editIcon('/requests/1/edit')}
+                  {/* {editIcon('/requests/1/edit')} */}
                 </div>
-                {mediaPerson(
-                  "https://picsum.photos/50",
-                  "Елена Алексеевна",
-                  <span>Москва, Россия</span>
+                {request && request.user &&
+                  mediaPerson(
+                  request.user.photo ? request.user.photo : "https://picsum.photos/50",
+                  `${request.user.firstName} ${request.user.surName}`,
+                  <span>{`${request.user.city && request.user.city.country.nameRU}, ${request.user.city && request.user.city.nameRU}`}</span>
                 )}
-                <p className="small"><b>Категория:</b> Спорт</p>
-                <p className="small"><b>Локация:</b> Екатеринбург, Олимпийская набережная</p>
-                <p className="small"><b>Окончание необходимости:</b> 23.04.19</p>
+                {request.category && request.category.name &&
+                  <p className="small"><b>Категория:</b> {request.category.name}</p>}
+                {request.location && request.location.city &&
+                  <p className="small"><b>Локация:</b> {`${request.location.city.country.nameRU}, ${request.location.city.nameRU}`}</p>}
+                {request.expiredAt &&
+                  <p className="small"><b>Окончание необходимости:</b> {formatDate(request.expiredAt)}</p>}
 
-                <p>Суперлига. Уралочка-НТМК – Динамо-Казань Свободный вход. В рамках 15-го тура российской Суперлиги «Уралочка-НТМК» на домашней площадке в Екатеринбурге принимает «Динамо-Казань». Рассказываем о сопернике и анализируем турнирную ситуацию.</p>
-                <p>В сезоне 2018/2019 «Уралочка» и «Динамо-Казань» соперничают не только на внутренней арене, но и в Лиге чемпионов. Всего за сезон друг с другом оппоненты из Екатеринбурга и столицы Татарстана проведут 4 встречи. Две – уже позади.</p>
-                <p>Первое очное противостояние состоялось в конце ноября в Казани в рамках чемпионата России и тогда успех праздновали хозяйки площадки – 3:0, хотя во второй партии борьба была абсолютно равной, но завершился сет в пользу команды из Татарстана, что и стало определяющим фактором в игре.</p>
+                {request.text
+                  ? <p>{request.text}</p>
+                  : <p>Loading...</p>}
 
-                <img src="https://picsum.photos/250/150" alt="" />
+                {request.album && request.album.photos.length > 0 &&
+                  <img src={request.album.photos[0].fullPreview} alt="request gallery" />}
 
-                <div className="row no-gutters mt-2">
-                  <Link className="button button_secondary" to='/person/1'>Ответить</Link>
-                </div>
+                {user.id !== (request.user && request.user.id) &&
+                  <div className="row no-gutters mt-2">
+                    <Link className="button button_secondary" to={`/profile/${request.user && request.user.id}`}>Ответить</Link>
+                  </div>}
               </div>
             )}
           </div>
@@ -48,20 +72,25 @@ export default function requestSingle(router) {
             {cardBlock(
               <h2>Похожие запросы</h2>,
               <div className="list-card no-padding">
-                {Array(3).fill().map((item, index) => <div key={index} className="card">
-                  {requestItem(
-                    {
-                      photo: "https://picsum.photos/50",
-                      name: "Елена Алексеевна",
-                      location: "Москва, Россия"
-                    },
-                    {
-                      category: "путешествия",
-                      location: "Новосибирск"
-                    },
-                    "Ребята, буду в Новосибирске проездом. Посоветуйте, чем там можно заняться?.."
-                  )}
-                </div>)}
+                {similarRequest.length > 0 &&
+                  similarRequest.map((item, index) => <div key={index} className="card">
+                    {requestItem(
+                      {
+                        id: item.user.id,
+                          photo: item.user.photo ? item.user.photo : "https://picsum.photos/50",
+                          name: `${item.user.firstName} ${item.user.surName}`,
+                          location: `${item.user.city && item.user.city.country.nameRU}, ${item.user.city && item.user.city.nameRU}`
+                      },
+                      {
+                        category: item.category && item.category.name,
+                        location: item.location && item.location.city.nameRU,
+                        expiredAt: item.expiredAt && formatDate(item.expiredAt)
+                      },
+                      item.text && item.text.substring(0, 50),
+                      item.album && item.album.photos.length > 0 && item.album.photos[0].fullPreview,
+                      item.id && item.id
+                    )}
+                  </div>)}
                 <div className="px-2 mt-2">
                   <Link to='/requests'>Все запросы <i className="fas fa-angle-double-right"></i></Link>
                 </div>

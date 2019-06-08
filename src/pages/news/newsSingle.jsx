@@ -21,7 +21,7 @@ export default function NewsSingle(router) {
       setNews(newsContent)
     }
     loadNewsContent()
-  }, [])
+  }, [newsId])
 
   const title = "О трудоустройстве",
     content = "Нью-Йорк идеален для работы и карьеры, я уже писал почему. До приезда сюда я работал и в офисе, и был полтора года на фрилансе и вот опять вернулся в офис. За этот год снова убедился, что я совсем не офисный человек. Потому на вершине успеха я решил закончить свою карьеру веб-дизайнера. Работать только ради денег я не умею. Опыт работы тут бесценный, но когда для меня карьера перестала быть приоритетом я снова решил, что больше нет смысла сидеть в офисе, хоть даже и в Нью-Йорке.",
@@ -55,10 +55,10 @@ export default function NewsSingle(router) {
                 <div className="news-meta">
                   <div className="row no-gutters">
                     <div>
-                      {feedbackLike(feedback.likesCount)}
+                      {feedbackLike(0)}
                     </div>
                     <div className="ml-2">
-                      {feedbackComment(feedback.commentsCount)}
+                      {feedbackComment(0)}
                     </div>
 
                     <div className="ml-auto">
@@ -70,7 +70,7 @@ export default function NewsSingle(router) {
             )}
           </div>
 
-          <div className="mt-2">
+          {/* <div className="mt-2">
             {cardBlock(
               <h2>Обсуждения</h2>,
               <div className="no-padding">
@@ -120,7 +120,7 @@ export default function NewsSingle(router) {
                 </div>
               </div>
             )}
-          </div>
+          </div> */}
         </div>
 
         <div className="col-lg-4 d-none d-lg-block">
@@ -136,8 +136,8 @@ export default function NewsSingle(router) {
                       item.announce ? <p>{item.announce}</p> : parse(item.content),
                       item.imagePreviewPath,
                       {
-                        likesCount: 650,
-                        commentsCount: 2
+                        likesCount: 0,
+                        commentsCount: 0
                       },
                       item.updatedAt
                     )}

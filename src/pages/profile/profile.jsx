@@ -33,8 +33,8 @@ export default function Profile(router) {
             </div>
             <div className="col-6 pl-1">
               <h2 className="profile-person__name">{user && user.fio ? `${user.firstName} ${user.surName}` : '...'}</h2>
-              <Link className="profile-person__button button button_expanded" to={`/profile/${router.match.params.id}`}>Написать</Link>
-              <Link className="profile-person__button button button_expanded button_secondary mt-1" to={`/profile/${router.match.params.id}`}>Отзыв</Link>
+              <a href={`mailto:${user && user.email}`} className="profile-person__button button button_expanded">Написать</a>
+              <Link className="profile-person__button button button_expanded button_secondary mt-1 disabled" to={`/profile/${router.match.params.id}`}>Отзыв</Link>
             </div>
           </div>
 
@@ -87,10 +87,20 @@ export default function Profile(router) {
                         <div className="profile-info__head col-6">Образование:</div>
                         <div className="profile-info__content col-6">{user.education}</div>
                       </div>}
-                    {user.workExperiencies && user.workExperiencies.length !== 0 &&
+                    {user.workExperiencies && user.workExperiencies.length !== 0 && user.workExperiencies[0].name &&
+                      <div className="row mb-2">
+                        <div className="profile-info__head col-6">Место работы:</div>
+                        <div className="profile-info__content col-6">{user.workExperiencies[0].name}</div>
+                      </div>}
+                    {user.workExperiencies && user.workExperiencies.length !== 0 && user.workExperiencies[0].position &&
                       <div className="row mb-2">
                         <div className="profile-info__head col-6">Должность:</div>
-                        <div className="profile-info__content col-6">{user.workExperiencies[0].name}</div>
+                        <div className="profile-info__content col-6">{user.workExperiencies[0].position}</div>
+                      </div>}
+                    {user.workExperiencies && user.workExperiencies.length !== 0 && user.workExperiencies[0].start &&
+                      <div className="row mb-2">
+                        <div className="profile-info__head col-6">Год начала работы:</div>
+                        <div className="profile-info__content col-6">{user.workExperiencies[0].start.split('-')[0]}</div>
                       </div>}
                     {user.networks && user.networks.length !== 0 &&
                       <div className="row mb-2">

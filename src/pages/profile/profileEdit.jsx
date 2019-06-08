@@ -316,10 +316,10 @@ export default function ProfileEdit() {
     if (!(user && user.email)) return
 
     setGraduationYear(user.graduationYear)
-    setWorkPlace(user.workExperiencies[0].name)
-    setWorkPosition(user.workExperiencies[0].position)
-    const workDateList = user.workExperiencies[0].start.match(/\d\d\d\d-\d\d-\d\d/)[0].split('-')
-    setWorkYears(parseInt(workDateList[0]))
+    setWorkPlace(user.workExperiencies[0] && user.workExperiencies[0].name ? user.workExperiencies[0].name : '')
+    setWorkPosition(user.workExperiencies[0] && user.workExperiencies[0].position ? user.workExperiencies[0].position : '')
+    const workDateList = user.workExperiencies[0] && user.workExperiencies[0].start.match(/\d\d\d\d-\d\d-\d\d/)[0].split('-')
+    setWorkYears(workDateList && workDateList[0] ? parseInt(workDateList[0]) : '')
     setEducation(user.education)
     // setInterests(user.interests)
     setAbout(user.about)

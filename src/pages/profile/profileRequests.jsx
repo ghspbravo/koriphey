@@ -1,38 +1,56 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import cardBlock from '../../components/cardBlock/cardBlock';
 import requestItem from '../../components/requestItem/requestItem';
 
+import { useActions, useStore } from 'easy-peasy';
+
 export default function ProfileRequests(router) {
+
+  const [userRequests, userRequestsSet] = useState([])
+  const loadUserRequests = useActions(actions => actions.requests.loadUserRequests)
+  const user = useStore(store => store.profile.user)
+
+  useState(() => {
+
+    loadUserRequests().then(userRequestsSet)
+
+  }, [])
   return (
     <div className="container">
       <div className="row">
         <div className="col-lg-9">
           {cardBlock(
             <button className="link" onClick={router.history.goBack}><i className="fas fa-angle-double-left"></i> Назад</button>,
-          <div className="no-padding">
-            <div className="card-list row">
-              {Array(9).fill().map((item, index) => <div key={index} className="col-md-6">
-                <div className="card">
-                  {requestItem(
-                    {
-                      photo: "https://picsum.photos/50",
-                      name: "Елена Алексеевна",
-                      location: "Москва, Россия"
-                    },
-                    {
-                      category: "путешествия",
-                      location: "Новосибирск"
-                    },
-                    "Ребята, буду в Новосибирске проездом. Посоветуйте, чем там можно заняться?..",
-                    "https://picsum.photos/150/50"
-                  )}
-                </div>
-              </div>)}
-            </div>
-          </div>)}
+            <div className="no-padding">
+              <div className="card-list row">
+                {userRequests.length > 0
+                  ? userRequests.map((item, index) => <div key={index} className="col-md-6">
+                    <div style={{height: '100%'}} className="card">
+                      {requestItem(
+                        {
+                          photo: user.photo && user.photo,
+                          name: user.firstName && `${user.firstName} ${user.surName}`,
+                          location: user.city && `${user.city.nameRU}, ${user.city.country.nameRU}`,
+                          // id: item.user.id
+                        },
+                        {
+                          category: item.category && item.category.name,
+                          location: item.location && item.location.city.nameRU
+                        },
+                        item.text,
+                        item.album && item.album.photos.length > 0 && item.album.photos[0].preview,
+                        item.id
+                      )}
+                    </div>
+                  </div>)
+                  : <div className="px-2">
+                    <p>Loading...</p>
+                  </div>}
+              </div>
+            </div>)}
         </div>
 
-        <div className="col-lg-3 d-none d-lg-block">
+        {/* <div className="col-lg-3 d-none d-lg-block">
           <div>
             {cardBlock(
               <h2>Фильтр</h2>,
@@ -58,7 +76,7 @@ export default function ProfileRequests(router) {
               </div>
             )}
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   )

@@ -30,17 +30,32 @@ export default function Home() {
           </div>
         )}
       </div>
+      <div className="row d-xl-none d-none d-lg-flex">
+        <div className="col-md-6 mb-2">
+          {cardBlock(
+            <h2>Области занятости</h2>,
+            WorkDoughnutChart()
+          )}
+        </div>
+
+        <div className="col-md-6 mb-2">
+          {cardBlock(
+            <h2>Увлечения</h2>,
+            HobbiesDoughnutChart()
+          )}
+        </div>
+      </div>
       <div className="row">
         <div className="col-lg-8">
           <div className="row">
-            <div className="col-md-6 mb-2">
+            <div className="col-md-6 mb-2 d-lg-none d-xl-block">
               {cardBlock(
                 <h2>Области занятости</h2>,
                 WorkDoughnutChart()
               )}
             </div>
 
-            <div className="col-md-6 mb-2">
+            <div className="col-md-6 mb-2 d-lg-none d-xl-block">
               {cardBlock(
                 <h2>Увлечения</h2>,
                 HobbiesDoughnutChart()
@@ -59,8 +74,8 @@ export default function Home() {
                           item.announce ? <p>{item.announce}</p> : parse(item.content),
                           item.imagePrewiew,
                           {
-                            likesCount: 650,
-                            commentsCount: 2
+                            likesCount: 0,
+                            commentsCount: 0
                           },
                           item.updatedAt
                         )}
@@ -93,10 +108,10 @@ export default function Home() {
                     },
                     {
                       category: item.category.name,
-                      location: item.location
+                      location: item.location && item.location.city.nameRU,
                     },
                     item.text,
-                    item.album,
+                    item.album && item.album.photos.length > 0 && item.album.photos[0].fullPreview,
                     item.id
                   )}
                 </div>)}

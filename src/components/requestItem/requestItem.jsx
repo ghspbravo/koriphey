@@ -10,7 +10,7 @@ import mediaPerson from '../mediaPerson/mediaPerson';
  */
 export default function requestItem(person, meta, content, thumbnail, id) {
   return (
-    <div className="request">
+    <div className="request d-flex flex-column" style={{height: '100%'}}>
       {mediaPerson(
         person.photo,
         person.name,
@@ -19,7 +19,10 @@ export default function requestItem(person, meta, content, thumbnail, id) {
 
       <div className="request-meta">
         <p className="small"><b>Категория: </b>{meta.category}</p>
-        <p className="small"><b>Локация: </b>{meta.location}</p>
+        {meta.location &&
+          <p className="small"><b>Локация: </b>{meta.location}</p>}
+        {meta.expiredAt &&
+          <p className="small"><b>Окончание необходимости: </b>{meta.expiredAt}</p>}
       </div>
 
       <div className="request-body mt-1">
@@ -31,12 +34,13 @@ export default function requestItem(person, meta, content, thumbnail, id) {
         </div>
       </div>
 
-      <div className="mt-1">
+      <div className="mt-auto">
         <Link className="button button_expanded-xs" to={`/requests/${id}`}>Смотреть полностью</Link>
       </div>
-      <div className="mt-1">
-        <Link className="button button_expanded-xs button_secondary" to={`/profile/${person.id}`}>Ответить</Link>
-      </div>
+      {person.id &&
+        <div className="mt-1">
+          <Link className="button button_expanded-xs button_secondary" to={`/profile/${person.id}`}>Ответить</Link>
+        </div>}
     </div>
   )
 }

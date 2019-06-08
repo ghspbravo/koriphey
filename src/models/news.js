@@ -4,7 +4,7 @@ export const news = {
   newsList: [],
 
   loadNews: thunk(async (actions, payload) => {
-    const success = await fetch(process.env.REACT_APP_API + 'News/List?count=20&page=1', {
+    const success = await fetch(process.env.REACT_APP_API + 'News/List?count=100&page=1', {
       method: 'get',
       headers: {
         'Accept': 'application/json',
@@ -15,6 +15,20 @@ export const news = {
         actions.appendInNewsList(data)
       })
       .catch(console.error)
+
+    return success
+  }),
+
+  toggleLike: thunk(async (actions, payload, { getStoreState }) => {
+    const success = await fetch(process.env.REACT_APP_API + `News/AddRemoveLike?newsId=${payload}`, {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getStoreState().auth.access}`
+      },
+    }).then(response => response.json())
+      .catch(window.alert)
 
     return success
   }),

@@ -15,7 +15,6 @@ export default function Recover() {
     const success = await recover(payload.email)
     if (success === true) {
       successSet(true)
-      processingSet(false)
     }
     else {
       try {
@@ -26,6 +25,7 @@ export default function Recover() {
         window.alert(error)
       }
     }
+    processingSet(false)
   }
   const [success, successSet] = useState(false)
   const [processing, processingSet] = useState(false)

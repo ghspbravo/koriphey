@@ -7,6 +7,7 @@ import MobileNavigation from '../mobileNavigation/mobileNavigation';
 
 import { useStore, useActions } from 'easy-peasy';
 
+import logo from './logo.svg'
 export default function Header() {
 
   const profileControls = useRef()
@@ -70,16 +71,7 @@ export default function Header() {
           )}
 
           <div className={`header__logo ${isAuth ? "mx-auto" : ""} mx-md-0`}>
-            {/* TODO:
-              replace text logo to image
-            */}
-            <span style={{
-              display: 'block',
-              color: 'white',
-              fontSize: '2rem',
-              paddingTop: '15px'
-            }}>Корифей</span>
-            {/* <img className="not-responsive" src="https://picsum.photos/150/50" alt="logo" /> */}
+            <img className="not-responsive" src={logo} alt="logo" />
             <Link to="/" className="expanded" />
           </div>
 
@@ -87,12 +79,12 @@ export default function Header() {
             ? user.status === 1 &&
             [<div key={0} className="header__search d-none d-md-flex search ml-xl-4 ml-md-2">
               <Link style={{ fontSize: "18px" }} to='/search'
-                className="search__icon no-style"><i className="fas fa-search"></i></Link>
+                className="disabled search__icon no-style"><i className="fas fa-search"></i></Link>
               <input placeholder="Поиск" className="search__input" type="text" name="search" />
             </div>,
 
             <nav key={1} className="header__navigation d-none d-md-block navigation ml-xl-4 ml-md-2">
-              <NavLink className="navigation-item no-style" to='/people'>Люди</NavLink>
+              <NavLink className="navigation-item no-style" to='/people'>Выпускники</NavLink>
               <NavLink className="navigation-item no-style" to='/requests'>Запросы</NavLink>
               <NavLink className="navigation-item no-style" to='/news'>Новости</NavLink>
             </nav>,
@@ -114,10 +106,10 @@ export default function Header() {
                       <NavLink className="navigation-item no-style" to='/requests/create'>Создать запрос</NavLink>
                     </div>
 
-                    <div className="profile-controls-section">
+                    {/* <div className="profile-controls-section">
                       <NavLink className="navigation-item no-style" to='/endaument'>Эндаумент</NavLink>
                       <NavLink className="navigation-item no-style" to='/endaument'>Сообщить о достижении</NavLink>
-                    </div>
+                    </div> */}
 
                     <div className="profile-controls-section">
                       <NavLink className="navigation-item no-style" to='/profile/edit'>Редактировать</NavLink>
@@ -160,7 +152,7 @@ export default function Header() {
 
           {isAuth && user.status === 1 &&
             <div className="d-md-none">
-              <Link to='/search' className="search__icon no-style"><i className="fas fa-search"></i></Link>
+              <Link to='/search' className="disabled search__icon no-style"><i className="fas fa-search"></i></Link>
             </div>}
 
         </div>

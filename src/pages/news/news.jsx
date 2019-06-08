@@ -4,19 +4,22 @@ import cardBlock from '../../components/cardBlock/cardBlock';
 import requestItem from '../../components/requestItem/requestItem';
 import newsItem from '../../components/newsItem/newsItem';
 
-import { useStore } from 'easy-peasy';
+import { useStore, useActions } from 'easy-peasy';
 import parse from 'html-react-parser'
+import formatDate from '../../functions/formatDate';
 
 export default function News() {
   const newsList = useStore(store => store.news.newsList)
   const requestList = useStore(store => store.requests.requestList)
+
+  const toggleLike = useActions(actions => actions.news.toggleLike)
   return (
     <div className="container">
       <div className="row">
         <div className="col-lg-8">
           <div>
             {cardBlock(
-              <h2>Последние новости</h2>,
+              <h2>Новости</h2>,
               <div className="list-card no-padding">
                 {newsList.length !== 0
                   ? newsList.map((item, index) => <div key={index} className="card">
@@ -26,10 +29,11 @@ export default function News() {
                       item.announce ? <p>{item.announce}</p> : parse(item.content),
                       item.imagePrewiew,
                       {
-                        likesCount: 650,
-                        commentsCount: 2
+                        likesCount: 0,
+                        commentsCount: 0
                       },
-                      item.updatedAt
+                      item.updatedAt,
+                      () => toggleLike(item.id)
                     )}
                   </div>)
                   : <div className="px-2">
@@ -56,10 +60,11 @@ export default function News() {
                     },
                     {
                       category: item.category.name,
-                      location: item.location
+                      location: item.location && item.location.city.nameRu,
+                      expiredAt: item.expiredAt && formatDate(item.expiredAt)
                     },
                     item.text,
-                    item.album,
+                    item.album && item.album.photos.length > 0 && item.album.photos[0].preview,
                     item.id
                   )}
                 </div>)}

@@ -14,31 +14,31 @@ export default function Welcome() {
 
   return (
     <div className="container">
-      {isAuth && user &&  user.status === 0 &&
+      {isAuth && user && user.status === 0 &&
         <div className="mb-1">
           <p className="form-hint"><i className="fas fa-info-circle icon"></i> Ваша заявка на регистрацию обрабатывается. После подтверждения Вы получите доступ ко всем разделам сервиса</p>
         </div>}
-      {isAuth && user &&  user.status === 2 &&
+      {isAuth && user && user.status === 2 &&
         <div className="mb-1">
           <p className="form-error"><i className="fas fa-info-circle icon"></i> Ваша заявка на регистрацию была отклонена. Обратитесь в поддержку для получения подробной информации</p>
         </div>}
       <div className="row">
 
-        <div className="col-lg-4">
+        <div className="col-xl-4">
           {cardBlock(
-            <h2>Цель проекта</h2>,
-            <p><b>Цель проекта</b> – создать платформу для выпускников разных лет, чтобы разрозненные поколения  объединились в сообщество благодарных выпускников, готовых поддерживать школу, способствовать её развитию.</p>
+            <h2>Клуб выпускников</h2>,
+            <p>Эта платформа создана для сообщества выпускников <b>Гимназии «Корифей»</b>, чтобы помочь выпускникам разных лет знакомиться, обмениваться идеями и помогать друг другу в любой точке мира</p>
           )}
         </div>
 
-        <div className="col-lg-4 col-md-6 mt-2 mt-lg-0">
+        <div className="col-xl-4 col-md-6 mt-2 mt-xl-0">
           {cardBlock(
             <h2>Области занятости</h2>,
             WorkDoughnutChart()
           )}
         </div>
 
-        <div className="col-lg-4 col-md-6 mt-2 mt-lg-0">
+        <div className="col-xl-4 col-md-6 mt-2 mt-xl-0">
           {cardBlock(
             <h2>Увлечения</h2>,
             HobbiesDoughnutChart()

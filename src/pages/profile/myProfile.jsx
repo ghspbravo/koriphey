@@ -83,10 +83,20 @@ export default function MyProfile() {
                         <div className="profile-info__head col-6">Образование:</div>
                         <div className="profile-info__content col-6">{user.education}</div>
                       </div>}
-                    {user.workExperiencies && user.workExperiencies.length !== 0 &&
+                    {user.workExperiencies && user.workExperiencies.length !== 0 && user.workExperiencies[0].name &&
+                      <div className="row mb-2">
+                        <div className="profile-info__head col-6">Место работы:</div>
+                        <div className="profile-info__content col-6">{user.workExperiencies[0].name}</div>
+                      </div>}
+                    {user.workExperiencies && user.workExperiencies.length !== 0 && user.workExperiencies[0].position &&
                       <div className="row mb-2">
                         <div className="profile-info__head col-6">Должность:</div>
-                        <div className="profile-info__content col-6">{user.workExperiencies[0].name}</div>
+                        <div className="profile-info__content col-6">{user.workExperiencies[0].position}</div>
+                      </div>}
+                    {user.workExperiencies && user.workExperiencies.length !== 0 && user.workExperiencies[0].start &&
+                      <div className="row mb-2">
+                        <div className="profile-info__head col-6">Год начала работы:</div>
+                        <div className="profile-info__content col-6">{user.workExperiencies[0].start.split('-')[0]}</div>
                       </div>}
                     {user.networks && user.networks.length !== 0 &&
                       <div className="row mb-2">
