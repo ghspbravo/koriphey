@@ -8,7 +8,7 @@ import home from './pages/home';
 import requests from './pages/requests/requests';
 import peoples from './pages/people/people';
 import news from './pages/news/news';
-import search from './pages/search';
+import search from './pages/search/search';
 import requestSingle from './pages/requests/requestSingle';
 import newsSingle from './pages/news/newsSingle';
 import Profile from './pages/profile/profile';
@@ -97,7 +97,7 @@ function App(router) {
           <Route exact path="/news" component={news} />
           <Route exact path="/news/:id" component={newsSingle} />
 
-          <Route path="/search" component={search} />
+          <Route path="/search/:query?" component={search} />
 
           <Route exact path="/profile/requests" component={ProfileRequests} />
           <Route exact path="/profile/edit" component={ProfileEdit} />

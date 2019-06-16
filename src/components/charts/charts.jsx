@@ -31,13 +31,16 @@ export function WorkDoughnutChart() {
   const workChart = useRef()
 
   useEffect(() => {
-    if (!(statistics && statistics.competenciesCount)) return
+    if (Object.entries(statistics).length === 0) return
+    let counter = 0
+
+    statistics.competenciesCount.forEach(item => counter += item.count)
 
     const workDoughnutChart = new Chart(workChart.current, {
       type: 'doughnut',
       data: {
         datasets: [{
-          data: statistics.competenciesCount.map(item => Math.round(item.count / statistics.totalCompetenciesCount * 100)),
+          data: statistics.competenciesCount.map(item => Math.round(item.count / counter * 100)),
           backgroundColor: [
             '#252D33',    // color for data at index 0
             '#3C6374',
@@ -72,13 +75,16 @@ export function HobbiesDoughnutChart() {
   const hobbiesChart = useRef()
 
   useEffect(() => {
-    if (!(statistics && statistics.hobbyCount)) return
+    if (Object.entries(statistics).length === 0) return
+    let counter = 0
+
+    statistics.hobbyCount.forEach(item => counter += item.count)
 
     const hobbiesDoughnutChart = new Chart(hobbiesChart.current, {
       type: 'doughnut',
       data: {
         datasets: [{
-          data: statistics.hobbyCount.map(item => Math.round(item.count / statistics.totalHobbyCount * 100)),
+          data: statistics.hobbyCount.map(item => Math.round(item.count / counter * 100)),
           backgroundColor: [
             '#252D33',    // color for data at index 0
             '#3C6374',

@@ -6,6 +6,7 @@ import IMask from 'imask';
 
 import { createPortal } from 'react-dom'
 import Modal from '../../components/modals/modal';
+import graduationYearOptions from '../../components/graduationYear/graduationYearOptions';
 
 export default function Register(router) {
 
@@ -154,7 +155,7 @@ export default function Register(router) {
                   <div className="form-group mb-1">
                     <select {...graduationYearBind} className="w-100" onBlur={() => graduationYearErrorSet('')} id="mobile-person-graduation-year">
                       <option value="" defaultChecked>Выберите год выпуска*</option>
-                      {Array(new Date().getFullYear() + 1 - 2004).fill().map((item, index) => <option key={index} value={2004 + index}>{2004 + index}</option>)}
+                      {graduationYearOptions()}
                     </select>
                     <div className="form-error">{graduationYearError}</div>
                   </div>

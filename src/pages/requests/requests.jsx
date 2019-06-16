@@ -1,42 +1,35 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useState } from 'react'
 import cardBlock from '../../components/cardBlock/cardBlock';
 import requestItem from '../../components/requestItem/requestItem';
 
 import { useStore, useActions } from 'easy-peasy';
 import formatDate from '../../functions/formatDate';
 
-import IMask from 'imask';
-
 import useInput from '../../hooks/useInput';
 import useLocation from '../../hooks/useLocation';
-import location from '../../components/location/location';
-import categories from '../../components/categories/categories';
 import useFetch from '../../hooks/useFetch';
+import requestFilter from '../../components/filters/requestFilter';
 
 export default function Requests() {
   const requestList = useStore(store => store.requests.requestList)
 
-  const dateInput = useRef()
-
-  useEffect(() => {
-    const dateMask = dateInput.current && new IMask(dateInput.current, {
-      mask: Date,
-      blocks: {
-        Y: {
-          mask: IMask.MaskedRange,
-          from: new Date().getFullYear(),
-          to: new Date().getFullYear() + 5
-        }
-      },
-    });
-
-    return (() => {
-      dateMask && dateMask.destroy()
-    })
-  }, [])
-
   // LOCATION
   const { selectedCountryId, cityId, countriesList, cities, countryChoiceHandler, cityChoiceHandler, setCityId, setSelectedCountryId } = useLocation()
+
+  const { value: competence, bind: competenceBind, reset: competenceReset } = useInput('');
+  const getCompetencesList = useActions(actions => actions.profile.getCompetencesList)
+  const competencesList = useStore(store => store.profile.competencesList)
+  useFetch(competencesList, getCompetencesList)
+
+  const { value: hobbie, bind: hobbieBind, reset: hobbieReset } = useInput('');
+  const getHobbiesList = useActions(actions => actions.profile.getHobbiesList)
+  const hobbiesList = useStore(store => store.profile.hobbiesList)
+  useFetch(hobbiesList, getHobbiesList)
+
+  const { value: suggest, bind: suggestBind, reset: suggestReset } = useInput('');
+  const getSuggestsList = useActions(actions => actions.profile.getSuggestsList)
+  const suggestsList = useStore(store => store.profile.suggestsList)
+  useFetch(suggestsList, getSuggestsList)
 
   const { value: category, bind: categoryBind, reset: categoryReset } = useInput('');
   const requestCategoriesList = useActions(actions => actions.requests.loadCategories)
@@ -54,7 +47,10 @@ export default function Requests() {
     const payload = {
       countryId: selectedCountryId,
       cityId,
-      categoryId: category
+      categoryId: category,
+      competence,
+      hobbie,
+      suggest
     }
 
     loadFilterRequests(payload).then(filteredRequestsSet)
@@ -63,6 +59,9 @@ export default function Requests() {
   const resetHandler = () => {
     showFilterResultsSet(false)
     categoryReset()
+    competenceReset()
+    hobbieReset()
+    suggestReset()
     setSelectedCountryId(0)
     setCityId(0)
   }
@@ -91,7 +90,8 @@ export default function Requests() {
                             location: `${item.user.city && item.user.city.country.nameRU}, ${item.user.city && item.user.city.nameRU}`
                           },
                           {
-                            category: item.category.name,
+                            // category: item.category.name,
+                            category: item.utility && item.utility.name,
                             location: item.location && item.location.city && `${item.location.city.country.nameRU}, ${item.location.city.nameRU}`,
                             expiredAt: item.expiredAt && formatDate(item.expiredAt)
                           },
@@ -134,39 +134,22 @@ export default function Requests() {
           <div>
             {cardBlock(
               <h2>Фильтр</h2>,
-              <form onSubmit={submitHandler}>
+              requestFilter(
+                submitHandler,
 
-                <p className="big">Локация</p>
+                selectedCountryId, countryChoiceHandler, countriesList,
+                cities, cityId, cityChoiceHandler,
 
-                <div>
-                  {location(
-                    selectedCountryId,
-                    countryChoiceHandler,
-                    countriesList,
+                categoryBind, categoriesList,
 
-                    cities,
-                    cityId,
-                    cityChoiceHandler
-                  )}
-                </div>
+                competenceBind, competencesList,
 
-                <p className="big">Категория</p>
-                <div className="form-group mb-1">
-                  {categories(
-                    categoryBind,
-                    categoriesList
-                  )}
-                </div>
+                hobbieBind, hobbiesList,
 
-                <div className="row no-gutters mt-1">
-                  <button className="ml-auto">Фильтр</button>
-                </div>
+                suggestBind, suggestsList,
 
-                <div className="row no-gutters mt-1">
-                  <button type="button" onClick={resetHandler} className="ml-auto button_secondary">Сбросить</button>
-                </div>
-
-              </form>
+                resetHandler
+              )
             )}
           </div>
         </div>

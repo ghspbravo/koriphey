@@ -11,10 +11,13 @@ import useFileInput from '../../hooks/useFileInput';
 import Modal from '../../components/modals/modal';
 
 import IMask from 'imask';
-import categories from '../../components/categories/categories';
+// import categories from '../../components/categories/categories';
 import location from '../../components/location/location';
 import useFetch from '../../hooks/useFetch';
 import useLocation from '../../hooks/useLocation';
+// import competencesChoice from '../../components/competences/competencesChoice';
+// import hobbiesChoice from '../../components/hobbies/hobbiesChoice';
+import suggestsChoice from '../../components/suggests/suggestsChoice';
 
 export default function RequestCreate() {
 
@@ -41,12 +44,29 @@ export default function RequestCreate() {
   // LOCATION
   const { selectedCountryId, cityId, countriesList, cities, countryChoiceHandler, cityChoiceHandler } = useLocation()
 
-  const { value: category, bind: categoryBind } = useInput('');
+  const { value: category, /* bind: categoryBind */ } = useInput('');
   const requestCategoriesList = useActions(actions => actions.requests.loadCategories)
   const categoriesList = useStore(store => store.requests.categoriesList)
   useFetch(categoriesList, requestCategoriesList)
 
+  const { value: competence, /* bind: competenceBind */ } = useInput('');
+  const getCompetencesList = useActions(actions => actions.profile.getCompetencesList)
+  const competencesList = useStore(store => store.profile.competencesList)
+  useFetch(competencesList, getCompetencesList)
+
+  const { value: hobbie, /* bind: hobbieBind */ } = useInput('');
+  const getHobbiesList = useActions(actions => actions.profile.getHobbiesList)
+  const hobbiesList = useStore(store => store.profile.hobbiesList)
+  useFetch(hobbiesList, getHobbiesList)
+
+  const { value: suggest, bind: suggestBind } = useInput('');
+  const [suggestError, suggestErrorSet] = useState('')
+  const getSuggestsList = useActions(actions => actions.profile.getSuggestsList)
+  const suggestsList = useStore(store => store.profile.suggestsList)
+  useFetch(suggestsList, getSuggestsList)
+
   const { value: content, bind: contentBind } = useInput('');
+  const [contentError, contentErrorSet] = useState('')
   const { value: expiredDate, bind: expiredDateBind } = useInput('');
   const { value: photoFile, previewFile: photo, bind: photoBind } = useFileInput({}, '')
 
@@ -57,6 +77,16 @@ export default function RequestCreate() {
   const [processing, processingSet] = useState(false)
   const submitHandler = async (e) => {
     e.preventDefault()
+    let valid = true
+    if (!suggest) {
+      suggestErrorSet('Выберите категорию')
+      valid = false
+    }
+    if (!content) {
+      contentErrorSet('Заполните текст заявки')
+      valid = false
+    }
+    if (!valid) return
     processingSet(true)
 
     const date = expiredDate.split('.')
@@ -65,13 +95,18 @@ export default function RequestCreate() {
       content,
       category: parseInt(category),
       expiredDate: `${date[2]}-${date[1]}-${date[0]}`,
-      cityId: parseInt(cityId)
+      cityId: parseInt(cityId),
+      competence, hobbie, suggest
     }
 
     let myFormData = new FormData();
 
     myFormData.append("text", payload.content);
-    myFormData.append("categoryId", payload.category);
+    payload.category && myFormData.append("categoryId", payload.category);
+
+    payload.competence && myFormData.append("CompetenceId", payload.competence);
+    payload.hobbie && myFormData.append("HobbyId", payload.hobbie);
+    payload.suggest && myFormData.append("UtilityId", payload.suggest);
 
     payload.expiredDate && myFormData.append("expiredAt", payload.expiredDate);
     payload.cityId && myFormData.append("location.cityId", payload.cityId);
@@ -101,6 +136,7 @@ export default function RequestCreate() {
                   <label htmlFor="request-content">Описание запроса<sup>*</sup></label>
                 </div>
                 <textarea {...contentBind} rows="20" id="request-content" className="w-100" placeholder="Описание запроса" type="text" />
+                <div className="form-error">{contentError}</div>
               </div>
 
               <div className="d-none d-md-block form-group mb-1">
@@ -109,7 +145,7 @@ export default function RequestCreate() {
                 </div>
                 <label style={{ cursor: 'pointer' }} htmlFor="request-photo"><img src={photo} alt="" /></label>
                 <label htmlFor="request-photo" className="link">Загрузить фотографию</label>
-                <input accept="image/png" {...photoBind} id="request-photo" className="d-none" type="file" />
+                <input accept="image/png, image/jpg" {...photoBind} id="request-photo" className="d-none" type="file" />
               </div>
             </div>
           )}
@@ -123,10 +159,12 @@ export default function RequestCreate() {
                   <div className="mb-1">
                     <label htmlFor="request-category">Категория<sup>*</sup></label>
                   </div>
-                  {categories(
+                  {/* {categories(
                     categoryBind,
                     categoriesList
-                  )}
+                  )} */}
+                  {suggestsChoice(suggestBind, suggestsList, 'Какая помощь/поддержка Вам нужна')}
+                  <div className="form-error">{suggestError}</div>
                 </div>
 
                 <div className="form-group mb-1">
@@ -144,12 +182,33 @@ export default function RequestCreate() {
                   )}
                 </div>
 
-                <div className="form-group">
+                <div className="form-group mb-1">
                   <div className="mb-1">
                     <label htmlFor="request-expire-date">Окончание необходимости</label>
                   </div>
                   <input ref={dateInput} {...expiredDateBind} id="request-expire-date" className="w-100" placeholder="Дата" type="text" />
                 </div>
+
+                {/* <div className="form-group mb-1">
+                  <div className="mb-1">
+                    <label>Компетенции</label>
+                  </div>
+                  {competencesChoice(competenceBind, competencesList)}
+                </div>
+
+                <div className="form-group mb-1">
+                  <div className="mb-1">
+                    <label>Хобби/увлечения</label>
+                  </div>
+                  {hobbiesChoice(hobbieBind, hobbiesList)}
+                </div> */}
+
+                {/* <div className="form-group">
+                  <div className="mb-1">
+                    <label>Категория пользы</label>
+                  </div>
+                  {suggestsChoice(suggestBind, suggestsList)}
+                </div> */}
               </div>
             )}
           </div>

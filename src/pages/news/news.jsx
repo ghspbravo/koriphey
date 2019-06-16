@@ -12,7 +12,17 @@ export default function News() {
   const newsList = useStore(store => store.news.newsList)
   const requestList = useStore(store => store.requests.requestList)
 
+  const loadNews = useActions(actions => actions.news.loadNews)
+
   const toggleLike = useActions(actions => actions.news.toggleLike)
+  const likeHandler = (id) => {
+    toggleLike(id).then(status => {
+      if (status === 200) {
+        loadNews()
+      }
+      else alert('Ошибка лайка')
+    })
+  }
   return (
     <div className="container">
       <div className="row">
@@ -29,11 +39,11 @@ export default function News() {
                       item.announce ? <p>{item.announce}</p> : parse(item.content),
                       item.imagePrewiew,
                       {
-                        likesCount: 0,
-                        commentsCount: 0
+                        likesCount: item.likeCount,
+                        commentsCount: item.newsComments.length
                       },
                       item.updatedAt,
-                      () => toggleLike(item.id)
+                      () => likeHandler(item.id)
                     )}
                   </div>)
                   : <div className="px-2">

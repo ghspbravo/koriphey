@@ -15,7 +15,7 @@ export default function location(
         <select value={selectedCountryId} onChange={countryChoiceHandler} className="w-100">
           <option value="" defaultValue>Страна</option>
           {countriesList.length > 0 &&
-            countriesList.map((item, index) => <option key={index} value={item.id}>
+            countriesList.map((item, index) => item && <option key={index} value={item.id}>
               {item.nameRU}
             </option>)}
         </select>
@@ -27,7 +27,7 @@ export default function location(
           <select value={cityId} onChange={cityChoiceHandler} className="w-100">
             <option value="" defaultValue>Город</option>
             {cities.length > 0 &&
-              cities.map((item, index) => <option key={index} value={item.id}>
+              cities.map((item, index) => item && <option key={index} value={item.id}>
                 {item.nameRU}
               </option>)}
           </select>

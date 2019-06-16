@@ -7,12 +7,24 @@ import cityStatsMap from '../components/cityStats/cityStatsMap';
 import cityStats from '../components/cityStats/cityStats';
 import { WorkDoughnutChart, HobbiesDoughnutChart } from '../components/charts/charts';
 
-import { useStore } from 'easy-peasy';
+import { useStore, useActions } from 'easy-peasy';
 import parse from 'html-react-parser'
 
 export default function Home() {
   const newsList = useStore(store => store.news.newsList)
   const requestList = useStore(store => store.requests.requestList)
+
+  const loadNews = useActions(actions => actions.news.loadNews)
+
+  const toggleLike = useActions(actions => actions.news.toggleLike)
+  const likeHandler = (id) => {
+    toggleLike(id).then(status => {
+      if (status === 200) {
+        loadNews()
+      }
+      else alert('Ошибка лайка')
+    })
+  }
   return (
     <div className="container">
       <div className="col-12 mb-2 px-0">
@@ -74,10 +86,11 @@ export default function Home() {
                           item.announce ? <p>{item.announce}</p> : parse(item.content),
                           item.imagePrewiew,
                           {
-                            likesCount: 0,
-                            commentsCount: 0
+                            likesCount: item.likeCount,
+                            commentsCount: item.newsComments.length
                           },
-                          item.updatedAt
+                          item.updatedAt,
+                          () => likeHandler(item.id)
                         )}
                     </div>)
                     : <div className="px-2">

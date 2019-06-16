@@ -62,15 +62,15 @@ export const requests = {
   }),
 
   loadFilterRequests: thunk(async (actions, payload, { getStoreState }) => {
-    const data = await fetch(process.env.REACT_APP_API 
-      + `Request/List?page=1&count=100${payload.countryId ? `&country=${payload.countryId}` : ''}${payload.cityId ? `&city=${payload.cityId}` : ''}${payload.categoryId ? `&categoryId=${payload.categoryId}` : ''}`, {
-      method: 'get',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${getStoreState().auth.access}`
-      },
-    }).then(response => response.json())
+    const data = await fetch(process.env.REACT_APP_API
+      + `Request/List?page=1&count=100${payload.countryId ? `&country=${payload.countryId}` : ''}${payload.cityId ? `&city=${payload.cityId}` : ''}${payload.categoryId ? `&categoryId=${payload.categoryId}` : ''}${payload.competence ? `&competenceId=${payload.competence}` : ''}${payload.hobbie ? `&hobbyId=${payload.hobbie}` : ''}${payload.suggest ? `&utilityId=${payload.suggest}` : ''}${payload.searchQuery ? `&searchString=${payload.searchQuery}` : ''}`, {
+        method: 'get',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getStoreState().auth.access}`
+        },
+      }).then(response => response.json())
       .then(data => {
         // actions.appendInRequestList(data.requests)
         return data.requests
@@ -113,7 +113,7 @@ export const requests = {
 
     return response
   }),
- 
+
   loadSimilarRequests: thunk(async (actions, payload, { getStoreState }) => {
     const response = await fetch(process.env.REACT_APP_API + `Request/Similar?id=${payload}&count=3`, {
       method: 'get',

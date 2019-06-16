@@ -7,6 +7,7 @@ import timeRelate from '../../components/timeRelate/timeRelate';
 
 import { useStore, useActions } from 'easy-peasy';
 import parse from 'html-react-parser'
+import useInput from '../../hooks/useInput';
 
 export default function NewsSingle(router) {
   const newsId = router.match.params.id
@@ -15,13 +16,48 @@ export default function NewsSingle(router) {
 
   const getNewsContent = useActions(actions => actions.news.loadNewsItem)
   const [news, setNews] = useState({})
+
+  async function loadNewsContent() {
+    const newsContent = await getNewsContent(newsId)
+    setNews(newsContent)
+  }
+
   useEffect(() => {
-    async function loadNewsContent() {
-      const newsContent = await getNewsContent(newsId)
-      setNews(newsContent)
-    }
     loadNewsContent()
-  }, [newsId, getNewsContent])
+    // eslint-disable-next-line
+  }, [newsId])
+
+  const loadNews = useActions(actions => actions.news.loadNews)
+
+  const toggleLike = useActions(actions => actions.news.toggleLike)
+  const likeHandler = (id) => {
+    toggleLike(id).then(status => {
+      if (status === 200) {
+        loadNewsContent()
+        loadNews()
+      }
+      else alert('Ошибка лайка')
+    })
+  }
+  const user = useStore(store => store.profile.user)
+
+  const { value: commentText, bind: commentBind, reset: commentReset } = useInput('')
+
+  const comment = useActions(actions => actions.news.commentNews)
+  const submitCommentHandler = () => {
+    if (!commentText) return
+    comment({
+      newsId: newsId,
+      comment: commentText
+    }).then(responseStatus => {
+      if (responseStatus === 200) {
+        loadNewsContent()
+        loadNews()
+        commentReset()
+
+      } else alert('Ошибка отправки комментария')
+    })
+  }
 
   return (
     <div className="container">
@@ -46,11 +82,11 @@ export default function NewsSingle(router) {
 
                 <div className="news-meta">
                   <div className="row no-gutters">
-                    <div>
-                      {feedbackLike(0)}
-                    </div>
+                    <button className="no-style" onClick={() => likeHandler(newsId)}>
+                      {feedbackLike(news.likeCount)}
+                    </button>
                     <div className="ml-2">
-                      {feedbackComment(0)}
+                      {feedbackComment(news.newsComments && news.newsComments.length)}
                     </div>
 
                     <div className="ml-auto">
@@ -62,57 +98,62 @@ export default function NewsSingle(router) {
             )}
           </div>
 
-          {/* <div className="mt-2">
+          <div className="mt-2">
             {cardBlock(
               <h2>Обсуждения</h2>,
               <div className="no-padding">
                 <div className="list-card">
-                  {Array(3).fill().map((item, index) => <div key={index} className="card list-card-item">
-                    <div className="comment">
+                  {news.newsComments && news.newsComments.length > 0
+                    ? news.newsComments.map((item, index) => <div key={index} className="card list-card-item">
+                      <div className="comment">
 
-                      <div className="row no-gutters media-person">
-                        <div className="media-person__photo">
-                          <img className="not-responsive" src={thumbnail} alt="person" />
-                        </div>
-
-                        <div className="comment__content col">
-                          <div className="media-person__body">
-                            <div className="media-person__name">
-                              <span>Елена Алексеевна</span>
-                            </div>
+                        <div className="row no-gutters media-person">
+                          <div className="media-person__photo">
+                            <img src={item.user.photo} alt="person" />
                           </div>
-                          <p>Самое главное, чему меня научил Александр, - это умение бороться, ведь в современной жизни без этого никуда! Школа, безусловно, закалила мой характер - теперь уже не страшны ни бессонные ночи, ни огромные задания.</p>
-                        </div>
-                      </div>
 
-                      <div className="row no-gutters">
-                        <div className="ml-auto">
-                          {timeRelate(postDate)}
+                          <div className="comment__content col">
+                            <div className="media-person__body">
+                              <div className="media-person__name">
+                                <span>{item.user.firstName} {item.user.surName}</span>
+                              </div>
+                            </div>
+                            <p>{item.text}</p>
+                          </div>
                         </div>
-                      </div>
 
+                        <div className="row no-gutters">
+                          <div className="ml-auto">
+                            {timeRelate(item.timeStamp)}
+                          </div>
+                        </div>
+
+                      </div>
                     </div>
-                  </div>
-                  )}
+                    )
+                    : <div className="px-2">
+                      <p>К новости пока нет комментариев</p>
+                    </div>
+                  }
                 </div>
 
                 <div className="row align-items-center no-gutters mt-2 mx-2">
                   <div className="mr-1 media-person__photo d-none d-md-block">
-                    <img className="not-responsive" src={thumbnail} alt="person" />
+                    <img src={user && user.photo} alt="person" />
                   </div>
 
                   <div className="col">
-                    <textarea className="w-100" placeholder="Напишите комментарий" type="text" />
+                    <textarea {...commentBind} className="w-100" placeholder="Напишите комментарий" type="text" />
                   </div>
 
                   <button style={{
                     fontSize: '24px'
-                  }} className="no-style ml-1"><i className="fab fa-telegram-plane"></i></button>
+                  }} onClick={submitCommentHandler} className="no-style ml-1"><i className="fab fa-telegram-plane"></i></button>
 
                 </div>
               </div>
             )}
-          </div> */}
+          </div>
         </div>
 
         <div className="col-lg-4 d-none d-lg-block">
@@ -128,10 +169,11 @@ export default function NewsSingle(router) {
                       item.announce ? <p>{item.announce}</p> : parse(item.content),
                       item.imagePreviewPath,
                       {
-                        likesCount: 0,
-                        commentsCount: 0
+                        likesCount: item.likeCount,
+                        commentsCount: item.newsComments.length
                       },
-                      item.updatedAt
+                      item.updatedAt,
+                      () => likeHandler(item.id)
                     )}
                   </div>)
                   : <div className="px-2">

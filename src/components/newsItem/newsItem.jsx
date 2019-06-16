@@ -40,7 +40,7 @@ export default function newsItem(id, title, content, thumbnail, feedback, postDa
           </div>
 
           <div className="ml-auto">
-            {timeRelate(postDate)}
+            {postDate ? timeRelate(postDate) : '...'}
           </div>
         </div>
       </div>

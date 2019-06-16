@@ -20,6 +20,7 @@ import suggestsEdit from '../../components/suggests/suggestsEdit';
 import location from '../../components/location/location';
 
 import userThumb from '../../components/userThumb.png'
+import graduationYearOptions from '../../components/graduationYear/graduationYearOptions';
 
 export default function ProfileEdit() {
   const user = useStore(store => store.profile.user)
@@ -94,7 +95,7 @@ export default function ProfileEdit() {
             </div>
             <select {...graduationYearBind} className="w-100" onBlur={() => graduationYearErrorSet('')} id="mobile-person-graduation-year">
               <option value="" defaultChecked>Выберите год выпуска*</option>
-              {Array(new Date().getFullYear() + 1 - 2004).fill().map((item, index) => <option key={index} value={2004 + index}>{2004 + index}</option>)}
+              {graduationYearOptions()}
             </select>
             {/* <input onBlur={() => graduationYearErrorSet('')} ref={graduateYearInputMobile} {...graduationYearBind} placeholder="Год выпуска" className="w-100" id='mobile-person-graduation-year' type="text" /> */}
             <div className="form-error">{graduationYearError}</div>
@@ -465,7 +466,7 @@ export default function ProfileEdit() {
                   <div className="col-lg-6">
                     <select {...graduationYearBind} className="w-100" onBlur={() => graduationYearErrorSet('')} id="person-graduation-year">
                       <option value="" defaultChecked>Выберите год выпуска*</option>
-                      {Array(new Date().getFullYear() + 1 - 2004).fill().map((item, index) => <option key={index} value={2004 + index}>{2004 + index}</option>)}
+                      {graduationYearOptions()}
                     </select>
                     <div className="form-error">{graduationYearError}</div>
                   </div>

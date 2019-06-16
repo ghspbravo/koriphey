@@ -121,6 +121,24 @@ export const profile = {
   }),
 
 
+  commentUser: thunk(async (actions, payload, { getStoreState }) => {
+    const data = await fetch(process.env.REACT_APP_API + `User/Details?TargetUserId=${payload.id}&Text=${payload.reviewText}`, {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getStoreState().auth.access}`
+      }
+    }).then(response => response.json())
+      .then(response => {
+        return response
+      })
+      .catch(console.error)
+
+    return data
+
+  }),
+
   getUserById: thunk(async (actions, payload, { getStoreState }) => {
     const data = await fetch(process.env.REACT_APP_API + `User/Details?id=${payload}`, {
       method: 'get',
@@ -178,14 +196,15 @@ export const profile = {
   }),
 
   getFilterUserList: thunk(async (actions, payload, { getStoreState }) => {
-    const status = await fetch(process.env.REACT_APP_API + `User/List?page=1&count=1000${payload.hobbies ? `&hobby=${payload.hobbies}` : ''}${payload.suggests ? `&utility=${payload.suggests}` : ''}${payload.competences ? `&competence=${payload.competences}` : ''}`, {
-      method: 'get',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${getStoreState().auth.access}`
-      }
-    }).then(response => response.json())
+    const status = await fetch(process.env.REACT_APP_API +
+      `User/List?page=1&count=1000${payload.hobbies ? `&hobby=${payload.hobbies}` : ''}${payload.suggests ? `&utility=${payload.suggests}` : ''}${payload.competences ? `&competence=${payload.competences}` : ''}${payload.graduationYear ? `&graduationYear=${payload.graduationYear}` : ''}${payload.name ? `&name=${payload.name}` : ''}`, {
+        method: 'get',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getStoreState().auth.access}`
+        }
+      }).then(response => response.json())
       .catch(console.error)
 
     return status

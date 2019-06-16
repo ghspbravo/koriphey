@@ -8,25 +8,30 @@ import MobileNavigation from '../mobileNavigation/mobileNavigation';
 import { useStore, useActions } from 'easy-peasy';
 
 import logo from './logo.svg'
+import useInput from '../../hooks/useInput';
 export default function Header() {
 
   const profileControls = useRef()
 
   const profileClickHandler = () => {
-    try {if (!profileControls.current.classList.contains('expanded')) {
-      profileControls.current.classList.add('expanded')
-      window.addEventListener('click', clickOutsideControlsHandler)
-    }
-    else {
-      profileControls.current.classList.remove('expanded')
-      window.removeEventListener('click', clickOutsideControlsHandler)
-    }} catch (error) {console.error(error)}
+    try {
+      if (!profileControls.current.classList.contains('expanded')) {
+        profileControls.current.classList.add('expanded')
+        window.addEventListener('click', clickOutsideControlsHandler)
+      }
+      else {
+        profileControls.current.classList.remove('expanded')
+        window.removeEventListener('click', clickOutsideControlsHandler)
+      }
+    } catch (error) { console.error(error) }
   }
 
   const clickOutsideControlsHandler = e => {
-    try {if (e.target.closest('.header__profile-controls')) return
-    profileControls.current.classList.remove('expanded')
-    window.removeEventListener('click', clickOutsideControlsHandler)} catch (error) {console.error(error)}
+    try {
+      if (e.target.closest('.header__profile-controls')) return
+      profileControls.current.classList.remove('expanded')
+      window.removeEventListener('click', clickOutsideControlsHandler)
+    } catch (error) { console.error(error) }
   }
 
   const mobileMenu = useRef()
@@ -52,6 +57,7 @@ export default function Header() {
 
   const user = useStore(store => store.profile.user)
 
+  const { value: search, bind: searchBind } = useInput('');
 
   return (
     <div className="header">
@@ -78,9 +84,9 @@ export default function Header() {
           {isAuth
             ? user.status === 1 &&
             [<div key={0} className="header__search d-none d-md-flex search ml-xl-4 ml-md-2">
-              <Link style={{ fontSize: "18px" }} to='/search'
-                className="disabled search__icon no-style"><i className="fas fa-search"></i></Link>
-              <input placeholder="Поиск" className="search__input" type="text" name="search" />
+              <Link style={{ fontSize: "18px" }} to={`/search/${search}`}
+                className="search__icon no-style"><i className="fas fa-search"></i></Link>
+              <input {...searchBind} placeholder="Поиск" className="search__input" type="text" name="search" />
             </div>,
 
             <nav key={1} className="header__navigation d-none d-md-block navigation ml-xl-4 ml-md-2">
@@ -131,28 +137,28 @@ export default function Header() {
               <Link to='/login' className="button button_secondary ml-2">Войти</Link>
             </div>}
 
-          {isAuth && (user.status === 0 || user.status === 2)&&
+          {isAuth && (user.status === 0 || user.status === 2) &&
             <div className="ml-auto">
               <div onClick={profileClickHandler} className="header__profile-controls">
                 <img className='not-responsive' src={user && user.photo ? user.photo : "https://www.dacgllc.com/site/wp-content/uploads/2015/12/DACG_Web_AboutUs_PersonPlaceholder.png"} alt="person thumbnail" />
                 <i className="fas fa-angle-down"></i>
-  
+
                 <div ref={profileControls} className="profile-controls">
-  
+
                   <div className="profile-controls-section">
                     <button onClick={logoutHandler} style={{
                       textAlign: 'left',
                       width: '100%'
                     }} className="no-style navigation-item">Выход</button>
                   </div>
-  
+
                 </div>
               </div>
             </div>}
 
           {isAuth && user.status === 1 &&
             <div className="d-md-none">
-              <Link to='/search' className="disabled search__icon no-style"><i className="fas fa-search"></i></Link>
+              <Link to='/search/' className="search__icon no-style"><i className="fas fa-search"></i></Link>
             </div>}
 
         </div>

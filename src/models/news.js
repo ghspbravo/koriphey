@@ -12,7 +12,7 @@ export const news = {
       },
     }).then(response => response.json())
       .then(data => {
-        actions.appendInNewsList(data)
+        actions.setNewsList(data)
       })
       .catch(console.error)
 
@@ -44,6 +44,11 @@ export const news = {
     payload.forEach(news => state.newsList.push(news))
   }),
 
+  setNewsList: action((state, payload) => {
+    state.newsList = []
+    payload.forEach(news => state.newsList.push(news))
+  }),
+
   toggleLike: thunk(async (actions, payload, { getStoreState }) => {
     const success = await fetch(process.env.REACT_APP_API + `News/AddRemoveLike?newsId=${payload}`, {
       method: 'post',
@@ -52,25 +57,20 @@ export const news = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${getStoreState().auth.access}`
       },
-    }).then(response => response.json())
+    }).then(response => response.status)
       .catch(window.alert)
 
     return success
   }),
 
   commentNews: thunk(async (actions, payload, { getStoreState }) => {
-    const data = {
-      "newsId": payload.newsId,
-      "text": payload.comment
-    }
-    const success = await fetch(process.env.REACT_APP_API + 'News/AddComment', {
+    const success = await fetch(process.env.REACT_APP_API + `News/AddComment/?newsId=${payload.newsId}&text=${payload.comment}`, {
       method: 'post',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${getStoreState().auth.access}`
       },
-      body: JSON.stringify(data)
     }).then(response => response.status)
       .catch(console.error)
 

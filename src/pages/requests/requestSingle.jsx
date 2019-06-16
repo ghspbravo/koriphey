@@ -40,14 +40,20 @@ export default function RequestSingle(router) {
                 </div>
                 {request && request.user &&
                   mediaPerson(
-                  request.user.photo ? request.user.photo : "https://picsum.photos/50",
+                  request.user.photo ? request.user.photo : "",
                   `${request.user.firstName} ${request.user.surName}`,
                   <span>{`${request.user.city && request.user.city.country.nameRU}, ${request.user.city && request.user.city.nameRU}`}</span>
                 )}
-                {request.category && request.category.name &&
-                  <p className="small"><b>Категория:</b> {request.category.name}</p>}
+                {/* {request.category && request.category.name &&
+                  <p className="small"><b>Категория:</b> {request.category.name}</p>} */}
+                {request.utility && request.utility.name &&
+                  <p className="small"><b>Категория:</b> {`${request.utility.name}`}</p>}
                 {request.location && request.location.city &&
                   <p className="small"><b>Локация:</b> {`${request.location.city.country.nameRU}, ${request.location.city.nameRU}`}</p>}
+                {/* {request.competence && request.competence.name &&
+                  <p className="small"><b>Сфера деятельности:</b> {`${request.competence.name}`}</p>}
+                {request.hobby && request.hobby.name &&
+                  <p className="small"><b>Хобби/увлечение:</b> {`${request.hobby.name}`}</p>} */}
                 {request.expiredAt &&
                   <p className="small"><b>Окончание необходимости:</b> {formatDate(request.expiredAt)}</p>}
 
@@ -82,7 +88,8 @@ export default function RequestSingle(router) {
                           location: `${item.user.city && item.user.city.country.nameRU}, ${item.user.city && item.user.city.nameRU}`
                       },
                       {
-                        category: item.category && item.category.name,
+                        // category: item.category && item.category.name,
+                        category: item.utility && item.utility.name,
                         location: item.location && item.location.city.nameRU,
                         expiredAt: item.expiredAt && formatDate(item.expiredAt)
                       },

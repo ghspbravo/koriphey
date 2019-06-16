@@ -5,11 +5,13 @@ import cardBlock from '../../components/cardBlock/cardBlock';
 import { useActions, useStore } from 'easy-peasy';
 import useInput from '../../hooks/useInput';
 import useFetch from '../../hooks/useFetch';
+import peopleFilter from '../../components/filters/peopleFilter';
 
 export default function Peoples() {
   const userList = useStore(store => store.profile.userList)
   const getFilterUserList = useActions(actions => actions.profile.getFilterUserList)
 
+  const { value: graduationYear, bind: graduationYearBind, reset: graduationYearReset } = useInput('');
 
   const { value: hobbies, bind: hobbiesBind, reset: hobbiesReset } = useInput('');
   const fetchedHobbiesList = useStore(store => store.profile.hobbiesList)
@@ -34,7 +36,7 @@ export default function Peoples() {
 
     showFilterResultsSet(true)
     const payload = {
-      hobbies, suggests, competences
+      hobbies, suggests, competences, graduationYear
     }
 
     getFilterUserList(payload).then(filteredPeopleSet)
@@ -45,6 +47,7 @@ export default function Peoples() {
     hobbiesReset()
     suggestsReset()
     competencesReset()
+    graduationYearReset()
   }
 
   return (
@@ -104,41 +107,18 @@ export default function Peoples() {
           <div>
             {cardBlock(
               <h2>Фильтр</h2>,
-              <form onSubmit={submitHandler}>
+              peopleFilter(
+                submitHandler,
+                competencesBind, fetchedCompetencesList,
 
-                <p className="big">Сфера деятельности</p>
-                <select required className="w-100" {...competencesBind}>
-                  <option value="0">Выберите сферу деятельности</option>
-                  {fetchedCompetencesList.map((competence, index) => <option key={index} value={competence.id}>
-                    {competence.name}
-                  </option>)}
-                </select>
+                suggestsBind, fetchedSuggestsList,
 
-                <p className="big">Польза</p>
-                <select required className="w-100" {...suggestsBind}>
-                  <option value="0">Выберите категорию</option>
-                  {fetchedSuggestsList.map((suggest, index) => <option key={index} value={suggest.id}>
-                    {suggest.name}
-                  </option>)}
-                </select>
+                hobbiesBind, fetchedHobbiesList,
 
-                <p className="big">Хобби/увлечения</p>
-                <select required className="w-100" {...hobbiesBind}>
-                  <option value="0">Выберите хобби/увлечение</option>
-                  {fetchedHobbiesList.map((hobbie, index) => <option key={index} value={hobbie.id}>
-                    {hobbie.name}
-                  </option>)}
-                </select>
+                graduationYearBind,
 
-                <div className="row no-gutters mt-1">
-                  <button className="ml-auto">Фильтр</button>
-                </div>
-
-                <div className="row no-gutters mt-1">
-                  <button type="button" onClick={resetHandler} className="button_secondary ml-auto">Сбросить</button>
-                </div>
-
-              </form>
+                resetHandler
+              )
             )}
           </div>
         </div>

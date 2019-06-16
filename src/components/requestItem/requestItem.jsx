@@ -10,7 +10,7 @@ import mediaPerson from '../mediaPerson/mediaPerson';
  */
 export default function requestItem(person, meta, content, thumbnail, id) {
   return (
-    <div className="request d-flex flex-column" style={{height: '100%'}}>
+    <div className="request d-flex flex-column" style={{ height: '100%' }}>
       {mediaPerson(
         person.photo,
         person.name,
@@ -18,7 +18,8 @@ export default function requestItem(person, meta, content, thumbnail, id) {
       )}
 
       <div className="request-meta">
-        <p className="small"><b>Категория: </b>{meta.category}</p>
+        {meta.category &&
+          <p className="small"><b>Категория: </b>{meta.category}</p>}
         {meta.location &&
           <p className="small"><b>Локация: </b>{meta.location}</p>}
         {meta.expiredAt &&

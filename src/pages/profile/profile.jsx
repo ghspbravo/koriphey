@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import cardBlock from '../../components/cardBlock/cardBlock';
 import comment from '../../components/comment/comment';
 
@@ -8,19 +8,36 @@ import { socialVkontakte, socialFacebook, socialInstagram } from '../../componen
 
 import { useActions } from 'easy-peasy';
 import userThumb from '../../components/userThumb.png'
+import useInput from '../../hooks/useInput';
 
 export default function Profile(router) {
   const [user, setUser] = useState()
 
   const getUserById = useActions(actions => actions.profile.getUserById)
+  async function loadUserContent() {
+    const userContent = await getUserById(router.match.params.id)
+    setUser(userContent)
+  }
   useEffect(() => {
-    const userId = router.match.params.id
-    async function loadUserContent() {
-      const userContent = await getUserById(userId)
-      setUser(userContent)
-    }
     loadUserContent()
-  }, [getUserById, router.match.params.id])
+    // eslint-disable-next-line
+  }, [router.match.params.id])
+
+  const { value: reviewText, bind: reviewTextBind, reset: reviewTextReset } = useInput('')
+
+  const review = useActions(actions => actions.profile.commentUser)
+  const submitReviewHandler = () => {
+    if (!reviewText) return
+    review({
+      id: router.match.params.id,
+      reviewText
+    }).then(response => {
+      if (response === 200) {
+        reviewTextReset()
+        loadUserContent()
+      } else alert('Ошибка отзыв')
+    })
+  }
   return (
     <div className="container">
       <div className="row">
@@ -34,7 +51,7 @@ export default function Profile(router) {
             <div className="col-6 pl-1">
               <h2 className="profile-person__name">{user && user.fio ? `${user.firstName} ${user.surName}` : '...'}</h2>
               <a href={`mailto:${user && user.email}`} className="profile-person__button button button_expanded">Написать</a>
-              <Link className="profile-person__button button button_expanded button_secondary mt-1 disabled" to={`/profile/${router.match.params.id}`}>Отзыв</Link>
+              {/* <Link className="profile-person__button button button_expanded button_secondary mt-1 disabled" to={`/profile/${router.match.params.id}`}>Отзыв</Link> */}
             </div>
           </div>
 
@@ -166,6 +183,21 @@ export default function Profile(router) {
                   : <div className="px-2">
                     <p>Отзывов о пользователе пока нет</p>
                   </div>}
+
+                <div className="row align-items-center no-gutters mt-2 mx-2">
+                  <div className="mr-1 media-person__photo d-none d-md-block">
+                    <img src={user && user.photo} alt="person" />
+                  </div>
+
+                  <div className="col">
+                    <textarea {...reviewTextBind} className="w-100" placeholder="Напишите отзыв" type="text" />
+                  </div>
+
+                  <button style={{
+                    fontSize: '24px'
+                  }} onClick={submitReviewHandler} className="no-style ml-1"><i className="fab fa-telegram-plane"></i></button>
+
+                </div>
               </div>
             )}
           </div>
