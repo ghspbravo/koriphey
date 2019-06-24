@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import cardBlock from '../../components/cardBlock/cardBlock';
 import requestItem from '../../components/requestItem/requestItem';
@@ -9,6 +9,16 @@ import parse from 'html-react-parser'
 import formatDate from '../../functions/formatDate';
 
 export default function News() {
+  const [currentPage, currentPageSet] = useState(1)
+  const nextPageHandler = async (e) => {
+    const target = e.target
+    target.disabled = true
+    currentPageSet(currentPage + 1)
+    const hasNextPage = await loadNews(currentPage + 1)
+    if (!hasNextPage) currentPageSet(null)
+    target.disabled = false
+  }
+
   const newsList = useStore(store => store.news.newsList)
   const requestList = useStore(store => store.requests.requestList)
 
@@ -42,8 +52,9 @@ export default function News() {
                         likesCount: item.likeCount,
                         commentsCount: item.newsComments.length
                       },
-                      item.updatedAt,
-                      () => likeHandler(item.id)
+                      item.createdAt,
+                      () => likeHandler(item.id),
+                      item.hasLike
                     )}
                   </div>)
                   : <div className="px-2">
@@ -52,6 +63,12 @@ export default function News() {
                 }
               </div>
             )}
+          </div>
+          <div className="row justify-content-center">
+            {currentPage === null
+              ? null
+              : <button onClick={nextPageHandler} className="mt-2">Показать больше</button>
+            }
           </div>
         </div>
 

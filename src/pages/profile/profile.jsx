@@ -6,12 +6,15 @@ import comment from '../../components/comment/comment';
 import './profile.scss'
 import { socialVkontakte, socialFacebook, socialInstagram } from '../../components/socials/socials';
 
-import { useActions } from 'easy-peasy';
+import { useActions, useStore } from 'easy-peasy';
 import userThumb from '../../components/userThumb.png'
 import useInput from '../../hooks/useInput';
 
 export default function Profile(router) {
   const [user, setUser] = useState()
+
+  const currentUser = useStore(store => store.profile.user)
+
 
   const getUserById = useActions(actions => actions.profile.getUserById)
   async function loadUserContent() {
@@ -78,7 +81,7 @@ export default function Profile(router) {
                     {user && user.competencies.length !== 0 &&
                       <div>
                         <div className="row mb-1">
-                          <div className="profile-info__head col-12">Сферы деятельнсти: </div>
+                          <div className="profile-info__head col-12">Сферы деятельности: </div>
                         </div>
                         <div className="row mb-2">
                           <div className="profile-info__content col-12">{user.competencies
@@ -186,7 +189,7 @@ export default function Profile(router) {
 
                 <div className="row align-items-center no-gutters mt-2 mx-2">
                   <div className="mr-1 media-person__photo d-none d-md-block">
-                    <img src={user && user.photo} alt="person" />
+                    <img src={currentUser && currentUser.photo} alt="person" />
                   </div>
 
                   <div className="col">

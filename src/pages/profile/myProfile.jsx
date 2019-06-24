@@ -58,7 +58,7 @@ export default function MyProfile() {
                     {user && user.competencies.length !== 0 &&
                       <div>
                         <div className="row mb-1">
-                          <div className="profile-info__head col-12">Сферы деятельнсти: </div>
+                          <div className="profile-info__head col-12">Сферы деятельности: </div>
                         </div>
                         <div className="row mb-2">
                           <div className="profile-info__content col-12">{user.competencies

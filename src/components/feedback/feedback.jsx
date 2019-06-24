@@ -6,7 +6,7 @@ import './feedback.scss'
  * @param {number} count 
  * @param {boolean} liked 
  */
-export function feedbackLike(count, liked) {
+export function feedbackLike(count, liked = false) {
   return (
     <div className={`feedback-like ${liked ? "liked" : ""}`}>
       <div className="feedback__icon">

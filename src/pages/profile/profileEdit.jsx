@@ -209,6 +209,7 @@ export default function ProfileEdit() {
               <label style={{ fontWeight: 'normal' }} className="link" htmlFor="mobile-person-photo">Изменить фото</label>
             </div>
             <input {...photoBind} accept="image/png, image/jpeg" className="d-none" type="file" name="mobile-person-photo" id="mobile-person-photo" />
+            <p className="small">Друзьям будет проще узнать Вас, если Вы загрузите свою настоящую фотографию, на которой отчетливо будет видно лицо.</p>
           </div>
 
         </div>
@@ -623,6 +624,7 @@ export default function ProfileEdit() {
                     <div>
                       <label style={{ cursor: 'pointer' }} htmlFor="person-photo"><img src={photo} alt="" /></label>
                       <label style={{ fontWeight: 'normal' }} className="link" htmlFor="person-photo">Изменить фото</label>
+                      <p className="small">Друзьям будет проще узнать Вас, если Вы загрузите свою настоящую фотографию, на которой отчетливо будет видно лицо.</p>
                       <input {...photoBind} accept="image/png, image/jpeg" className="d-none" type="file" name="person-photo" id="person-photo" />
                     </div>
                   </div>

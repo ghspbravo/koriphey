@@ -45,7 +45,8 @@ export const requests = {
   }),
 
   loadRequests: thunk(async (actions, payload, { getStoreState }) => {
-    const success = await fetch(process.env.REACT_APP_API + 'Request/List?page=1&count=100', {
+    const page = payload || 1
+    const success = await fetch(process.env.REACT_APP_API + `Request/List?page=${page}&count=20`, {
       method: 'get',
       headers: {
         'Accept': 'application/json',
@@ -55,6 +56,7 @@ export const requests = {
     }).then(response => response.json())
       .then(data => {
         actions.appendInRequestList(data.requests)
+        return data.isExistNextPage
       })
       .catch(window.alert)
 

@@ -46,6 +46,9 @@ export default function Register(router) {
   const [passwordError, passwordErrorSet] = useState('')
   const { value: repeatPassword, bind: repeatPasswordBind } = useInput('');
 
+  const { value: role, bind: roleBind } = useInput('');
+  const [roleError, roleErrorSet] = useState('')
+
   const { value: photoFile, previewFile: photo, bind: photoBind } = useFileInput(false, 'https://www.dacgllc.com/site/wp-content/uploads/2015/12/DACG_Web_AboutUs_PersonPlaceholder.png')
   // const [photoError, photoErrorSet] = useState('')
 
@@ -70,6 +73,7 @@ export default function Register(router) {
     if (password === '') { passwordErrorSet('Заполните пароль'); isValid = false }
     else if (password.length < 8) { passwordErrorSet('Пароль должен быть не меньше 8 символов'); isValid = false }
     if (password !== repeatPassword) isValid = false
+    if (role === 0) { roleErrorSet('Выберите роль'); isValid = false }
     if (!isValid) return
     processingSet(true)
     const date = birthdate.split('.')
@@ -161,6 +165,16 @@ export default function Register(router) {
                   </div>
 
                   <div className="form-group mb-1">
+                    <select {...roleBind} onBlur={() => roleErrorSet('')} name='type' className="w-100" type='hidden' value='00' required placeholder="Роль*">
+                      <option value="" defaultValue>Выберите роль*</option>
+                      <option value="0">Выпускник</option>
+                      <option value="1">Учитель</option>
+                      <option value="2">Старшеклассник</option>
+                    </select>
+                    <div className="form-error">{roleError}</div>
+                  </div>
+
+                  <div className="form-group mb-1">
                     <input {...passwordBind} onBlur={() => passwordErrorSet('')} className="w-100" name='password' required placeholder="Придумайте пароль*" type="password" />
                     <div className="form-hint">Пароль должен быть не менее 8 символов</div>
                     <div className="form-error">{passwordError}</div>
@@ -175,6 +189,7 @@ export default function Register(router) {
                     <div className="row no-gutters align-items-center">
                       <label className="d-block mr-1" style={{ cursor: 'pointer' }} htmlFor="person-photo"><img style={{ width: '40px', height: '35px' }} src={photo} alt="" /></label>
                       <label style={{ fontWeight: 'normal' }} className="link" htmlFor="person-photo">Загрузить фото</label>
+                      <p className="small">Друзьям будет проще узнать Вас, если Вы загрузите свою настоящую фотографию, на которой отчетливо будет видно лицо.</p>
                     </div>
                   </div>
 
@@ -189,6 +204,7 @@ export default function Register(router) {
                 <label style={{ fontWeight: 'normal' }} className="link" htmlFor="person-photo">Загрузить фото</label>
                 <input accept='image/png, image/jpeg'
                   {...photoBind} className="d-none" type="file" name="photo" id="person-photo" />
+                <p className="small">Друзьям будет проще узнать Вас, если Вы загрузите свою настоящую фотографию, на которой отчетливо будет видно лицо.</p>
               </div>
             </div>
           </form>

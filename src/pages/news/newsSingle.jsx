@@ -83,14 +83,14 @@ export default function NewsSingle(router) {
                 <div className="news-meta">
                   <div className="row no-gutters">
                     <button className="no-style" onClick={() => likeHandler(newsId)}>
-                      {feedbackLike(news.likeCount)}
+                      {feedbackLike(news.likeCount, news.hasLike)}
                     </button>
                     <div className="ml-2">
                       {feedbackComment(news.newsComments && news.newsComments.length)}
                     </div>
 
                     <div className="ml-auto">
-                      {news && news.updatedAt ? timeRelate(news.updatedAt) : '...'}
+                      {news && news.createdAt ? timeRelate(news.createdAt) : '...'}
                     </div>
                   </div>
                 </div>
@@ -172,8 +172,9 @@ export default function NewsSingle(router) {
                         likesCount: item.likeCount,
                         commentsCount: item.newsComments.length
                       },
-                      item.updatedAt,
-                      () => likeHandler(item.id)
+                      item.createdAt,
+                      () => likeHandler(item.id),
+                      item.hasLike
                     )}
                   </div>)
                   : <div className="px-2">

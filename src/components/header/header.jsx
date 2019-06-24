@@ -78,6 +78,15 @@ export default function Header() {
 
           <div className={`header__logo ${isAuth ? "mx-auto" : ""} mx-md-0`}>
             <img className="not-responsive" src={logo} alt="logo" />
+            {/* <span style={{
+              display: 'block',
+              color: 'white',
+              fontSize: '2rem',
+              paddingTop: '10px'
+            }}>{"ЛНИП "}<span className="d-none d-md-inline-block" style={{
+                fontSize: '1rem'
+              }}>г. Королев</span>
+            </span> */}
             <Link to="/" className="expanded" />
           </div>
 

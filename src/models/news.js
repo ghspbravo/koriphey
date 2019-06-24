@@ -3,29 +3,33 @@ import { action, thunk } from 'easy-peasy'
 export const news = {
   newsList: [],
 
-  loadNews: thunk(async (actions, payload) => {
-    const success = await fetch(process.env.REACT_APP_API + 'News/List?count=100&page=1', {
+  loadNews: thunk(async (actions, payload, { getStoreState }) => {
+    const page = payload || 1
+    const success = await fetch(process.env.REACT_APP_API + `News/List?count=10&page=${page}`, {
       method: 'get',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getStoreState().auth.access}`
       },
     }).then(response => response.json())
       .then(data => {
-        actions.setNewsList(data)
+        actions.appendInNewsList(data)
+        return data.isExistNextPage
       })
       .catch(console.error)
 
     return success
   }),
 
-  loadNewsItem: thunk(async (actions, payload) => {
+  loadNewsItem: thunk(async (actions, payload, { getStoreState }) => {
 
     const newsContent = await fetch(process.env.REACT_APP_API + `News/Details?id=${payload}`, {
       method: 'get',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getStoreState().auth.access}`
       },
     }).then(response => {
       let newsContent = {}

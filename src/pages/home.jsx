@@ -89,8 +89,9 @@ export default function Home() {
                             likesCount: item.likeCount,
                             commentsCount: item.newsComments.length
                           },
-                          item.updatedAt,
-                          () => likeHandler(item.id)
+                          item.createdAt,
+                          () => likeHandler(item.id),
+                          item.hasLike
                         )}
                     </div>)
                     : <div className="px-2">

@@ -13,6 +13,17 @@ import requestFilter from '../../components/filters/requestFilter';
 export default function Requests() {
   const requestList = useStore(store => store.requests.requestList)
 
+  const [currentPage, currentPageSet] = useState(1)
+  const loadRequests = useActions(actions => actions.requests.loadRequests)
+  const nextPageHandler = async (e) => {
+    const target = e.target
+    target.disabled = true
+    currentPageSet(currentPage + 1)
+    const hasNextPage = await loadRequests(currentPage + 1)
+    if (!hasNextPage) currentPageSet(null)
+    target.disabled = false
+  }
+
   // LOCATION
   const { selectedCountryId, cityId, countriesList, cities, countryChoiceHandler, cityChoiceHandler, setCityId, setSelectedCountryId } = useLocation()
 
@@ -128,6 +139,13 @@ export default function Requests() {
                   </div>}
               </div>
             </div>)}
+            
+          <div className="row justify-content-center">
+            {currentPage === null
+              ? null
+              : <button onClick={nextPageHandler} className="mt-2">Показать больше</button>
+            }
+          </div>
         </div>
 
         <div className="col-lg-3 d-none d-lg-block">

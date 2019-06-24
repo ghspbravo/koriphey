@@ -122,17 +122,14 @@ export const profile = {
 
 
   commentUser: thunk(async (actions, payload, { getStoreState }) => {
-    const data = await fetch(process.env.REACT_APP_API + `User/Details?TargetUserId=${payload.id}&Text=${payload.reviewText}`, {
+    const data = await fetch(process.env.REACT_APP_API + `User/AddReview?TargetUserId=${payload.id}&Text=${payload.reviewText}`, {
       method: 'post',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${getStoreState().auth.access}`
       }
-    }).then(response => response.json())
-      .then(response => {
-        return response
-      })
+    }).then(response => response.status)
       .catch(console.error)
 
     return data
@@ -178,7 +175,8 @@ export const profile = {
   }),
 
   getUserList: thunk(async (actions, payload, { getStoreState }) => {
-    const status = await fetch(process.env.REACT_APP_API + 'User/List?page=1&count=1000', {
+    const page = payload || 1
+    const status = await fetch(process.env.REACT_APP_API + `User/List?page=${page}&count=20`, {
       method: 'get',
       headers: {
         'Accept': 'application/json',
@@ -188,6 +186,7 @@ export const profile = {
     }).then(response => response.json())
       .then(data => {
         actions.appendInUserList(data)
+        return data.isExistNextPage
       })
       .catch(console.error)
 

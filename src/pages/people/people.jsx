@@ -8,6 +8,17 @@ import useFetch from '../../hooks/useFetch';
 import peopleFilter from '../../components/filters/peopleFilter';
 
 export default function Peoples() {
+  const [currentPage, currentPageSet] = useState(1)
+  const getUserList = useActions(actions => actions.profile.getUserList)
+  const nextPageHandler = async (e) => {
+    const target = e.target
+    target.disabled = true
+    currentPageSet(currentPage + 1)
+    const hasNextPage = await getUserList(currentPage + 1)
+    if (!hasNextPage) currentPageSet(null)
+    target.disabled = false
+  }
+
   const userList = useStore(store => store.profile.userList)
   const getFilterUserList = useActions(actions => actions.profile.getFilterUserList)
 
@@ -100,6 +111,14 @@ export default function Peoples() {
                     </div>}
                 </div>
               </div>)}
+
+            <div className="row justify-content-center">
+              {currentPage === null
+                ? null
+                : <button onClick={nextPageHandler} className="mt-2">Показать больше</button>
+              }
+            </div>
+
           </div>
         </div>
 
