@@ -20,18 +20,18 @@ export default function News() {
   }
 
   const newsList = useStore(store => store.news.newsList)
+  const hasNextPage = useStore(store => store.news.hasNextPage)
   const requestList = useStore(store => store.requests.requestList)
 
   const loadNews = useActions(actions => actions.news.loadNews)
 
   const toggleLike = useActions(actions => actions.news.toggleLike)
-  const likeHandler = (id) => {
-    toggleLike(id).then(status => {
-      if (status === 200) {
-        loadNews()
-      }
-      else alert('Ошибка лайка')
-    })
+  const likeHandler = async (id) => {
+    const status = await toggleLike(id)
+    if (status === 200) {
+      // loadNews()
+    }
+    else alert('Ошибка лайка')
   }
   return (
     <div className="container">
@@ -65,7 +65,7 @@ export default function News() {
             )}
           </div>
           <div className="row justify-content-center">
-            {currentPage === null
+            {!hasNextPage
               ? null
               : <button onClick={nextPageHandler} className="mt-2">Показать больше</button>
             }

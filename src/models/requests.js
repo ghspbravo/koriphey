@@ -3,6 +3,7 @@ import { action, thunk } from 'easy-peasy'
 export const requests = {
   requestList: [],
   userRequestList: [],
+  hasNextPage: false,
 
   categoriesList: [],
 
@@ -55,7 +56,7 @@ export const requests = {
       },
     }).then(response => response.json())
       .then(data => {
-        actions.appendInRequestList(data.requests)
+        actions.appendInRequestList(data)
         return data.isExistNextPage
       })
       .catch(window.alert)
@@ -134,7 +135,8 @@ export const requests = {
   }),
 
   appendInRequestList: action((state, payload) => {
-    payload.forEach(request => state.requestList.push(request))
+    payload.requests.forEach(request => state.requestList.push(request))
+    state.hasNextPage = payload.isExistNextPage
   }),
 
   appendInCategoriesList: action((state, payload) => {

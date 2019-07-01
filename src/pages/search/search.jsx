@@ -11,6 +11,7 @@ import useLocation from '../../hooks/useLocation';
 import requestFilter from '../../components/filters/requestFilter';
 import peopleFilter from '../../components/filters/peopleFilter';
 import formatDate from '../../functions/formatDate';
+import SearchInput from '../../components/searchInput/searchInput';
 
 const FILTER_BY = {
   ALL: 0,
@@ -23,6 +24,14 @@ export default function Search(router) {
   const [filterBy, filterBySet] = useState(FILTER_BY.ALL)
 
   const { value: search, bind: searchBind } = useInput('')
+
+  const searchQuery = useStore(store => store.search.query)
+  const valueChangeHandler = useActions(actions => actions.search.queryChange)
+  const searchChangeHandler = e => {
+    const value = e.target.value
+
+    valueChangeHandler(value)
+  }
 
   // REQUESTS
   const { selectedCountryId, cityId, countriesList, cities, countryChoiceHandler, cityChoiceHandler, setCityId, setSelectedCountryId } = useLocation()
@@ -42,7 +51,7 @@ export default function Search(router) {
   const suggestsList = useStore(store => store.profile.suggestsList)
   useFetch(suggestsList, getSuggestsList)
 
-  const { value: category, bind: categoryBind, reset: categoryReset } = useInput('');
+  const { /* value: category, */ bind: categoryBind, reset: categoryReset } = useInput('');
   const requestCategoriesList = useActions(actions => actions.requests.loadCategories)
   const categoriesList = useStore(store => store.requests.categoriesList)
   useFetch(categoriesList, requestCategoriesList)
@@ -61,9 +70,21 @@ export default function Search(router) {
 
   useEffect(() => {
     // const query = router.match.params.query
-    submitFiltersHandler()
+    submitEmptyFilters()
     // eslint-disable-next-line
   }, [router.match.params.query])
+
+  const submitEmptyFilters = e => {
+    e && e.preventDefault()
+
+    const payload = {
+      searchQuery: router.match.params.query,
+      name: router.match.params.query,
+    }
+
+    loadFilterRequests(payload).then(filteredRequestsSet)
+    getFilterUserList(payload).then(filteredPeopleSet)
+  }
 
   const submitFiltersHandler = e => {
     e && e.preventDefault()
@@ -71,10 +92,10 @@ export default function Search(router) {
     const payload = {
       countryId: selectedCountryId,
       cityId,
-      categoryId: category,
-      competence,
-      hobbie,
-      suggest,
+      categoryId: suggest,
+      competences: competence,
+      hobbies: hobbie,
+      suggests: suggest,
 
       searchQuery: router.match.params.query,
       name: router.match.params.query,
@@ -95,7 +116,7 @@ export default function Search(router) {
     setCityId(0)
     graduationYearReset()
 
-    submitFiltersHandler()
+    submitEmptyFilters()
   }
 
   return (
@@ -109,7 +130,9 @@ export default function Search(router) {
                 {cardBlock(
                   <div className="search">
                     <Link to={`/search/${search}`} className="search__icon no-style"><i className="fas fa-search"></i></Link>
-                    <input {...searchBind} placeholder="Поиск" className="search__input" type="text" name="search" />
+                    {SearchInput(
+                      searchQuery, searchChangeHandler
+                    )}
                   </div>,
                   <div className="no-padding">
                     <div className="mb-2 px-2">
@@ -209,7 +232,7 @@ export default function Search(router) {
             {filterBy === FILTER_BY.REQUESTS &&
               <div className="mt-2">
                 {cardBlock(
-                  <h2>Фильтр</h2>,
+                  <h2>Поиск</h2>,
                   requestFilter(
                     submitFiltersHandler,
 
@@ -232,7 +255,7 @@ export default function Search(router) {
             {filterBy === FILTER_BY.PEOPLE &&
               <div className="mt-2">
                 {cardBlock(
-                  <h2>Фильтр</h2>,
+                  <h2>Поиск</h2>,
                   peopleFilter(
                     submitFiltersHandler,
                     competenceBind, competencesList,

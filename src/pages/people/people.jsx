@@ -19,6 +19,7 @@ export default function Peoples() {
     target.disabled = false
   }
 
+  const hasNextPage = useStore(store => store.profile.hasNextPage)
   const userList = useStore(store => store.profile.userList)
   const getFilterUserList = useActions(actions => actions.profile.getFilterUserList)
 
@@ -113,7 +114,7 @@ export default function Peoples() {
               </div>)}
 
             <div className="row justify-content-center">
-              {currentPage === null
+              {!hasNextPage
                 ? null
                 : <button onClick={nextPageHandler} className="mt-2">Показать больше</button>
               }

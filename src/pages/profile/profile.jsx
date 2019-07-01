@@ -174,13 +174,11 @@ export default function Profile(router) {
                   ? user.reviews.map((item, key) => <div className="card list-card-item" key={key}>
                     {comment(
                       {
-                        photo: "https://picsum.photos/50",
-                        name: "Денис Петров",
-                        location: "Нью-Йорк, США"
+                        photo: item.from.photo,
+                        name: `${item.from.firstName} ${item.from.surName}`,
+                        // location: `${}`
                       },
-                      "Самое главное, чему меня научил Александр, - это умение бороться, ведь в современной жизни без этого никуда! Школа, безусловно, закалила мой характер - теперь уже не страшны ни бессонные ночи, ни огромные задания.",
-                      1,
-                      new Date("2019-05-02")
+                      item.text
                     )}
                   </div>)
                   : <div className="px-2">

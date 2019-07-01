@@ -6,6 +6,7 @@ export const profile = {
   competencesList: [],
   hobbiesList: [],
   suggestsList: [],
+  hasNextPage: false,
 
   resetPassword: thunk(async (actions, payload, { dispatch, getStoreState }) => {
 
@@ -204,6 +205,7 @@ export const profile = {
           'Authorization': `Bearer ${getStoreState().auth.access}`
         }
       }).then(response => response.json())
+      .then(response => response.news)
       .catch(console.error)
 
     return status
@@ -224,7 +226,8 @@ export const profile = {
   }),
 
   appendInUserList: action((state, payload) => {
-    payload.forEach(user => state.userList.push(user))
+    payload.news.forEach(user => state.userList.push(user))
+    state.hasNextPage = payload.isExistNextPage
   }),
 
   getSuggestsList: thunk(async (actions, payload) => {

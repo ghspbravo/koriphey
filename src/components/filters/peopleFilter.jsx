@@ -48,7 +48,7 @@ export default function peopleFilter(
 
 
       <div className="row no-gutters mt-1">
-        <button className="ml-auto">Фильтр</button>
+        <button className="ml-auto">Искать</button>
       </div>
 
       <div className="row no-gutters mt-1">

@@ -8,7 +8,7 @@ import MobileNavigation from '../mobileNavigation/mobileNavigation';
 import { useStore, useActions } from 'easy-peasy';
 
 import logo from './logo.svg'
-import useInput from '../../hooks/useInput';
+import SearchInput from '../searchInput/searchInput';
 export default function Header() {
 
   const profileControls = useRef()
@@ -57,7 +57,15 @@ export default function Header() {
 
   const user = useStore(store => store.profile.user)
 
-  const { value: search, bind: searchBind } = useInput('');
+  // const { value: search, bind: searchBind } = useInput('');
+
+  const searchQuery = useStore(store => store.search.query)
+  const valueChangeHandler = useActions(actions => actions.search.queryChange)
+  const searchChangeHandler = e => {
+    const value = e.target.value
+
+    valueChangeHandler(value)
+  }
 
   return (
     <div className="header">
@@ -93,9 +101,11 @@ export default function Header() {
           {isAuth
             ? user.status === 1 &&
             [<div key={0} className="header__search d-none d-md-flex search ml-xl-4 ml-md-2">
-              <Link style={{ fontSize: "18px" }} to={`/search/${search}`}
+              <Link style={{ fontSize: "18px" }} to={`/search/${searchQuery}`}
                 className="search__icon no-style"><i className="fas fa-search"></i></Link>
-              <input {...searchBind} placeholder="Поиск" className="search__input" type="text" name="search" />
+              {SearchInput(
+                searchQuery, searchChangeHandler
+              )}
             </div>,
 
             <nav key={1} className="header__navigation d-none d-md-block navigation ml-xl-4 ml-md-2">

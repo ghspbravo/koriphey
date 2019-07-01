@@ -53,7 +53,7 @@ export default function Login() {
 
             <button disabled={processing} className="mt-3 button_expanded">{processing ? '...' : 'Войти'}</button>
           </form>
-          <Link to='/register' className="button button_expanded button_secondary mt-1" >Зарегестрироваться</Link>
+          <Link to='/register' className="button button_expanded button_secondary mt-1" >Зарегистрироваться</Link>
 
           {/* <div className="mt-3">
             <p>Зарегестрироваться  с помощью соцсетей: </p>

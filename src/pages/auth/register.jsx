@@ -81,7 +81,6 @@ export default function Register(router) {
     const payload = {
       name, surname, email,
       graduationYear: parseInt(graduationYear),
-      role: 0,
       birthdate: `${date[2]}-${date[1]}-${date[0]}`
     }
 
@@ -93,7 +92,7 @@ export default function Register(router) {
     myFormData.append("birthDate", payload.birthdate);
     myFormData.append("password", password);
     myFormData.append("graduationYear", payload.graduationYear);
-    myFormData.append("type", payload.role);
+    myFormData.append("type", role);
 
     if (photoFile) myFormData.append("photo", photoFile);
 
@@ -165,11 +164,12 @@ export default function Register(router) {
                   </div>
 
                   <div className="form-group mb-1">
-                    <select {...roleBind} onBlur={() => roleErrorSet('')} name='type' className="w-100" type='hidden' value='00' required placeholder="Роль*">
-                      <option value="" defaultValue>Выберите роль*</option>
-                      <option value="0">Выпускник</option>
-                      <option value="1">Учитель</option>
-                      <option value="2">Старшеклассник</option>
+                    <div className="form-hint">Выберите роль</div>
+                    <select {...roleBind} onBlur={() => roleErrorSet('')} name='type' className="w-100" required>
+                      {/* <option value="" defaultChecked>Выберите роль*</option> */}
+                      <option value="0" defaultChecked>Выпускник</option>
+                      <option value="3">Учитель</option>
+                      <option value="4">Старшеклассник</option>
                     </select>
                     <div className="form-error">{roleError}</div>
                   </div>

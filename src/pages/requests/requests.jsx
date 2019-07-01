@@ -11,6 +11,7 @@ import useFetch from '../../hooks/useFetch';
 import requestFilter from '../../components/filters/requestFilter';
 
 export default function Requests() {
+  const hasNextPage = useStore(store => store.requests.hasNextPage)
   const requestList = useStore(store => store.requests.requestList)
 
   const [currentPage, currentPageSet] = useState(1)
@@ -141,7 +142,7 @@ export default function Requests() {
             </div>)}
             
           <div className="row justify-content-center">
-            {currentPage === null
+            {!hasNextPage
               ? null
               : <button onClick={nextPageHandler} className="mt-2">Показать больше</button>
             }

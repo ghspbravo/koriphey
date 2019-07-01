@@ -2,6 +2,7 @@ import { action, thunk } from 'easy-peasy'
 
 export const news = {
   newsList: [],
+  hasNextPage: false,
 
   loadNews: thunk(async (actions, payload, { getStoreState }) => {
     const page = payload || 1
@@ -45,7 +46,8 @@ export const news = {
   }),
 
   appendInNewsList: action((state, payload) => {
-    payload.forEach(news => state.newsList.push(news))
+    payload.news.forEach(news => state.newsList.push(news))
+    state.hasNextPage = payload.isExistNextPage
   }),
 
   setNewsList: action((state, payload) => {
@@ -53,7 +55,17 @@ export const news = {
     payload.forEach(news => state.newsList.push(news))
   }),
 
-  toggleLike: thunk(async (actions, payload, { getStoreState }) => {
+  like: action((state, id) => {
+    state.newsList[id].likeCount += 1
+    state.newsList[id].hasLike = true
+  }),
+  
+  dislike: action((state, id) => {
+    state.newsList[id].likeCount -= 1
+    state.newsList[id].hasLike = false
+  }),
+
+  toggleLike: thunk(async (actions, payload, { getStoreState, getState }) => {
     const success = await fetch(process.env.REACT_APP_API + `News/AddRemoveLike?newsId=${payload}`, {
       method: 'post',
       headers: {
@@ -62,6 +74,17 @@ export const news = {
         'Authorization': `Bearer ${getStoreState().auth.access}`
       },
     }).then(response => response.status)
+      .then((status) => {
+        if (status === 200) {
+          getState().newsList.forEach((news, index) => {
+            if (news.id === payload) {
+              if (news.hasLike) actions.dislike(index)
+              else actions.like(index)
+            }
+          })
+        }
+        return status
+      })
       .catch(window.alert)
 
     return success
