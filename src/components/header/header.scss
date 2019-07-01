@@ -63,8 +63,14 @@ header {
     flex: 1 0;
     max-width: 330px;
     height: 40px;
+    padding-left: 10px;
 
-    .search__icon {
+    .search__input {
+      flex: 1 0;
+    }
+
+    .search__icon,
+    .search__clear {
       color: $c-gray;
     }
   }

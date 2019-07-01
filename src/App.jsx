@@ -75,7 +75,7 @@ function App(router) {
   return (
     <div>
       <header>
-        <Header />
+        <Header router={router} />
       </header>
       <main>
         <Switch>

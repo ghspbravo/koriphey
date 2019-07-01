@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 
-import { Link } from 'react-router-dom'
 import cardBlock from '../../components/cardBlock/cardBlock';
 import personItem from '../../components/personItem/personItem';
 import requestItem from '../../components/requestItem/requestItem';
@@ -22,8 +21,6 @@ const FILTER_BY = {
 export default function Search(router) {
 
   const [filterBy, filterBySet] = useState(FILTER_BY.ALL)
-
-  const { value: search, bind: searchBind } = useInput('')
 
   const searchQuery = useStore(store => store.search.query)
   const valueChangeHandler = useActions(actions => actions.search.queryChange)
@@ -76,6 +73,7 @@ export default function Search(router) {
 
   const submitEmptyFilters = e => {
     e && e.preventDefault()
+    isLoadingSet(true)
 
     const payload = {
       searchQuery: router.match.params.query,
@@ -83,11 +81,16 @@ export default function Search(router) {
     }
 
     loadFilterRequests(payload).then(filteredRequestsSet)
-    getFilterUserList(payload).then(filteredPeopleSet)
+    getFilterUserList(payload).then(filteredPeopleSet).then(() => {
+      isLoadingSet(false)
+    })
   }
+
+  const [isLoading, isLoadingSet] = useState(false)
 
   const submitFiltersHandler = e => {
     e && e.preventDefault()
+    isLoadingSet(true)
 
     const payload = {
       countryId: selectedCountryId,
@@ -103,8 +106,14 @@ export default function Search(router) {
       graduationYear
     }
 
+    filteredRequestsSet([])
+    filteredPeopleSet([])
+
     loadFilterRequests(payload).then(filteredRequestsSet)
-    getFilterUserList(payload).then(filteredPeopleSet)
+    getFilterUserList(payload).then(filteredPeopleSet).then(() => {
+      isLoadingSet(false)
+    })
+
   }
 
   const resetHandler = () => {
@@ -129,9 +138,9 @@ export default function Search(router) {
               <div className="mb-2">
                 {cardBlock(
                   <div className="search">
-                    <Link to={`/search/${search}`} className="search__icon no-style"><i className="fas fa-search"></i></Link>
                     {SearchInput(
-                      searchQuery, searchChangeHandler
+                      searchQuery, searchChangeHandler,
+                      router
                     )}
                   </div>,
                   <div className="no-padding">
@@ -155,7 +164,7 @@ export default function Search(router) {
                           </div>
                         </div>)
                         : <div className="px-3">
-                          <p>Результатов не найдено</p>
+                          <p>{isLoading ? '...' : 'Результатов не найдено'}</p>
                         </div>}
                     </div>
                     <div className="px-2 mt-2">
@@ -171,8 +180,10 @@ export default function Search(router) {
                     {filterBy === FILTER_BY.ALL
                       ? <h2>Запросы</h2>
                       : <div className="search">
-                        <Link to={`/search/${search}`} className="search__icon no-style"><i className="fas fa-search"></i></Link>
-                        <input {...searchBind} placeholder="Поиск" className="search__input" type="text" name="search" />
+                        {SearchInput(
+                          searchQuery, searchChangeHandler,
+                          router
+                        )}
                       </div>}
                   </div>,
                   <div className="no-padding">
@@ -204,7 +215,7 @@ export default function Search(router) {
                           </div>
                         </div>)
                         : <div className="px-3">
-                          <p>Результатов не найдено</p>
+                          <p>{isLoading ? '...' : 'Результатов не найдено'}</p>
                         </div>}
                     </div>
                     <div className="px-2 mt-2">

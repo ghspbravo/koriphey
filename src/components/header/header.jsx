@@ -9,7 +9,7 @@ import { useStore, useActions } from 'easy-peasy';
 
 import logo from './logo.svg'
 import SearchInput from '../searchInput/searchInput';
-export default function Header() {
+export default function Header(props) {
 
   const profileControls = useRef()
 
@@ -100,11 +100,10 @@ export default function Header() {
 
           {isAuth
             ? user.status === 1 &&
-            [<div key={0} className="header__search d-none d-md-flex search ml-xl-4 ml-md-2">
-              <Link style={{ fontSize: "18px" }} to={`/search/${searchQuery}`}
-                className="search__icon no-style"><i className="fas fa-search"></i></Link>
+            [<div key={0} className="header__search d-none d-md-block search ml-xl-4 ml-md-2">
               {SearchInput(
-                searchQuery, searchChangeHandler
+                searchQuery, searchChangeHandler,
+                props.router
               )}
             </div>,
 
