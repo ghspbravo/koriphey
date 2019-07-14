@@ -8,6 +8,7 @@ import timeRelate from '../../components/timeRelate/timeRelate';
 import { useStore, useActions } from 'easy-peasy';
 import parse from 'html-react-parser'
 import useInput from '../../hooks/useInput';
+import formatDate from '../../functions/formatDate';
 
 export default function NewsSingle(router) {
   const newsId = router.match.params.id
@@ -90,7 +91,7 @@ export default function NewsSingle(router) {
                     </div>
 
                     <div className="ml-auto">
-                      {news && news.createdAt ? timeRelate(news.createdAt) : '...'}
+                      {news && news.createdAt ? formatDate(news.createdAt) : '...'}
                     </div>
                   </div>
                 </div>

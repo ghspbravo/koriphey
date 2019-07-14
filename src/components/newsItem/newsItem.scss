@@ -1,0 +1,5 @@
+@import '../../styles/mixins';
+
+.news-meta {
+  @include text-small;
+}

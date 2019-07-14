@@ -1,7 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+
+import './newsItem.scss'
+
 import { feedbackLike, feedbackComment } from '../feedback/feedback';
-import timeRelate from '../timeRelate/timeRelate';
+import formatDate from '../../functions/formatDate';
 
 /**
  * 
@@ -40,7 +43,7 @@ export default function newsItem(id, title, content, thumbnail, feedback, postDa
           </div>
 
           <div className="ml-auto">
-            {postDate ? timeRelate(postDate) : '...'}
+            {postDate ? formatDate(postDate) : '...'}
           </div>
         </div>
       </div>

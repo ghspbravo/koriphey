@@ -176,9 +176,10 @@ export default function Profile(router) {
                       {
                         photo: item.from.photo,
                         name: `${item.from.firstName} ${item.from.surName}`,
-                        // location: `${}`
+                        location: `${item.from.city.country.nameRU}, ${item.from.city.nameRU}`,
                       },
-                      item.text
+                      item.text,
+                      new Date(item.timeStampUTC)
                     )}
                   </div>)
                   : <div className="px-2">

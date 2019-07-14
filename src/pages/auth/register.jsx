@@ -11,6 +11,10 @@ import graduationYearOptions from '../../components/graduationYear/graduationYea
 export default function Register(router) {
 
   const dateInput = useRef()
+  const workYearInput = useRef()
+
+  const { value: role, bind: roleBind } = useInput('');
+  const [roleError, roleErrorSet] = useState('')
 
   // add input mask
   useEffect(() => {
@@ -24,10 +28,17 @@ export default function Register(router) {
         }
       },
     });
+    const workYearMask = workYearInput.current && IMask(workYearInput.current, {
+      mask: IMask.MaskedRange,
+      from: 1900,
+      to: new Date().getFullYear(),
+      autofix: true,  // bound value
+    });
     return () => {
       dateMask && dateMask.destroy()
+      workYearMask && workYearMask.destroy()
     }
-  }, [])
+  }, [role])
 
 
   const { value: name, bind: nameBind } = useInput('');
@@ -46,8 +57,8 @@ export default function Register(router) {
   const [passwordError, passwordErrorSet] = useState('')
   const { value: repeatPassword, bind: repeatPasswordBind } = useInput('');
 
-  const { value: role, bind: roleBind } = useInput('');
-  const [roleError, roleErrorSet] = useState('')
+  const { value: workingYear, bind: workingYearBind } = useInput('');
+  const [workingYearError, workingYearErrorSet] = useState('')
 
   const { value: photoFile, previewFile: photo, bind: photoBind } = useFileInput(false, 'https://www.dacgllc.com/site/wp-content/uploads/2015/12/DACG_Web_AboutUs_PersonPlaceholder.png')
   // const [photoError, photoErrorSet] = useState('')
@@ -69,7 +80,10 @@ export default function Register(router) {
       .test(email)) { emailErrorSet('Заполните валидный Email'); isValid = false }
     if (birthdate === '') { birthdateErrorSet('Заполните Вашу дату рождения'); isValid = false }
     else if (!/[0-9][0-9].[0-9][0-9].[0-9][0-9][0-9][0-9]/.test(birthdate)) { birthdateErrorSet('Заполните валидную дату рождения'); isValid = false }
-    if (graduationYear === '') { graduationYearErrorSet('Выберите год выпуска'); isValid = false }
+    // eslint-disable-next-line
+    if (role != 3 && graduationYear === '') { graduationYearErrorSet('Выберите год выпуска'); isValid = false }
+    // eslint-disable-next-line
+    if (role == 3 && workingYear === '') { workingYearErrorSet('Заполните год начала работы'); isValid = false }
     if (password === '') { passwordErrorSet('Заполните пароль'); isValid = false }
     else if (password.length < 8) { passwordErrorSet('Пароль должен быть не меньше 8 символов'); isValid = false }
     if (password !== repeatPassword) isValid = false
@@ -91,7 +105,9 @@ export default function Register(router) {
     myFormData.append("email", email);
     myFormData.append("birthDate", payload.birthdate);
     myFormData.append("password", password);
-    myFormData.append("graduationYear", payload.graduationYear);
+    // eslint-disable-next-line
+    role != 3 && myFormData.append("graduationYear", payload.graduationYear);
+    // role == 3 && myFormData.append("workingYear", payload.graduationYear);
     myFormData.append("type", role);
 
     if (photoFile) myFormData.append("photo", photoFile);
@@ -156,14 +172,6 @@ export default function Register(router) {
                   </div>
 
                   <div className="form-group mb-1">
-                    <select {...graduationYearBind} className="w-100" onBlur={() => graduationYearErrorSet('')} id="mobile-person-graduation-year">
-                      <option value="" defaultChecked>Выберите год выпуска*</option>
-                      {graduationYearOptions()}
-                    </select>
-                    <div className="form-error">{graduationYearError}</div>
-                  </div>
-
-                  <div className="form-group mb-1">
                     <div className="form-hint">Выберите роль</div>
                     <select {...roleBind} onBlur={() => roleErrorSet('')} name='type' className="w-100" required>
                       {/* <option value="" defaultChecked>Выберите роль*</option> */}
@@ -173,6 +181,23 @@ export default function Register(router) {
                     </select>
                     <div className="form-error">{roleError}</div>
                   </div>
+
+                  {role != 3 &&
+                    <div className="form-group mb-1">
+                      <select {...graduationYearBind} className="w-100" onBlur={() => graduationYearErrorSet('')} id="mobile-person-graduation-year">
+                        <option value="" defaultChecked>Выберите {role == 4 && 'будущий'} год выпуска*</option>
+                        {graduationYearOptions()}
+                      </select>
+                      <div className="form-error">{graduationYearError}</div>
+                    </div>}
+
+                  {role == 3 &&
+                    <div className="form-group mb-1">
+                      <input ref={workYearInput} {...workingYearBind}
+                        onBlur={() => workingYearErrorSet('')} className="w-100"
+                        name='workingYear' required placeholder="Введите год начала работы" type="text" />
+                      <div className="form-error">{workingYearError}</div>
+                    </div>}
 
                   <div className="form-group mb-1">
                     <input {...passwordBind} onBlur={() => passwordErrorSet('')} className="w-100" name='password' required placeholder="Придумайте пароль*" type="password" />

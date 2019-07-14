@@ -47,7 +47,7 @@ export default function News() {
                       item.id,
                       item.title,
                       item.announce ? <p>{item.announce}</p> : parse(item.content),
-                      item.imagePrewiew,
+                      item.imagePreview,
                       {
                         likesCount: item.likeCount,
                         commentsCount: item.newsComments.length
@@ -86,7 +86,7 @@ export default function News() {
                       location: `${item.user.city && item.user.city.country.nameRU}, ${item.user.city && item.user.city.nameRU}`
                     },
                     {
-                      category: item.category.name,
+                      category: item.category && item.category.name,
                       location: item.location && item.location.city.nameRu,
                       expiredAt: item.expiredAt && formatDate(item.expiredAt)
                     },

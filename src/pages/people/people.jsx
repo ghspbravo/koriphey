@@ -71,7 +71,7 @@ export default function Peoples() {
               <div className="search">
                 {/* <Link to='/search/people' className="search__icon no-style disabled"><i className="fas fa-search"></i></Link>
                 <input placeholder="Поиск по людям" className="search__input" type="text" name="search" /> */}
-                <h2>Выпускники</h2>
+                <h2>Сообщество</h2>
               </div>,
               <div className="no-padding">
                 <div className="card-list row">

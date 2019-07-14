@@ -31,7 +31,7 @@ export default function MobileNavigation(ref, closeHandler) {
           
           <nav className="navigation-section">
             <div className="py-1" >
-              <NavLink className="navigation-item no-style" to='/people'>Выпускники</NavLink>
+              <NavLink className="navigation-item no-style" to='/people'>Сообщество</NavLink>
             </div>
             <div className="py-1" >
               <NavLink className="navigation-item no-style" to='/requests'>Запросы</NavLink>
