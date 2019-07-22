@@ -24,6 +24,7 @@ import Register from './pages/auth/register';
 import NotFound from './pages/404';
 import MyProfile from './pages/profile/myProfile';
 import Recover from './pages/auth/recover';
+import Footer from './components/footer/footer';
 
 function App(router) {
   const isAuth = useStore(store => store.auth.isAuth)
@@ -61,10 +62,12 @@ function App(router) {
 
   // redirect user depending on status
   useEffect(() => {
-    if (['/login', /*'/register',*/ '/recover', '/welcome'].includes(router.location.pathname)
+    if (['/login', '/register', '/recover', '/welcome'].includes(router.location.pathname)
       && isAuth && user.status === 1) router.history.replace('/')
+    if (!['/welcome'].includes(router.location.pathname)
+      && isAuth && user.status !== 1) router.history.replace('/welcome')
     if (!['/login', '/register', '/recover', '/welcome'].includes(router.location.pathname)
-      && (!isAuth || (isAuth && (user.status === 0 || user.status === 2)))) router.history.replace('/welcome')
+      && !isAuth) router.history.replace('/welcome')
     // eslint-disable-next-line
   }, [router.location.pathname, isAuth, user])
 
@@ -110,6 +113,10 @@ function App(router) {
 
         </Switch>
       </main>
+
+      <footer>
+        <Footer></Footer>
+      </footer>
 
       <div id="modal-root"></div>
     </div>

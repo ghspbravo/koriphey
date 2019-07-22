@@ -14,7 +14,7 @@ export default function Login() {
     processingSet(true)
 
     e.preventDefault()
-    const payload = { username, password }
+    const payload = { username: username.trim().toLowerCase(), password }
     const success = await login(payload)
     processingSet(false)
     if (success !== true) {

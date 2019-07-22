@@ -1,0 +1,28 @@
+.badge {
+  position: absolute;
+  z-index: 2;
+
+  top: -5px;
+  right: -5px;
+
+  padding: 2px 5px;
+
+  
+  border-radius: 25px;
+  background-color: lightblue;
+  
+  font-size: 10px;
+
+  display: table;
+
+  pointer-events: none;
+
+  span {
+    display: table-cell;
+    vertical-align: middle;
+  }
+}
+
+.badge_develop {
+  background-color: lightgray;
+}

@@ -7,13 +7,25 @@ import IMask from 'imask';
 import { createPortal } from 'react-dom'
 import Modal from '../../components/modals/modal';
 import graduationYearOptions from '../../components/graduationYear/graduationYearOptions';
+import useLocation from '../../hooks/useLocation';
+import useCompetences from '../../hooks/useCompetences';
+import useHobbies from '../../hooks/useHobbies';
+import location from '../../components/location/location';
+import hobbiesEdit from '../../components/hobbies/hobbiesEdit';
+import competencesEdit from '../../components/competences/competencesEdit';
 
 export default function Register(router) {
+
+  const ROLE = {
+    GRADUATE: 0,
+    TEACHER: 3,
+    STUDENT: 4
+  }
 
   const dateInput = useRef()
   const workYearInput = useRef()
 
-  const { value: role, bind: roleBind } = useInput('');
+  const { value: role, bind: roleBind } = useInput('', 'number');
   const [roleError, roleErrorSet] = useState('')
 
   // add input mask
@@ -23,7 +35,7 @@ export default function Register(router) {
       blocks: {
         Y: {
           mask: IMask.MaskedRange,
-          from: 1950,
+          from: 1900,
           to: new Date().getFullYear() - 18,
         }
       },
@@ -40,6 +52,16 @@ export default function Register(router) {
     }
   }, [role])
 
+  // Steps handlers
+  const totalSteps = 2
+  const [currentStep, currentStepSet] = useState(1)
+  const prevStep = () => currentStepSet(currentStep - 1)
+  const nextStep = () => {
+    validateFirstStep() && currentStepSet(currentStep + 1)
+  }
+
+
+  // STEP 1 
 
   const { value: name, bind: nameBind } = useInput('');
   const [nameError, nameErrorSet] = useState('')
@@ -60,6 +82,39 @@ export default function Register(router) {
   const { value: workingYear, bind: workingYearBind } = useInput('');
   const [workingYearError, workingYearErrorSet] = useState('')
 
+  const validateFirstStep = () => {
+    let isValid = true
+    if (name === '') { nameErrorSet('Заполните Ваше имя'); isValid = false }
+    if (surname === '') { surnameErrorSet('Заполните Вашу фамилию'); isValid = false }
+    if (email === '') { emailErrorSet('Заполните Ваш Email'); isValid = false }
+    else if (!/\S+@\S+\.\S+/
+      .test(email)) { emailErrorSet('Заполните валидный Email'); isValid = false }
+    if (birthdate === '') { birthdateErrorSet('Заполните Вашу дату рождения'); isValid = false }
+    else if (!/[0-9][0-9].[0-9][0-9].[0-9][0-9][0-9][0-9]/.test(birthdate)) { birthdateErrorSet('Заполните валидную дату рождения'); isValid = false }
+
+    if (role !== ROLE.TEACHER && graduationYear === '') { graduationYearErrorSet('Выберите год выпуска'); isValid = false }
+    if (role === ROLE.TEACHER && workingYear === '') { workingYearErrorSet('Заполните год начала работы'); isValid = false }
+
+    if (password === '') { passwordErrorSet('Заполните пароль'); isValid = false }
+    else if (password.length < 8) { passwordErrorSet('Пароль должен быть не меньше 8 символов'); isValid = false }
+    if (password !== repeatPassword) isValid = false
+
+    return isValid
+  }
+
+  // STEP 2
+  const { selectedCountryId, cityId,
+    countriesList, cities, countryChoiceHandler, cityChoiceHandler } = useLocation()
+  const [countryError, countryErrorSet] = useState('')
+  const [cityError, cityErrorSet] = useState('')
+  const { competences,
+    competencesList, competencesChangeHandler, competencesRemoveHandler } = useCompetences()
+  const [competencesError, competencesErrorSet] = useState('')
+  const { hobbies, hobbiesList, hobbiesChangeHandler, hobbiesRemoveHandler } = useHobbies()
+  const [hobbiesError, hobbiesErrorSet] = useState('')
+
+
+
   const { value: photoFile, previewFile: photo, bind: photoBind } = useFileInput(false, 'https://www.dacgllc.com/site/wp-content/uploads/2015/12/DACG_Web_AboutUs_PersonPlaceholder.png')
   // const [photoError, photoErrorSet] = useState('')
 
@@ -73,28 +128,21 @@ export default function Register(router) {
   const submitHandler = async e => {
     e.preventDefault()
     let isValid = true
-    if (name === '') { nameErrorSet('Заполните Ваше имя'); isValid = false }
-    if (surname === '') { surnameErrorSet('Заполните Вашу фамилию'); isValid = false }
-    if (email === '') { emailErrorSet('Заполните Ваш Email'); isValid = false }
-    else if (!/\S+@\S+\.\S+/
-      .test(email)) { emailErrorSet('Заполните валидный Email'); isValid = false }
-    if (birthdate === '') { birthdateErrorSet('Заполните Вашу дату рождения'); isValid = false }
-    else if (!/[0-9][0-9].[0-9][0-9].[0-9][0-9][0-9][0-9]/.test(birthdate)) { birthdateErrorSet('Заполните валидную дату рождения'); isValid = false }
-    // eslint-disable-next-line
-    if (role != 3 && graduationYear === '') { graduationYearErrorSet('Выберите год выпуска'); isValid = false }
-    // eslint-disable-next-line
-    if (role == 3 && workingYear === '') { workingYearErrorSet('Заполните год начала работы'); isValid = false }
-    if (password === '') { passwordErrorSet('Заполните пароль'); isValid = false }
-    else if (password.length < 8) { passwordErrorSet('Пароль должен быть не меньше 8 символов'); isValid = false }
-    if (password !== repeatPassword) isValid = false
-    if (role === 0) { roleErrorSet('Выберите роль'); isValid = false }
+    if (selectedCountryId === undefined) { countryErrorSet('Выберите страну проживания'); isValid = false }
+    if (selectedCountryId !== undefined && cityId === undefined) { cityErrorSet('Выберите город проживания'); isValid = false }
+    if (competences.length === 0) { competencesErrorSet('Выберите хоть одну область занятости'); isValid = false }
+    if (hobbies.length === 0) { hobbiesErrorSet('Выберите хоть одно хобби'); isValid = false }
+
     if (!isValid) return
+
     processingSet(true)
+
     const date = birthdate.split('.')
 
     const payload = {
       name, surname, email,
       graduationYear: parseInt(graduationYear),
+      workingYear: parseInt(workingYear),
       birthdate: `${date[2]}-${date[1]}-${date[0]}`
     }
 
@@ -102,13 +150,23 @@ export default function Register(router) {
 
     myFormData.append("firstname", name);
     myFormData.append("surname", surname);
-    myFormData.append("email", email);
+    myFormData.append("email", email.trim().toLowerCase());
     myFormData.append("birthDate", payload.birthdate);
     myFormData.append("password", password);
-    // eslint-disable-next-line
-    role != 3 && myFormData.append("graduationYear", payload.graduationYear);
-    // role == 3 && myFormData.append("workingYear", payload.graduationYear);
+
+    role !== ROLE.TEACHER && myFormData.append("graduationYear", payload.graduationYear);
+
+    if (role === ROLE.TEACHER) {
+      myFormData.append("WorkStart", payload.workingYear);
+      myFormData.append("Work", 'Гимназия №210 «Корифей»');
+      myFormData.append("Position", 'Учитель');
+    }
     myFormData.append("type", role);
+
+    myFormData.append("CityId", cityId);
+
+    competences.forEach((competence, index) => myFormData.append(`Competencies${index}`, competence.id))
+    hobbies.forEach((hobby, index) => myFormData.append(`Hobbies${index}`, hobby.id))
 
     if (photoFile) myFormData.append("photo", photoFile);
 
@@ -117,6 +175,7 @@ export default function Register(router) {
     if (submitSuccess !== true) {
       try {
         if (submitSuccess === 'email') {
+          currentStepSet(1)
           emailErrorSet('Email должен быть уникальным')
         }
         if (submitSuccess === 'server error') window.alert('Code 500: server error')
@@ -151,74 +210,145 @@ export default function Register(router) {
               <div className="col-md-8">
 
                 <div>
-                  <div className="form-group mb-1">
-                    <input {...nameBind} onBlur={() => nameErrorSet('')} name="name" className="w-100" required placeholder="Имя*" type="text" />
-                    <div className="form-error">{nameError}</div>
-                  </div>
+                  {currentStep === 1 &&
+                    <div>
 
-                  <div className="form-group mb-1">
-                    <input {...surnameBind} onBlur={() => surnameErrorSet('')} name="surname" className="w-100" required placeholder="Фамилия*" type="text" />
-                    <div className="form-error">{surnameError}</div>
-                  </div>
+                      <div className="form-group mb-1">
+                        <input {...nameBind} onBlur={() => nameErrorSet('')} name="name" className="w-100" placeholder="Имя*" type="text" />
+                        <div className="form-error">{nameError}</div>
+                      </div>
 
-                  <div className="form-group mb-1">
-                    <input {...emailBind} onBlur={() => emailErrorSet('')} name="email" className="w-100" required placeholder="Email*" type="email" />
-                    <div className="form-error">{emailError}</div>
-                  </div>
+                      <div className="form-group mb-1">
+                        <input {...surnameBind} onBlur={() => surnameErrorSet('')} name="surname" className="w-100" placeholder="Фамилия*" type="text" />
+                        <div className="form-error">{surnameError}</div>
+                      </div>
 
-                  <div className="form-group mb-1">
-                    <input {...birthdateBind} onBlur={() => birthdateErrorSet('')} name="birthDate" ref={dateInput} className="w-100" required placeholder="Дата рождения*" type="text" />
-                    <div className="form-error">{birthdateError}</div>
-                  </div>
+                      <div className="form-group mb-1">
+                        <input {...emailBind} onBlur={() => emailErrorSet('')} name="email" className="w-100" placeholder="Email*" type="email" />
+                        <div className="form-error">{emailError}</div>
+                      </div>
 
-                  <div className="form-group mb-1">
-                    <div className="form-hint">Выберите роль</div>
-                    <select {...roleBind} onBlur={() => roleErrorSet('')} name='type' className="w-100" required>
-                      {/* <option value="" defaultChecked>Выберите роль*</option> */}
-                      <option value="0" defaultChecked>Выпускник</option>
-                      <option value="3">Учитель</option>
-                      <option value="4">Старшеклассник</option>
-                    </select>
-                    <div className="form-error">{roleError}</div>
-                  </div>
+                      <div className="form-group mb-1">
+                        <input {...birthdateBind} onBlur={() => birthdateErrorSet('')} name="birthDate" ref={dateInput} className="w-100" placeholder="Дата рождения*" type="text" />
+                        <div className="form-error">{birthdateError}</div>
+                      </div>
 
-                  {role != 3 &&
-                    <div className="form-group mb-1">
-                      <select {...graduationYearBind} className="w-100" onBlur={() => graduationYearErrorSet('')} id="mobile-person-graduation-year">
-                        <option value="" defaultChecked>Выберите {role == 4 && 'будущий'} год выпуска*</option>
-                        {graduationYearOptions()}
-                      </select>
-                      <div className="form-error">{graduationYearError}</div>
+                      <div className="form-group mb-1">
+
+                        <div className="form-hint">Выберите роль</div>
+                        <select {...roleBind} onBlur={() => roleErrorSet('')} name='type' className="w-100">
+                          <option value={ROLE.GRADUATE} defaultChecked>Выпускник</option>
+                          <option value={ROLE.TEACHER}>Учитель</option>
+                          <option value={ROLE.STUDENT}>Старшеклассник</option>
+                        </select>
+                        <div className="form-error">{roleError}</div>
+                      </div>
+
+                      {role !== ROLE.TEACHER &&
+                        <div className="form-group mb-1">
+                          <select {...graduationYearBind} className="w-100" onBlur={() => graduationYearErrorSet('')} id="mobile-person-graduation-year">
+                            <option value="" defaultChecked>Выберите {role === ROLE.STUDENT && 'будущий'} год выпуска*</option>
+                            {graduationYearOptions()}
+                          </select>
+                          <div className="form-error">{graduationYearError}</div>
+                        </div>}
+
+                      {role === ROLE.TEACHER &&
+                        <div className="form-group mb-1">
+                          <input ref={workYearInput} {...workingYearBind}
+                            onBlur={() => workingYearErrorSet('')} className="w-100"
+                            name='workingYear' placeholder="Введите год начала работы*" type="text" />
+                          <div className="form-error">{workingYearError}</div>
+                        </div>}
+
+                      <div className="form-group mb-1">
+                        <input {...passwordBind} onBlur={() => passwordErrorSet('')} className="w-100" name='password' placeholder="Придумайте пароль*" type="password" />
+                        <div className="form-hint">Пароль должен быть не менее 8 символов</div>
+                        <div className="form-error">{passwordError}</div>
+                      </div>
+
+                      <div className="form-group mb-1">
+                        <input {...repeatPasswordBind} className="w-100" placeholder="Повторите пароль*" type="password" />
+                        <span className="form-error">{password !== repeatPassword && 'Пароли не совпадают'}</span>
+                      </div>
+
+                      <div className="d-md-none form-group">
+                        <div className="row no-gutters align-items-center">
+                          <label className="d-block mr-1" style={{ cursor: 'pointer' }} htmlFor="person-photo"><img style={{ width: '40px', height: '35px' }} src={photo} alt="" /></label>
+                          <label style={{ fontWeight: 'normal' }} className="link" htmlFor="person-photo">Загрузить фото</label>
+                          <p className="small">Друзьям будет проще узнать Вас, если Вы загрузите свою настоящую фотографию, на которой отчетливо будет видно лицо.</p>
+                        </div>
+                      </div>
+
                     </div>}
 
-                  {role == 3 &&
-                    <div className="form-group mb-1">
-                      <input ref={workYearInput} {...workingYearBind}
-                        onBlur={() => workingYearErrorSet('')} className="w-100"
-                        name='workingYear' required placeholder="Введите год начала работы" type="text" />
-                      <div className="form-error">{workingYearError}</div>
+                  {currentStep === 2 &&
+                    <div>
+                      <div className="form-group mb-1">
+                        {location(
+                          selectedCountryId,
+                          countryChoiceHandler,
+                          countriesList,
+
+                          cities,
+                          cityId,
+                          cityChoiceHandler,
+
+                          {
+                            countryErrorSet,
+                            cityErrorSet
+                          }
+                        )}
+
+                        <div className="form-error">{countryError}</div>
+                        <div className="form-error">{!countryError && cityError}</div>
+                      </div>
+
+                      <div className="form-group mb-1">
+                        {competencesEdit(
+                          competences,
+                          competencesList,
+                          competencesChangeHandler,
+                          competencesRemoveHandler,
+                          competencesErrorSet
+                        )}
+
+                        <div className="form-error">{competencesError}</div>
+                      </div>
+
+                      <div className="form-group mb-1">
+                        {hobbiesEdit(
+                          hobbies,
+                          hobbiesList,
+                          hobbiesChangeHandler,
+                          hobbiesRemoveHandler,
+                          hobbiesErrorSet
+                        )}
+
+                        <div className="form-error">{hobbiesError}</div>
+                      </div>
+
                     </div>}
 
-                  <div className="form-group mb-1">
-                    <input {...passwordBind} onBlur={() => passwordErrorSet('')} className="w-100" name='password' required placeholder="Придумайте пароль*" type="password" />
-                    <div className="form-hint">Пароль должен быть не менее 8 символов</div>
-                    <div className="form-error">{passwordError}</div>
-                  </div>
+                  <div className="row justify-content-center mt-3">
+                    {currentStep > 1 && currentStep <= totalSteps &&
+                      <div className="col-6">
+                        <button type='button' className="button_expanded" onClick={prevStep} >Назад</button>
+                      </div>
+                    }
 
-                  <div className="form-group mb-1">
-                    <input {...repeatPasswordBind} className="w-100" placeholder="Повторите пароль*" type="password" />
-                    <span className="form-error">{password !== repeatPassword && 'Пароли не совпадают'}</span>
-                  </div>
+                    {currentStep < totalSteps &&
+                      <div className="col-6">
+                        <button type='button' className="button_expanded" onClick={nextStep} >Вперед</button>
+                      </div>
+                    }
 
-                  <div className="d-md-none form-group">
-                    <div className="row no-gutters align-items-center">
-                      <label className="d-block mr-1" style={{ cursor: 'pointer' }} htmlFor="person-photo"><img style={{ width: '40px', height: '35px' }} src={photo} alt="" /></label>
-                      <label style={{ fontWeight: 'normal' }} className="link" htmlFor="person-photo">Загрузить фото</label>
-                      <p className="small">Друзьям будет проще узнать Вас, если Вы загрузите свою настоящую фотографию, на которой отчетливо будет видно лицо.</p>
-                    </div>
+                    {currentStep === totalSteps &&
+                      <div className="col-6">
+                        <button disabled={processing} className="button_expanded button_secondary">{processing ? '...' : 'Зарегистрироваться'}</button>
+                      </div>
+                    }
                   </div>
-
-                  <button disabled={processing} className="mt-3 button_expanded button_secondary">{processing ? '...' : 'Зарегистрироваться'}</button>
                 </div>
 
               </div>

@@ -20,6 +20,14 @@ export const statistics = {
   }),
 
   setStatistics: action((state, payload) => {
+    for (const item in payload) {
+      if (payload.hasOwnProperty(item)) {
+        const statisticItem = payload[item];
+        if (Array.isArray(statisticItem)) {
+          payload[item] = statisticItem.filter(item => item.count > 0)
+        }
+      }
+    }
     state.statistics = payload
   }),
 

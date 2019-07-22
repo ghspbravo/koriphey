@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export const useInput = initialValue => {
+export const useInput = (initialValue = '', type = 'string') => {
   const [value, setValue] = useState(initialValue);
 
   return {
@@ -10,7 +10,15 @@ export const useInput = initialValue => {
     bind: {
       value,
       onChange: event => {
-        setValue(event.target.value);
+        switch (type) {
+          case 'number':
+            setValue(parseInt(event.target.value))
+            break
+
+
+          default:
+            setValue(event.target.value)
+        }
       }
     }
   };
