@@ -155,7 +155,7 @@ export const profile = {
 
   }),
 
-  getUser: thunk(async (actions, payload, { getStoreState }) => {
+  getUser: thunk(async (actions, payload, { getStoreState, dispatch }) => {
     const status = await fetch(process.env.REACT_APP_API + 'User/Profile', {
       method: 'get',
       headers: {
@@ -163,13 +163,16 @@ export const profile = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${getStoreState().auth.access}`
       }
-    }).then(response => response.json())
+    }).then(response => {
+      if (response.status === 401) throw new Error()
+      return response.json()
+    })
       .then(response => {
         actions.setUser(response)
 
         return true
       })
-      .catch(console.error)
+      .catch(dispatch.auth.logout)
 
     return status
 

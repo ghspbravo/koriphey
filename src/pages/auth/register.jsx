@@ -165,8 +165,8 @@ export default function Register(router) {
 
     myFormData.append("CityId", cityId);
 
-    competences.forEach((competence, index) => myFormData.append(`Competencies${index}`, competence.id))
-    hobbies.forEach((hobby, index) => myFormData.append(`Hobbies${index}`, hobby.id))
+    competences.forEach((competence, index) => myFormData.append(`Competencies[${index}]`, competence.id))
+    hobbies.forEach((hobby, index) => myFormData.append(`Hobbies[${index}]`, hobby.id))
 
     if (photoFile) myFormData.append("photo", photoFile);
 
