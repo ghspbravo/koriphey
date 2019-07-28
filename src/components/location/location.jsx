@@ -15,7 +15,7 @@ export default function location(
     <div>
       <div className="form-group mb-1">
         <select value={selectedCountryId} onChange={countryChoiceHandler}
-        onBlur={() => opts.countryErrorSet && opts.countryErrorSet('')}
+        onBlur={() => opts && opts.countryErrorSet && opts.countryErrorSet('')}
         className="w-100">
           <option value="" defaultValue>Страна</option>
           {countriesList.length > 0 &&
@@ -29,7 +29,7 @@ export default function location(
       {selectedCountryId !== 0 && cities && cities.length > 0 &&
         <div className="form-group mb-1">
           <select value={cityId} onChange={cityChoiceHandler}
-          onBlur={() => opts.cityErrorSet && opts.cityErrorSet('')}
+          onBlur={() => opts && opts.cityErrorSet && opts.cityErrorSet('')}
           className="w-100">
             <option value="" defaultValue>Город</option>
             {cities.length > 0 &&

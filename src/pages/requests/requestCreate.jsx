@@ -19,7 +19,7 @@ import useLocation from '../../hooks/useLocation';
 // import hobbiesChoice from '../../components/hobbies/hobbiesChoice';
 import suggestsChoice from '../../components/suggests/suggestsChoice';
 
-export default function RequestCreate() {
+export default function RequestCreate(router) {
 
   const dateInput = useRef()
 
@@ -116,14 +116,19 @@ export default function RequestCreate() {
     isSuccessSet(success)
     processingSet(false)
   }
+
+  const modalCloseHandler = () => {
+    router.history.push('/requests')
+  }
+
   return (
     <form onSubmit={submitHandler} className="container">
       {
         document.getElementById('modal-root') && createPortal(
-          <Modal isOpen={isSuccess} close={() => isSuccessSet(false)}>
+          <Modal isOpen={isSuccess} close={modalCloseHandler}>
             <h2>Запрос о помощи отправлен</h2>
-            <p>Благодарим за использование сервиса! Ваш запрос о помощи отправлен модераторам на рассмотрение.</p>
-            <p>После одобрения, Ваш запрос появится в общем списке.</p>
+            <p>Благодарим за использование сервиса! Ваш запрос о помощи принят и отправлен пользователям,
+              подписаным на выбранную категорию помощи.</p>
           </Modal>, document.getElementById('modal-root'))
       }
       <div className="row">

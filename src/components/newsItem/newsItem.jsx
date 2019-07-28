@@ -23,7 +23,6 @@ export default function newsItem(id, title, content, thumbnail, feedback, postDa
       </div>
 
       <div className="news-body my-1">
-        {/* <p>{content}</p> */}
         {content}
 
         {thumbnail &&
