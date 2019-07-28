@@ -60,14 +60,22 @@ function App(router) {
     moment.locale('ru');
   }, [loadStatistics, statistics])
 
+  const redirectIfUserNotAuth = () => (!['/login', '/register', '/recover', '/welcome'].includes(router.location.pathname)
+    && !isAuth) && router.history.replace('/welcome')
+
+  const redirectIfUserNotAccepted = () => (!['/welcome'].includes(router.location.pathname)
+    && isAuth && user.status !== 1) && router.history.replace('/welcome')
+
+  const redirectIfUserAccepted = () => (['/login', '/register', '/recover', '/welcome'].includes(router.location.pathname)
+    && isAuth && user.status === 1) && router.history.replace('/')
+
   // redirect user depending on status
   useEffect(() => {
-    if (['/login', '/register', '/recover', '/welcome'].includes(router.location.pathname)
-      && isAuth && user.status === 1) router.history.replace('/')
-    if (!['/welcome'].includes(router.location.pathname)
-      && isAuth && user.status !== 1) router.history.replace('/welcome')
-    if (!['/login', '/register', '/recover', '/welcome'].includes(router.location.pathname)
-      && !isAuth) router.history.replace('/welcome')
+    if (isAuth !== undefined && Object.entries(user).length > 0) {
+      redirectIfUserAccepted()
+      redirectIfUserNotAccepted()
+      redirectIfUserNotAuth()
+    } else if (isAuth === false) redirectIfUserNotAuth()
     // eslint-disable-next-line
   }, [router.location.pathname, isAuth, user])
 

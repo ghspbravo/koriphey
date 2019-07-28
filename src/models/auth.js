@@ -1,7 +1,7 @@
 import { action, thunk } from 'easy-peasy'
 
 export const auth = {
-  isAuth: false,
+  isAuth: undefined,
   access: '',
 
   requestChangePassword: thunk(async (actions, payload) => {
