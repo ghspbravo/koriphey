@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import cardBlock from '../../components/cardBlock/cardBlock';
 import requestItem from '../../components/requestItem/requestItem';
-import newsItem from '../../components/newsItem/newsItem';
 
 import { useStore, useActions } from 'easy-peasy';
 import parse from 'html-react-parser'
 import formatDate from '../../functions/formatDate';
+import newsListItem from '../../components/newsItem/newsListItem';
 
 export default function News() {
   const [currentPage, currentPageSet] = useState(1)
@@ -43,7 +43,7 @@ export default function News() {
               <div className="list-card no-padding">
                 {newsList.length !== 0
                   ? newsList.map((item, index) => <div key={index} className="card">
-                    {newsItem(
+                    {newsListItem(
                       item.id,
                       item.title,
                       item.announce ? <p>{item.announce}</p> : parse(item.content),

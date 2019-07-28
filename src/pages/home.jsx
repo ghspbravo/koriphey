@@ -2,13 +2,14 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import cardBlock from '../components/cardBlock/cardBlock';
 import requestItem from '../components/requestItem/requestItem';
-import newsItem from '../components/newsItem/newsItem';
+
 import cityStatsMap from '../components/cityStats/cityStatsMap';
 import cityStats from '../components/cityStats/cityStats';
 import { WorkDoughnutChart, HobbiesDoughnutChart } from '../components/charts/charts';
 
 import { useStore, useActions } from 'easy-peasy';
 import parse from 'html-react-parser'
+import newsListItem from '../components/newsItem/newsListItem';
 
 export default function Home() {
   const newsList = useStore(store => store.news.newsList)
@@ -80,7 +81,7 @@ export default function Home() {
                   {newsList.length !== 0
                     ? newsList.slice(0, 3).map((item, index) => <div key={index} className="card">
                       {
-                        newsItem(
+                        newsListItem(
                           item.id,
                           item.title,
                           item.announce ? <p>{item.announce}</p> : parse(item.content),
