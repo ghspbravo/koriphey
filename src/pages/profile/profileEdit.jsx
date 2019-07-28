@@ -23,6 +23,12 @@ import userThumb from '../../components/userThumb.png'
 import graduationYearOptions from '../../components/graduationYear/graduationYearOptions';
 
 export default function ProfileEdit() {
+  const ROLE = {
+    GRADUATE: 0,
+    TEACHER: 3,
+    STUDENT: 4
+  }
+
   const user = useStore(store => store.profile.user)
 
   const workYearInput = useRef()
@@ -372,7 +378,7 @@ export default function ProfileEdit() {
   const submitHandler = async e => {
     e.preventDefault()
     let isValid = true
-    if (graduationYear === '') { graduationYearErrorSet('Выберите год выпуска'); isValid = false }
+    if (user.status !== ROLE.TEACHER && graduationYear === '') { graduationYearErrorSet('Выберите год выпуска'); isValid = false }
     if (about === '') { aboutErrorSet('Заполните информацию о себе'); isValid = false }
     if (competences.length === 0) { competensesErrorSet('Выберите подходящие Вам компетенции'); isValid = false }
     if (hobbies.length === 0) { hobbiesErrorSet('Выберите подходящие Вам хобби/увлечения'); isValid = false }
@@ -391,7 +397,7 @@ export default function ProfileEdit() {
       password, oldPassword, about,
       competences: competences.map(competence => competence.id),
       workYears: workYears ? `${workYears}-01-01` : '',
-      graduationYear: parseInt(graduationYear),
+      graduationYear: graduationYear ? parseInt(graduationYear) : '',
       suggests,
       hobbies: hobbies.map(hobbie => hobbie.id),
       cityId: parseInt(cityId)
@@ -466,7 +472,8 @@ export default function ProfileEdit() {
                   </div>
                   <div className="col-lg-6">
                     <select {...graduationYearBind} className="w-100" onBlur={() => graduationYearErrorSet('')} id="person-graduation-year">
-                      <option value="" defaultChecked>Выберите год выпуска*</option>
+                      <option value="" defaultChecked>Выберите год выпуска{
+                        user.status !== ROLE.TEACHER && '*'}</option>
                       {graduationYearOptions()}
                     </select>
                     <div className="form-error">{graduationYearError}</div>

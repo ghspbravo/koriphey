@@ -62,7 +62,7 @@ export default function Profile(router) {
             {cardBlock(
               <h2>Информация</h2>,
               <div className="pb-2">
-                {user && user.graduationYear
+                {user !== undefined
                   ? <div className="profile-info">
                     <div className="row mb-2">
                       <div className="profile-info__head col-6">Год выпуска:</div>
