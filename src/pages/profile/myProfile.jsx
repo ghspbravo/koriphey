@@ -55,7 +55,7 @@ export default function MyProfile() {
                         <div className="profile-info__head col-6">Город:</div>
                         <div className="profile-info__content col-6">{user.city.nameRU}</div>
                       </div>}
-                    {user && user.competencies.length !== 0 &&
+                    {user.competencies && user.competencies.length !== 0 &&
                       <div>
                         <div className="row mb-1">
                           <div className="profile-info__head col-12">Сферы деятельности: </div>
@@ -65,7 +65,7 @@ export default function MyProfile() {
                             .map(competence => competence.name).join(', ')}</div>
                         </div>
                       </div>}
-                    {user && user.hobbies.length !== 0 &&
+                    {user.hobbies && user.hobbies.length !== 0 &&
                       <div>
                         <div className="row mb-1">
                           <div className="profile-info__head col-12">Хобби: </div>
@@ -148,7 +148,7 @@ export default function MyProfile() {
             {cardBlock(
               <h2>Отзывы</h2>,
               <div className="list-card no-padding">
-                {user && user.reviews && user.reviews.length
+                {user.reviews && user.reviews.length
                   ? user.reviews.map((item, key) => <div className="card list-card-item" key={key}>
                     {comment(
                       {

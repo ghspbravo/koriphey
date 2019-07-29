@@ -54,7 +54,6 @@ export default function Profile(router) {
             <div className="col-6 pl-1">
               <h2 className="profile-person__name">{user && user.fio ? `${user.firstName} ${user.surName}` : '...'}</h2>
               <a href={`mailto:${user && user.email}`} className="profile-person__button button button_expanded">Написать</a>
-              {/* <Link className="profile-person__button button button_expanded button_secondary mt-1 disabled" to={`/profile/${router.match.params.id}`}>Отзыв</Link> */}
             </div>
           </div>
 
@@ -78,7 +77,7 @@ export default function Profile(router) {
                         <div className="profile-info__head col-6">Город:</div>
                         <div className="profile-info__content col-6">{user.city.nameRU}</div>
                       </div>}
-                    {user && user.competencies.length !== 0 &&
+                    {user.competencies && user.competencies.length !== 0 &&
                       <div>
                         <div className="row mb-1">
                           <div className="profile-info__head col-12">Сферы деятельности: </div>
@@ -88,7 +87,7 @@ export default function Profile(router) {
                             .map(competence => competence.name).join(', ')}</div>
                         </div>
                       </div>}
-                    {user && user.hobbies.length !== 0 &&
+                    {user.hobbies && user.hobbies.length !== 0 &&
                       <div>
                         <div className="row mb-1">
                           <div className="profile-info__head col-12">Хобби: </div>
@@ -152,7 +151,7 @@ export default function Profile(router) {
             )}
           </div>
 
-          {user && user.utilities.length !== 0 &&
+          {user.utilities && user.utilities.length !== 0 &&
             <div className="mb-2">
               {cardBlock(
                 <h2>Что я могу предложить</h2>,
@@ -170,7 +169,7 @@ export default function Profile(router) {
             {cardBlock(
               <h2>Отзывы</h2>,
               <div className="list-card no-padding">
-                {user && user.reviews && user.reviews.length
+                {user.reviews && user.reviews.length
                   ? user.reviews.map((item, key) => <div className="card list-card-item" key={key}>
                     {comment(
                       {
