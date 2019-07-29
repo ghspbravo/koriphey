@@ -21,6 +21,7 @@ import location from '../../components/location/location';
 
 import userThumb from '../../components/userThumb.png'
 import graduationYearOptions from '../../components/graduationYear/graduationYearOptions';
+import PhotoEdit from '../../components/photoEdit/photoEdit';
 
 export default function ProfileEdit() {
   const ROLE = {
@@ -367,6 +368,8 @@ export default function ProfileEdit() {
   const { selectedCountryId, cityId, setSelectedCountryId, setCityId, countriesList, cities, countryChoiceHandler, cityChoiceHandler } = useLocation()
 
 
+  const [rotation, rotationSet] = useState(0)
+
   // SUBMIT
   const updatePhoto = useActions(actions => actions.profile.loadPhoto)
   const resetPassword = useActions(actions => actions.profile.resetPassword)
@@ -629,7 +632,11 @@ export default function ProfileEdit() {
                   {/* photo */}
                   <div className="order-1 order-xl-2 col-xl-6">
                     <div>
-                      <label style={{ cursor: 'pointer' }} htmlFor="person-photo"><img src={photo} alt="" /></label>
+                      <div className="photo">
+                        {/* <img src={photo} alt="" /> */}
+                        {PhotoEdit(photo, rotation, rotationSet)}
+
+                      </div>
                       <label style={{ fontWeight: 'normal' }} className="link" htmlFor="person-photo">Изменить фото</label>
                       <p className="small">Друзьям будет проще узнать Вас, если Вы загрузите свою настоящую фотографию, на которой отчетливо будет видно лицо.</p>
                       <input {...photoBind} accept="image/png, image/jpeg" className="d-none" type="file" name="person-photo" id="person-photo" />

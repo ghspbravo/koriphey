@@ -130,7 +130,7 @@ export default function MyProfile() {
               )}
             </div>}
 
-          {user.utilities && user.utilities.length !== 0 &&
+          {user && user.utilities && user.utilities.length !== 0 &&
             <div className="mb-2">
               {cardBlock(
                 <h2>Что я могу предложить</h2>,
@@ -148,7 +148,7 @@ export default function MyProfile() {
             {cardBlock(
               <h2>Отзывы</h2>,
               <div className="list-card no-padding">
-                {user.reviews && user.reviews.length
+                {user && user.reviews && user.reviews.length
                   ? user.reviews.map((item, key) => <div className="card list-card-item" key={key}>
                     {comment(
                       {

@@ -16,7 +16,9 @@ export const useFileInput = (initialValue, initialPhoto) => {
         setValue(event.target.files[0]);
         const fr = new FileReader();
         fr.onload = function () {
-          setPreviewFile(fr.result)
+          try {
+            setPreviewFile(fr.result)
+          } catch { }
         }
         fr.readAsDataURL(event.target.files[0]);
       }
