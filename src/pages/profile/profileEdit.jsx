@@ -25,6 +25,8 @@ import PhotoEdit from '../../components/photoEdit/photoEdit';
 import Work from '../../components/work/work';
 import useWork from '../../hooks/useWork';
 import badges from '../../components/badges/badges';
+import Education from '../../components/education/education';
+import useEducation from '../../hooks/useEducation';
 
 export default function ProfileEdit() {
   const ROLE = {
@@ -375,6 +377,9 @@ export default function ProfileEdit() {
   // WORK
   const { works, worksSet, addWorkHandler, changeHandler: changeWorkHandler } = useWork()
 
+  // EDUCATION
+  const { educations, educationsSet, addEducationHandler, changeHandler: changeEducationHandler } = useEducation()
+
 
   const [rotation, rotationSet] = useState(0)
 
@@ -496,7 +501,9 @@ export default function ProfileEdit() {
                     <label className="d-none d-lg-block" htmlFor="person-graduation">Образование:</label>
                   </div>
                   <div className="col-lg-6">
-                    <input {...educationBind} placeholder="Образование" className="w-100" id='person-graduation' type="text" />
+                    {/* <input {...educationBind} placeholder="Образование" className="w-100" id='person-graduation' type="text" /> */}
+                    {badges('develop')}
+                    {Education(educations, addEducationHandler, changeEducationHandler)}
                   </div>
                 </div>
 

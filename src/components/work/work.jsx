@@ -6,7 +6,7 @@ export default function Work(works, addWorkHandler, changeHandler) {
     <div>
       {works.map((work, index) => workForm(index, work, changeHandler))}
 
-      <button className="link" onClick={addWorkHandler}><i className="fas fa-plus"></i> Добавить место работы</button>
+      <button type="button" className="link" onClick={addWorkHandler}><i className="fas fa-plus"></i> Добавить место работы</button>
     </div>
   )
 }
