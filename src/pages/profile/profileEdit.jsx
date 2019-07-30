@@ -22,6 +22,9 @@ import location from '../../components/location/location';
 import userThumb from '../../components/userThumb.png'
 import graduationYearOptions from '../../components/graduationYear/graduationYearOptions';
 import PhotoEdit from '../../components/photoEdit/photoEdit';
+import Work from '../../components/work/work';
+import useWork from '../../hooks/useWork';
+import badges from '../../components/badges/badges';
 
 export default function ProfileEdit() {
   const ROLE = {
@@ -131,24 +134,8 @@ export default function ProfileEdit() {
 
             <div className="form-error">{competencesError}</div>
           </div>
-          <div className="form-group mb-1">
-            <div>
-              <label className="d-block mb-1" htmlFor="mobile-person-work">Место работы:</label>
-            </div>
-            <input {...workPlaceBind} placeholder="Место работы" className="w-100" id='mobile-person-work' type="text" />
-          </div>
-          <div className="form-group mb-1">
-            <div>
-              <label className="d-block mb-1" htmlFor="mobile-person-graduation-post">Должность: </label>
-            </div>
-            <input {...workPositionBind} placeholder="Должность" className="w-100" id='mobile-person-graduation-post' type="text" />
-          </div>
-          <div className="form-group mb-1">
-            <div>
-              <label className="d-block mb-1" htmlFor="mobile-person-work-years">Год начала работы:</label>
-            </div>
-            <input ref={workYearInputMobile} {...workYearsBind} placeholder="Год начала работы" className="w-100" id='mobile-person-work-years' type="text" />
-          </div>
+          {badges('develop')}
+          {Work(works, addWorkHandler, changeWorkHandler)}
 
         </div>
       case MOBILE_NAVIGATION.other:
@@ -252,11 +239,11 @@ export default function ProfileEdit() {
   const [graduationYearError, graduationYearErrorSet] = useState('')
   const { value: education, bind: educationBind, setValue: setEducation } = useInput('');
   // const [educationYearError, educationYearErrorSet] = useState('')
-  const { value: workPlace, bind: workPlaceBind, setValue: setWorkPlace } = useInput('');
+  // const { value: workPlace, bind: workPlaceBind, setValue: setWorkPlace } = useInput('');
   // const [workPlaceError, workPlaceErrorSet] = useState('')
-  const { value: workPosition, bind: workPositionBind, setValue: setWorkPosition } = useInput('');
+  // const { value: workPosition, bind: workPositionBind, setValue: setWorkPosition } = useInput('');
   // const [workPositionError, workPositionErrorSet] = useState('')
-  const { value: workYears, bind: workYearsBind, setValue: setWorkYears } = useInput('');
+  // const { value: workYears, bind: workYearsBind, setValue: setWorkYears } = useInput('');
   // const [workYearsError, workYearsErrorSet] = useState('')
   // const { value: currentActivity, bind: currentActivityBind, setValue: setCurrentActivity } = useInput('');
   // const [currentActivityError, currentActivityErrorSet] = useState('')
@@ -282,10 +269,10 @@ export default function ProfileEdit() {
     if (!(user && user.email)) return
 
     setGraduationYear(user.graduationYear)
-    setWorkPlace(user.workExperiencies[0] && user.workExperiencies[0].name ? user.workExperiencies[0].name : '')
-    setWorkPosition(user.workExperiencies[0] && user.workExperiencies[0].position ? user.workExperiencies[0].position : '')
-    const workDateList = user.workExperiencies[0] && user.workExperiencies[0].start.match(/\d\d\d\d-\d\d-\d\d/)[0].split('-')
-    setWorkYears(workDateList && workDateList[0] ? parseInt(workDateList[0]) : '')
+    // setWorkPlace(user.workExperiencies[0] && user.workExperiencies[0].name ? user.workExperiencies[0].name : '')
+    // setWorkPosition(user.workExperiencies[0] && user.workExperiencies[0].position ? user.workExperiencies[0].position : '')
+    // const workDateList = user.workExperiencies[0] && user.workExperiencies[0].start.match(/\d\d\d\d-\d\d-\d\d/)[0].split('-')
+    // setWorkYears(workDateList && workDateList[0] ? parseInt(workDateList[0]) : '')
     setEducation(user.education)
     setAbout(user.about)
     setPhoto(user.photo)
@@ -305,6 +292,24 @@ export default function ProfileEdit() {
         default:
           break;
       }
+    })
+
+    user.workExperiencies.length > 0 && worksSet((prev) => {
+      return [...prev, ...user.workExperiencies.map(work => {
+        const workStartDateList = work.start.match(/\d\d\d\d-\d\d-\d\d/)[0].split('-')
+        const workEndDateList = work.end.match(/\d\d\d\d-\d\d-\d\d/)[0].split('-')
+
+        const workStart = workStartDateList[0]
+        const workEnd = workEndDateList[0]
+
+        return {
+          place: work.name,
+          position: work.position,
+          yearsStart: workStart,
+          yearsEnd: workEnd,
+          isCurrent: false
+        }
+      })]
     })
 
     suggestsSet([])
@@ -367,6 +372,9 @@ export default function ProfileEdit() {
   // LOCATION
   const { selectedCountryId, cityId, setSelectedCountryId, setCityId, countriesList, cities, countryChoiceHandler, cityChoiceHandler } = useLocation()
 
+  // WORK
+  const { works, worksSet, addWorkHandler, changeHandler: changeWorkHandler } = useWork()
+
 
   const [rotation, rotationSet] = useState(0)
 
@@ -392,14 +400,14 @@ export default function ProfileEdit() {
 
     const payload = {
       education: education ? education : '',
-      workPlace: workPlace ? workPlace : '',
-      workPosition: workPosition ? workPosition : '',
+      // workPlace: workPlace ? workPlace : '',
+      // workPosition: workPosition ? workPosition : '',
       socialVk: socialVk ? socialVk : '',
       socialInsta: socialInsta ? socialInsta : '',
       socialFb: socialFb ? socialFb : '',
       password, oldPassword, about,
       competences: competences.map(competence => competence.id),
-      workYears: workYears ? `${workYears}-01-01` : '',
+      // workYears: workYears ? `${workYears}-01-01` : '',
       graduationYear: graduationYear ? parseInt(graduationYear) : '',
       suggests,
       hobbies: hobbies.map(hobbie => hobbie.id),
@@ -511,28 +519,11 @@ export default function ProfileEdit() {
 
                 <div className="row form-group mb-1">
                   <div className="col-lg-6">
-                    <label className="d-none d-lg-block" htmlFor="person-work">Место работы:</label>
+                    <label className="d-none d-lg-block" htmlFor="person-work">Работа:</label>
                   </div>
                   <div className="col-lg-6">
-                    <input {...workPlaceBind} placeholder="Место работы" className="w-100" id='person-work' type="text" />
-                  </div>
-                </div>
-
-                <div className="row form-group mb-1">
-                  <div className="col-lg-6">
-                    <label className="d-none d-lg-block" htmlFor="person-post">Должность:</label>
-                  </div>
-                  <div className="col-lg-6">
-                    <input {...workPositionBind} placeholder="Должность" className="w-100" id='person-post' type="text" />
-                  </div>
-                </div>
-
-                <div className="row form-group mb-1">
-                  <div className="col-lg-6">
-                    <label className="d-none d-lg-block" htmlFor="person-work-years">Год начала работы:</label>
-                  </div>
-                  <div className="col-lg-6">
-                    <input ref={workYearInput} {...workYearsBind} placeholder="Год начала работы" className="w-100" id='person-work-years' type="text" />
+                    {badges('develop')}
+                    {Work(works, addWorkHandler, changeWorkHandler)}
                   </div>
                 </div>
 
