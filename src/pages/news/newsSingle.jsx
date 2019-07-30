@@ -73,9 +73,9 @@ export default function NewsSingle(router) {
                 </div>
 
                 <div className="news-body my-1">
-                  {news.imagePrewiew &&
+                  {news.imagePreview &&
                     <div style={{ position: 'relative' }}>
-                      <img src={news.imagePrewiew} alt="" />
+                      <img src={news.imagePreview} alt="" />
                     </div>}
 
                   {news && news.content ? parse(news.content) : '...'}
