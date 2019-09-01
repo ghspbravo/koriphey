@@ -10,8 +10,28 @@ import editIcon from '../../components/editIcon/editIcon';
 import { useStore } from 'easy-peasy';
 
 import userThumb from '../../components/userThumb.png'
+import { formatDateYear } from '../../functions/formatDate';
 
 export default function MyProfile() {
+  const educations = {
+    0: "Бакалавриат",
+    1: "Специалитет",
+    2: "Магистратура",
+    3: "Аспирантура",
+    4: "Докторантура",
+    5: "МБА",
+    6: "Курсы повышения квалификации",
+    7: "Ученая степень",
+    8: "кандидат наук",
+    9: "доктор наук"
+  }
+
+  const ROLE = {
+    GRADUATE: 0,
+    TEACHER: 3,
+    STUDENT: 4
+  }
+
   const user = useStore(store => store.profile.user)
   return (
     <div className="container">
@@ -41,10 +61,11 @@ export default function MyProfile() {
               <div className="pb-2">
                 {user !== undefined
                   ? <div className="profile-info">
+                    {user.status === ROLE.GRADUATE &&
                     <div className="row mb-2">
                       <div className="profile-info__head col-6">Год выпуска:</div>
                       <div className="profile-info__content col-6">{user.graduationYear}</div>
-                    </div>
+                    </div>}
                     {user.city && user.city.country &&
                       <div className="row mb-2">
                         <div className="profile-info__head col-6">Страна:</div>
@@ -126,6 +147,27 @@ export default function MyProfile() {
                 <h2>О себе</h2>,
                 <div className="pb-2">
                   <p>{user.about}</p>
+
+                  {user && user.educatons.length > 0 && <div className="mt-2">
+                    <h3>Образование</h3>
+                    <ul>
+                      {user && user.educatons && user.educatons.map((education, index) => <li key={index}>
+                        {educations[education.type]} {education.name} {education.place && `(${education.place})`}
+                      </li>)
+                      }
+                    </ul>
+                  </div>}
+                  
+                  {user && user.workExperiencies.length > 0 &&
+                  <div className="mt-2">
+                    <h3>Работа</h3>
+                    <ul>
+                      {user && user.workExperiencies && user.workExperiencies.map((work, index) => <li key={index}>
+                        {work.position} {work.name && `в ${work.name}`} ({formatDateYear(work.start)} - {formatDateYear(work.end)})
+                      </li>)
+                      }
+                    </ul>
+                  </div>}
                 </div>
               )}
             </div>}

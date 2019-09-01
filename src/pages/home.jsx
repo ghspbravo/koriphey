@@ -10,6 +10,7 @@ import { WorkDoughnutChart, HobbiesDoughnutChart } from '../components/charts/ch
 import { useStore, useActions } from 'easy-peasy';
 import parse from 'html-react-parser'
 import newsListItem from '../components/newsItem/newsListItem';
+import registeredStats from '../components/registeredStats/registeredStats';
 
 export default function Home() {
   const newsList = useStore(store => store.news.newsList)
@@ -28,6 +29,7 @@ export default function Home() {
   }
   return (
     <div className="container">
+
       <div className="col-12 mb-2 px-0">
         {cardBlock(
           <h2>Карта выпускников</h2>,
@@ -57,6 +59,12 @@ export default function Home() {
             HobbiesDoughnutChart()
           )}
         </div>
+
+        <div className="col-12 mb-2">
+          {cardBlock(<h2>Всего зарегистрировано</h2>,
+            registeredStats()
+          )}
+        </div>
       </div>
       <div className="row">
         <div className="col-lg-8">
@@ -74,6 +82,13 @@ export default function Home() {
                 HobbiesDoughnutChart()
               )}
             </div>
+
+            <div className="col-12 mb-2">
+              {cardBlock(<h2>Всего зарегистрировано</h2>,
+                registeredStats()
+              )}
+            </div>
+
             <div className="col-12">
               {cardBlock(
                 <h2>Последние новости</h2>,

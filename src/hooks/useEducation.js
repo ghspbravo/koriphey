@@ -12,8 +12,6 @@ export default function useEducation(defaultEducations = []) {
       id = e.target.dataset.id,
       type = e.target.type
 
-    console.log(type)
-
     switch (type) {
       case 'text':
         const value = e.target.value
@@ -26,7 +24,6 @@ export default function useEducation(defaultEducations = []) {
       case 'select-one':
         const selectValue = e.target.value
 
-        console.log(e.target.value)
         educationsSet((prev) => {
           prev[id][property] = selectValue
           return [...prev]

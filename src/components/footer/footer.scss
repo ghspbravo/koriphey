@@ -1,0 +1,28 @@
+@import '../../styles/vars';
+
+.footer {
+  background-color: #252d33;
+  padding: 25px 0;
+
+  &,
+  & a {
+    color: white !important;
+  }
+
+  .social-item {
+    margin: 15px 0;
+    color: white;
+    display: block;
+
+    @media (max-width: $m-sm-max) {
+      text-align: center;
+    }
+  }
+
+  &-title {
+    @media (max-width: $m-sm-max) {
+      display: block;
+      text-align: center;
+    }
+  }
+}

@@ -11,6 +11,15 @@ export default function useWork(defaultWorks = []) {
     isCurrent: false
   }])
 
+  const removeWorkHandler = e => {
+    const id = e.target.dataset.id
+
+    worksSet((prev) => {
+      prev.splice(id, 1)
+      return [...prev]
+    })
+  }
+
   const changeHandler = e => {
     const property = e.target.name,
       id = e.target.dataset.id,
@@ -41,6 +50,7 @@ export default function useWork(defaultWorks = []) {
   return {
     works, worksSet,
     addWorkHandler,
-    changeHandler
+    changeHandler,
+    removeWorkHandler
   }
 }

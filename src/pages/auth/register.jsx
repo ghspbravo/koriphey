@@ -25,7 +25,7 @@ export default function Register(router) {
   const dateInput = useRef()
   const workYearInput = useRef()
 
-  const { value: role, bind: roleBind } = useInput('', 'number');
+  const { value: role, bind: roleBind } = useInput(ROLE.GRADUATE, 'number');
   const [roleError, roleErrorSet] = useState('')
 
   // add input mask
@@ -92,7 +92,7 @@ export default function Register(router) {
     if (birthdate === '') { birthdateErrorSet('Заполните Вашу дату рождения'); isValid = false }
     else if (!/[0-9][0-9].[0-9][0-9].[0-9][0-9][0-9][0-9]/.test(birthdate)) { birthdateErrorSet('Заполните валидную дату рождения'); isValid = false }
 
-    if (role !== ROLE.TEACHER && graduationYear === '') { graduationYearErrorSet('Выберите год выпуска'); isValid = false }
+    if (role === ROLE.GRADUATE && graduationYear === '') { graduationYearErrorSet('Выберите год выпуска'); isValid = false }
     if (role === ROLE.TEACHER && workingYear === '') { workingYearErrorSet('Заполните год начала работы'); isValid = false }
 
     if (password === '') { passwordErrorSet('Заполните пароль'); isValid = false }
@@ -154,7 +154,7 @@ export default function Register(router) {
     myFormData.append("birthDate", payload.birthdate);
     myFormData.append("password", password);
 
-    role !== ROLE.TEACHER && myFormData.append("graduationYear", payload.graduationYear);
+    role === ROLE.GRADUATE && myFormData.append("graduationYear", payload.graduationYear);
 
     if (role === ROLE.TEACHER) {
       myFormData.append("WorkStart", payload.workingYear);
@@ -244,10 +244,10 @@ export default function Register(router) {
                         <div className="form-error">{roleError}</div>
                       </div>
 
-                      {role !== ROLE.TEACHER &&
+                      {role === ROLE.GRADUATE &&
                         <div className="form-group mb-1">
                           <select {...graduationYearBind} className="w-100" onBlur={() => graduationYearErrorSet('')} id="mobile-person-graduation-year">
-                            <option value="" defaultChecked>Выберите {role === ROLE.STUDENT && 'будущий'} год выпуска*</option>
+                            <option value="" defaultChecked>Выберите год выпуска*</option>
                             {graduationYearOptions()}
                           </select>
                           <div className="form-error">{graduationYearError}</div>

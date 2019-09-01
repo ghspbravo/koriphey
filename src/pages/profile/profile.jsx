@@ -9,8 +9,15 @@ import { socialVkontakte, socialFacebook, socialInstagram } from '../../componen
 import { useActions, useStore } from 'easy-peasy';
 import userThumb from '../../components/userThumb.png'
 import useInput from '../../hooks/useInput';
+import { formatDateYear } from '../../functions/formatDate';
 
 export default function Profile(router) {
+  const ROLE = {
+    GRADUATE: 0,
+    TEACHER: 3,
+    STUDENT: 4
+  }
+
   const [user, setUser] = useState()
 
   const currentUser = useStore(store => store.profile.user)
@@ -41,6 +48,20 @@ export default function Profile(router) {
       } else alert('Ошибка отзыв')
     })
   }
+
+  const educations = {
+    0: "Бакалавриат",
+    1: "Специалитет",
+    2: "Магистратура",
+    3: "Аспирантура",
+    4: "Докторантура",
+    5: "МБА",
+    6: "Курсы повышения квалификации",
+    7: "Ученая степень",
+    8: "кандидат наук",
+    9: "доктор наук"
+  }
+
   return (
     <div className="container">
       <div className="row">
@@ -63,10 +84,11 @@ export default function Profile(router) {
               <div className="pb-2">
                 {user !== undefined
                   ? <div className="profile-info">
+                    {user.status === ROLE.GRADUATE &&
                     <div className="row mb-2">
                       <div className="profile-info__head col-6">Год выпуска:</div>
                       <div className="profile-info__content col-6">{user.graduationYear}</div>
-                    </div>
+                    </div>}
                     {user.city && user.city.country &&
                       <div className="row mb-2">
                         <div className="profile-info__head col-6">Страна:</div>
@@ -147,6 +169,27 @@ export default function Profile(router) {
               <h2>О себе</h2>,
               <div className="pb-2">
                 <p>{user && user.about}</p>
+
+                {user && user.educatons.length > 0 && <div className="mt-2">
+                    <h3>Образование</h3>
+                    <ul>
+                      {user && user.educatons && user.educatons.map((education, index) => <li key={index}>
+                        {educations[education.type]} {education.name} {education.place && `(${education.place})`}
+                      </li>)
+                      }
+                    </ul>
+                  </div>}
+                  
+                  {user && user.workExperiencies.length > 0 &&
+                  <div className="mt-2">
+                    <h3>Работа</h3>
+                    <ul>
+                      {user && user.workExperiencies && user.workExperiencies.map((work, index) => <li key={index}>
+                        {work.position} {work.name && `в ${work.name}`} ({formatDateYear(work.start)} - {formatDateYear(work.end)})
+                      </li>)
+                      }
+                    </ul>
+                  </div>}
               </div>
             )}
           </div>

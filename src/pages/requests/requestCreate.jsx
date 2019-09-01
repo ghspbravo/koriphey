@@ -94,7 +94,7 @@ export default function RequestCreate(router) {
     const payload = {
       content,
       category: parseInt(category),
-      expiredDate: `${date[2]}-${date[1]}-${date[0]}`,
+      expiredDate: expiredDate ? `${date[2]}-${date[1]}-${date[0]}` : '',
       cityId: parseInt(cityId),
       competence, hobbie, suggest
     }
@@ -112,7 +112,9 @@ export default function RequestCreate(router) {
     payload.cityId && myFormData.append("location.cityId", payload.cityId);
     photoFile && myFormData.append("files[0]", photoFile);
 
+
     const success = await createRequest(myFormData)
+
     isSuccessSet(success)
     processingSet(false)
   }

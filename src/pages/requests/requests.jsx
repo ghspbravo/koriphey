@@ -124,7 +124,7 @@ export default function Requests() {
                               location: `${item.user.city && item.user.city.country.nameRU}, ${item.user.city && item.user.city.nameRU}`
                             },
                             {
-                              category: item.category.name,
+                              category: item.category && item.category.name,
                               location: item.location && item.location.city && `${item.location.city.country.nameRU}, ${item.location.city.nameRU}`,
                               expiredAt: item.expiredAt && formatDate(item.expiredAt)
                             },

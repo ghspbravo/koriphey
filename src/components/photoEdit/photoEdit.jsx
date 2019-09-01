@@ -33,15 +33,19 @@ export default function PhotoEdit(photo, rotation, rotationSet) {
       alpha: true
     })
 
-    image.src = photo
     rotationSet(0)
-    context.clearRect(0, 0, canvas.width, canvas.height);
 
-    const imageRelateWidth = image.width % canvas.width
-    const imageRelateHeight = image.height % canvas.height
+    image.onload = () => {
 
-    context.drawImage(image, (canvas.width - imageRelateWidth) / 2, (canvas.height - imageRelateHeight) / 2,
-      imageRelateWidth, imageRelateHeight)
+
+      context.clearRect(0, 0, canvas.width, canvas.height);
+
+      const imageRelateWidth = image.width % canvas.width
+      const imageRelateHeight = image.height % canvas.height
+      context.drawImage(image, (canvas.width - imageRelateWidth) / 2, (canvas.height - imageRelateHeight) / 2,
+        imageRelateWidth, imageRelateHeight)
+    }
+
 
     // eslint-disable-next-line
   }, [photo, canvasWrapperWidth])

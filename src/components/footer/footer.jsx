@@ -1,36 +1,50 @@
 import React from 'react'
 import { socialVkontakte } from '../socials/socials';
+import vsvoiLogo from './vsvoi.svg'
+import './footer.scss'
 
 export default function Footer() {
   return (
-    <div className="container mt-3">
-      <hr />
-      <div className="mb-1">
-        <span>Наши ресурсы: </span>
-        <a href="http://www.koriphey.ru/" target="_blank" rel="noopener noreferrer">
-          Сайт Гимназии</a>, <a href="http://bib.koriphey.ru/" target="_blank" rel="noopener noreferrer">
-          Библиотека</a>, <a href="http://plus.koriphey.ru/" target="_blank" rel="noopener noreferrer">
-          Интеллект-школа</a>, <a href="http://fund.koriphey.ru/" target="_blank" rel="noopener noreferrer">
-          Эндаумент</a>, <a href="http://bonus.koriphey.ru/" target="_blank" rel="noopener noreferrer">
-          Дисконтная система</a>, <a href="http://leaders.koriphey.ru/" target="_blank" rel="noopener noreferrer">
-          Школа вожатых</a>, <a href="http://mbl.mba/" target="_blank" rel="noopener noreferrer">
-          Молодежная бизнес лига</a>
-      </div>
+    <div className="footer mt-3">
+      <div className="container">
+        <div className="mb-1 row">
+          <div className="col-lg-10 col-md-9">
+            <span className='footer-title'>Наши ресурсы: </span>
+            <div className="row">
+              <div className="col-lg-4 col-sm-6">
+                <a className="social-item" href="http://www.koriphey.ru/" target="_blank" rel="noopener noreferrer">Сайт Гимназии</a>
+                <a className="social-item" href="http://bib.koriphey.ru/" target="_blank" rel="noopener noreferrer">Библиотека</a>
+                <a className="social-item" href="http://plus.koriphey.ru/" target="_blank" rel="noopener noreferrer">Интеллект-школа</a>
+              </div>
+              <div className="col-lg-4 col-sm-6">
+                <a className="social-item" href="http://fund.koriphey.ru/" target="_blank" rel="noopener noreferrer">Эндаумент</a>
+                <a className="social-item" href="http://bonus.koriphey.ru/" target="_blank" rel="noopener noreferrer">Дисконтная система</a>
 
-      <div className="mb-1">
-        <span>Мы в соц. сетях:</span>
-      </div>
-      <div className="row no-gutters">
-        <div className="mr-1">
-          {socialVkontakte('https://vk.com/koriphey_klub_vypusknikov')}
+                <a className="d-lg-none social-item" href="http://leaders.koriphey.ru/" target="_blank" rel="noopener noreferrer">Школа вожатых</a>
+                <a className="d-lg-none social-item" href="http://mbl.mba/" target="_blank" rel="noopener noreferrer">Молодежная бизнес лига</a>
+              </div>
+              <div className="d-none d-lg-block col-lg-4">
+                <a className="social-item" href="http://leaders.koriphey.ru/" target="_blank" rel="noopener noreferrer">Школа вожатых</a>
+                <a className="social-item" href="http://mbl.mba/" target="_blank" rel="noopener noreferrer">Молодежная бизнес лига</a>
+              </div>
+            </div>
+          </div>
+          <div className="col-lg-2 col-md-3">
+            <span className='footer-title'>Мы в соц. сетях:</span>
+            <div className="row justify-content-center justify-content-md-start no-gutters mt-2">
+              {socialVkontakte('https://vk.com/koriphey_klub_vypusknikov')}
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div className="mt-1">
-        <p className='small'>
-          Сервис Клуба выпускников Гимназии “Корифей”  размещен на
-          платформе <a href="https://vsvoi.ru" target='_blank' rel="noopener noreferrer">VСВОИ</a>
-        </p>
+        <div className="mt-1">
+          <p style={{ textAlign: 'center' }} className="m-0">
+            Сервис Клуба выпускников Гимназии “Корифей”
+              <br className="d-sm-none" /> размещен на платформе
+              <a className="ml-1" href="https://vsvoi.ru" target='_blank' rel="noopener noreferrer">VСВОИ <img style={{ marginBottom: '-10px' }} className="ml-1 not-responsive" width={30} height={30} src={vsvoiLogo} alt="vsvoi logo" /></a>
+          </p>
+
+        </div>
       </div>
     </div>
   )

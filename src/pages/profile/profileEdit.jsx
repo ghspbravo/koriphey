@@ -24,7 +24,6 @@ import graduationYearOptions from '../../components/graduationYear/graduationYea
 import PhotoEdit from '../../components/photoEdit/photoEdit';
 import Work from '../../components/work/work';
 import useWork from '../../hooks/useWork';
-import badges from '../../components/badges/badges';
 import Education from '../../components/education/education';
 import useEducation from '../../hooks/useEducation';
 
@@ -33,7 +32,7 @@ export default function ProfileEdit() {
     GRADUATE: 0,
     TEACHER: 3,
     STUDENT: 4
-  }
+  } // TODO: Roles in constant
 
   const user = useStore(store => store.profile.user)
 
@@ -101,22 +100,21 @@ export default function ProfileEdit() {
               cityChoiceHandler
             )}
           </div>
+          {user.status === ROLE.GRADUATE &&
+            <div className="form-group mb-1">
+              <div>
+                <label className="d-block mb-1" htmlFor="mobile-person-graduation-year">Год выпуска: </label>
+              </div>
+              <select {...graduationYearBind} className="w-100" onBlur={() => graduationYearErrorSet('')} id="mobile-person-graduation-year">
+                <option value="" defaultChecked>Выберите год выпуска*</option>
+                {graduationYearOptions()}
+              </select>
+              {/* <input onBlur={() => graduationYearErrorSet('')} ref={graduateYearInputMobile} {...graduationYearBind} placeholder="Год выпуска" className="w-100" id='mobile-person-graduation-year' type="text" /> */}
+              <div className="form-error">{graduationYearError}</div>
+            </div>}
+
           <div className="form-group mb-1">
-            <div>
-              <label className="d-block mb-1" htmlFor="mobile-person-graduation-year">Год выпуска: </label>
-            </div>
-            <select {...graduationYearBind} className="w-100" onBlur={() => graduationYearErrorSet('')} id="mobile-person-graduation-year">
-              <option value="" defaultChecked>Выберите год выпуска*</option>
-              {graduationYearOptions()}
-            </select>
-            {/* <input onBlur={() => graduationYearErrorSet('')} ref={graduateYearInputMobile} {...graduationYearBind} placeholder="Год выпуска" className="w-100" id='mobile-person-graduation-year' type="text" /> */}
-            <div className="form-error">{graduationYearError}</div>
-          </div>
-          <div className="form-group mb-1">
-            <div>
-              <label className="d-block mb-1" htmlFor="mobile-person-graduation">Образование:</label>
-            </div>
-            <input {...educationBind} placeholder="Образование" className="w-100" id='mobile-person-graduation' type="text" />
+            {Education(educations, addEducationHandler, changeEducationHandler)}
           </div>
 
         </div>
@@ -136,8 +134,7 @@ export default function ProfileEdit() {
 
             <div className="form-error">{competencesError}</div>
           </div>
-          {badges('develop')}
-          {Work(works, addWorkHandler, changeWorkHandler)}
+          {Work(works, addWorkHandler, changeWorkHandler, removeWorkHandler)}
 
         </div>
       case MOBILE_NAVIGATION.other:
@@ -239,7 +236,7 @@ export default function ProfileEdit() {
 
   const { value: graduationYear, bind: graduationYearBind, setValue: setGraduationYear } = useInput('');
   const [graduationYearError, graduationYearErrorSet] = useState('')
-  const { value: education, bind: educationBind, setValue: setEducation } = useInput('');
+  // const { value: education, bind: educationBind, setValue: setEducation } = useInput('');
   // const [educationYearError, educationYearErrorSet] = useState('')
   // const { value: workPlace, bind: workPlaceBind, setValue: setWorkPlace } = useInput('');
   // const [workPlaceError, workPlaceErrorSet] = useState('')
@@ -275,9 +272,15 @@ export default function ProfileEdit() {
     // setWorkPosition(user.workExperiencies[0] && user.workExperiencies[0].position ? user.workExperiencies[0].position : '')
     // const workDateList = user.workExperiencies[0] && user.workExperiencies[0].start.match(/\d\d\d\d-\d\d-\d\d/)[0].split('-')
     // setWorkYears(workDateList && workDateList[0] ? parseInt(workDateList[0]) : '')
-    setEducation(user.education)
+    // setEducation(user.education)
     setAbout(user.about)
     setPhoto(user.photo)
+
+    user.educatons && educationsSet(user.educatons.map(education => ({
+      educationType: education.type,
+      educationName: education.name,
+      cityId: education.city && education.city.id
+    })))
 
     user.networks.forEach(social => {
       switch (social.network) {
@@ -297,7 +300,7 @@ export default function ProfileEdit() {
     })
 
     user.workExperiencies.length > 0 && worksSet((prev) => {
-      return [...prev, ...user.workExperiencies.map(work => {
+      return [...user.workExperiencies.map(work => {
         const workStartDateList = work.start.match(/\d\d\d\d-\d\d-\d\d/)[0].split('-')
         const workEndDateList = work.end.match(/\d\d\d\d-\d\d-\d\d/)[0].split('-')
 
@@ -309,7 +312,7 @@ export default function ProfileEdit() {
           position: work.position,
           yearsStart: workStart,
           yearsEnd: workEnd,
-          isCurrent: false
+          isCurrent: work.isCurrent
         }
       })]
     })
@@ -375,11 +378,10 @@ export default function ProfileEdit() {
   const { selectedCountryId, cityId, setSelectedCountryId, setCityId, countriesList, cities, countryChoiceHandler, cityChoiceHandler } = useLocation()
 
   // WORK
-  const { works, worksSet, addWorkHandler, changeHandler: changeWorkHandler } = useWork()
+  const { works, worksSet, addWorkHandler, changeHandler: changeWorkHandler, removeWorkHandler } = useWork()
 
   // EDUCATION
   const { educations, educationsSet, addEducationHandler, changeHandler: changeEducationHandler } = useEducation()
-
 
   const [rotation, rotationSet] = useState(0)
 
@@ -403,8 +405,9 @@ export default function ProfileEdit() {
     if (!isValid) return
     processingSet(true)
 
+
     const payload = {
-      education: education ? education : '',
+      // education: education ? education : '',
       // workPlace: workPlace ? workPlace : '',
       // workPosition: workPosition ? workPosition : '',
       socialVk: socialVk ? socialVk : '',
@@ -416,7 +419,19 @@ export default function ProfileEdit() {
       graduationYear: graduationYear ? parseInt(graduationYear) : '',
       suggests,
       hobbies: hobbies.map(hobbie => hobbie.id),
-      cityId: parseInt(cityId)
+      cityId: parseInt(cityId),
+      educations: educations.map(education => ({
+        type: parseInt(education.educationType),
+        name: education.educationName,
+        cityId: education.cityId
+      })),
+      works: works.map(work => ({
+        work: work.place,
+        position: work.position,
+        workStart: new Date(`02-02-${work.yearsStart}`),
+        workEnd: work.yearsEnd ? new Date(`02-02-${work.yearsEnd}`) : '',
+        isCurrent: work.isCurrent
+      }))
     }
 
     const submitSuccess = await updateUser(payload)
@@ -440,10 +455,11 @@ export default function ProfileEdit() {
     }
 
     // CHANGE PHOTO
-    if (user.photo !== photo) {
+    if (user.photo !== photo || rotation !== 0) {
       let photoFormData = new FormData();
 
-      photoFormData.append("photo", photoFile);
+      if (user.photo !== photo) photoFormData.append("photo", photoFile);
+      photoFormData.append("angle", rotation);
       updatePhoto(photoFormData)
     }
 
@@ -482,19 +498,19 @@ export default function ProfileEdit() {
                   </div>
                 </div>
 
-                <div className="row form-group mb-1">
-                  <div className="col-lg-6">
-                    <label className="d-none d-lg-block" htmlFor="person-graduation-year">Год выпуска: </label>
-                  </div>
-                  <div className="col-lg-6">
-                    <select {...graduationYearBind} className="w-100" onBlur={() => graduationYearErrorSet('')} id="person-graduation-year">
-                      <option value="" defaultChecked>Выберите год выпуска{
-                        user.status !== ROLE.TEACHER && '*'}</option>
-                      {graduationYearOptions()}
-                    </select>
-                    <div className="form-error">{graduationYearError}</div>
-                  </div>
-                </div>
+                {user.status === ROLE.GRADUATE &&
+                  <div className="row form-group mb-1">
+                    <div className="col-lg-6">
+                      <label className="d-none d-lg-block" htmlFor="person-graduation-year">Год выпуска: </label>
+                    </div>
+                    <div className="col-lg-6">
+                      <select {...graduationYearBind} className="w-100" onBlur={() => graduationYearErrorSet('')} id="person-graduation-year">
+                        <option value="" defaultChecked>Выберите год выпуска*</option>
+                        {graduationYearOptions()}
+                      </select>
+                      <div className="form-error">{graduationYearError}</div>
+                    </div>
+                  </div>}
 
                 <div className="row form-group mb-1">
                   <div className="col-lg-6">
@@ -502,7 +518,6 @@ export default function ProfileEdit() {
                   </div>
                   <div className="col-lg-6">
                     {/* <input {...educationBind} placeholder="Образование" className="w-100" id='person-graduation' type="text" /> */}
-                    {badges('develop')}
                     {Education(educations, addEducationHandler, changeEducationHandler)}
                   </div>
                 </div>
@@ -529,8 +544,7 @@ export default function ProfileEdit() {
                     <label className="d-none d-lg-block" htmlFor="person-work">Работа:</label>
                   </div>
                   <div className="col-lg-6">
-                    {badges('develop')}
-                    {Work(works, addWorkHandler, changeWorkHandler)}
+                    {Work(works, addWorkHandler, changeWorkHandler, removeWorkHandler)}
                   </div>
                 </div>
 

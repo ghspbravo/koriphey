@@ -7,7 +7,7 @@ export const requests = {
 
   categoriesList: [],
 
-  createRequest: thunk(async (actions, payload, { getStoreState }) => {
+  createRequest: thunk(async (actions, payload, { getStoreState, dispatch }) => {
 
     const success = await fetch(process.env.REACT_APP_API + 'Request/Create', {
       method: 'post',
@@ -22,7 +22,9 @@ export const requests = {
       return response.json()
     })
       .then(data => {
-        return true
+        actions.clearRequestsList();
+        dispatch.requests.loadRequests();
+        return true;
       })
       .catch((e) => window.alert(e.message))
 
@@ -137,6 +139,10 @@ export const requests = {
   appendInRequestList: action((state, payload) => {
     payload.requests.forEach(request => state.requestList.push(request))
     state.hasNextPage = payload.isExistNextPage
+  }),
+
+  clearRequestsList: action((state, payload) => {
+    state.requestList = [];
   }),
 
   appendInCategoriesList: action((state, payload) => {

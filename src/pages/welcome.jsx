@@ -10,6 +10,7 @@ import { useStore, useActions } from 'easy-peasy';
 
 import { WorkDoughnutChart, HobbiesDoughnutChart } from '../components/charts/charts'
 import useFetch from '../hooks/useFetch';
+import RegisteredStats from '../components/registeredStats/registeredStats';
 
 export default function Welcome() {
   const isAuth = useStore(store => store.auth.isAuth)
@@ -64,6 +65,12 @@ export default function Welcome() {
                 {cityStatsMap()}
               </div>
             </div>
+          )}
+        </div>
+
+        <div className="col-12 mt-2">
+          {cardBlock(<h2>Всего зарегистрировано</h2>,
+            RegisteredStats()
           )}
         </div>
 
