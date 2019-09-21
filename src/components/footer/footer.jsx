@@ -4,7 +4,7 @@ import vsvoiLogo from './vsvoi.svg'
 import './footer.scss'
 
 import { Link } from "react-router-dom";
-import { isKoriphey, CURRENT_PROFILE, PROFILES } from '../../constants';
+import { isKoriphey, isDla8 } from '../../constants';
 
 export default function Footer() {
   return (
@@ -44,12 +44,12 @@ export default function Footer() {
         <div className="mt-1">
           <p style={{ textAlign: 'center' }} className="m-0">
             Сервис Клуба выпускников
-            {CURRENT_PROFILE === PROFILES.KORIPHEY && " Гимназии “Корифей”"}
-            {CURRENT_PROFILE === PROFILES.DLA8 && " Лицея им. С.П. Дягилева"}
+            {isKoriphey && " Гимназии “Корифей”"}
+            {isDla8 && " Лицея им. С.П. Дягилева"}
             <br className="d-sm-none" /> размещен на платформе
               <a className="ml-1" href="https://vsvoi.ru" target='_blank' rel="noopener noreferrer">VСВОИ <img style={{ marginBottom: '-10px' }} className="ml-1 not-responsive" width={30} height={30} src={vsvoiLogo} alt="vsvoi logo" /></a>
 
-            <br /> <Link to="/policy">Политика конфиденциальности</Link>
+            <br /><br/> <Link to="/policy">Политика конфиденциальности</Link>
           </p>
 
         </div>
