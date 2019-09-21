@@ -4,8 +4,8 @@ export const PROFILES = {
 };
 
 export const API = {
-  KORIPHEY: "https://koriphey.us-east-2.elasticbeanstalk.com/api/v1/",
-  DLA8: "http://dla8.us-east-2.elasticbeanstalk.com/api/v1/",
+  KORIPHEY: process.env.REACT_APP_API || "https://koriphey.us-east-2.elasticbeanstalk.com/api/v1/",
+  DLA8: process.env.REACT_APP_API || "http://dla8.us-east-2.elasticbeanstalk.com/api/v1/",
 };
 
 export const FAVICONS = {
@@ -38,11 +38,11 @@ export let isDla8 = false;
 
 
 const currentBase = window.location.hostname;
-if (/koriphey/.test(currentBase) || /localhost/.test(currentBase)) {
+if (/koriphey/.test(currentBase) || process.env.REACT_APP_PROJECT === PROFILES.KORIPHEY) {
   CURRENT_PROFILE = PROFILES.KORIPHEY;
   isKoriphey = true;
 }
-if (/dla8/.test(currentBase)) {
+if (/dla8/.test(currentBase) || process.env.REACT_APP_PROJECT === PROFILES.DLA8) {
   CURRENT_PROFILE = PROFILES.DLA8;
   isDla8 = true;
 }
