@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-// import { socialVkontakte, socialFacebook } from '../../components/socials/socials';
+import { socialVkontakte, socialFacebook, socialGoogle } from '../../components/socials/socials';
 
 import { useActions } from 'easy-peasy';
 import useInput from '../../hooks/useInput';
+import { isKoriphey } from '../../constants';
 
 export default function Login() {
   const login = useActions(actions => actions.auth.requestToken)
-  
+
   const [processing, processingSet] = useState(false)
 
   const loginHandler = async (e) => {
@@ -31,6 +32,7 @@ export default function Login() {
   const [authError, setAuthError] = useState('')
   const { value: username, bind: usernameBind } = useInput('');
   const { value: password, bind: passwordBind } = useInput('');
+
   return (
     <div className="container">
       <div className="mt-0 mt-md-5 mx-auto col-xl-5 col-lg-6 col-md-8 col-sm-10 px-0">
@@ -55,20 +57,31 @@ export default function Login() {
           </form>
           <Link to='/register' className="button button_expanded button_secondary mt-1" >Зарегистрироваться</Link>
 
-          {/* <div className="mt-3">
-            <p>Зарегестрироваться  с помощью соцсетей: </p>
-            <div className="row no-gutters">
+          {isKoriphey &&
+            <div className="mt-3">
+              <p>Авторизоваться  с помощью соцсетей: </p>
+              <div className="row no-gutters">
 
-              <div className="mr-1">
-                {socialVkontakte("https://vk.com")}
+                <div className="mr-1">
+                  {socialVkontakte("http://koriphey.us-east-2.elasticbeanstalk.com/api/v1/Account/ExternalLogin?provider=Vkontakte", {
+                    useBlank: false
+                  })}
+                </div>
+
+                <div className="mr-1">
+                  {socialFacebook("http://koriphey.us-east-2.elasticbeanstalk.com/api/v1/Account/ExternalLogin?provider=Facebook", {
+                    useBlank: false
+                  })}
+                </div>
+
+                <div className="mr-1">
+                  {socialGoogle("http://koriphey.us-east-2.elasticbeanstalk.com/api/v1/Account/ExternalLogin?provider=Google", {
+                    useBlank: false
+                  })}
+                </div>
+
               </div>
-
-              <div className="mr-1">
-                {socialFacebook("https://facebook.com")}
-              </div>
-
-            </div>
-          </div> */}
+            </div>}
 
         </div>
       </div>

@@ -17,14 +17,14 @@ function workForm(id, { place, position, yearsStart, yearsEnd, isCurrent }, chan
 
   return (
     <div key={id} className='mb-1'>
-      <h3 className='mb-2'>{position} {place && `в ${place}`} <button type="button" data-id={id}
+      <h3 className='mb-2'>{position || ""} {place && `в ${place}`} <button type="button" data-id={id}
         className="link no-style" onClick={removeHandler}>
         <i style={{ pointerEvents: 'none' }} className="fas fa-trash-alt"></i></button> </h3>
       <div className="form-group mb-1">
         <label>Место работы</label>
         <input className='w-100'
           onChange={changeHandler}
-          value={place}
+          value={place || ""}
           data-id={id}
           placeholder='Место работы' name='place' type="text" />
       </div>
@@ -32,7 +32,7 @@ function workForm(id, { place, position, yearsStart, yearsEnd, isCurrent }, chan
         <label>Должность</label>
         <input className='w-100'
           onChange={changeHandler}
-          value={position}
+          value={position || ""}
           data-id={id}
           placeholder='Должность' name='position' type="text" />
       </div>

@@ -1,10 +1,11 @@
 import { action, thunk } from 'easy-peasy'
+import { API, CURRENT_PROFILE } from '../constants'
 
 export const locations = {
   countriesList: [],
 
   loadCountries: thunk(async (actions, payload) => {
-    const success = await fetch(process.env.REACT_APP_API + 'countries', {
+    const success = await fetch(API[CURRENT_PROFILE] + 'countries', {
       method: 'get',
       headers: {
         'Accept': 'application/json',
@@ -20,7 +21,7 @@ export const locations = {
   }),
 
   loadCities: thunk(async (actions, payload) => {
-    const cities = await fetch(process.env.REACT_APP_API + `cities?countryId=${payload}`, {
+    const cities = await fetch(API[CURRENT_PROFILE] + `cities?countryId=${payload}`, {
       method: 'get',
       headers: {
         'Accept': 'application/json',

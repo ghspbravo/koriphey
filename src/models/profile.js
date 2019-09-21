@@ -1,5 +1,6 @@
 import { action, thunk, listen } from 'easy-peasy'
 import auth from './auth'
+import { API, CURRENT_PROFILE } from '../constants'
 export const profile = {
   user: {},
   userList: [],
@@ -14,7 +15,7 @@ export const profile = {
       currentPass: payload.oldPassword,
       newPass: payload.newPassword,
     }
-    const success = await fetch(process.env.REACT_APP_API + 'User/PasswordUpdate', {
+    const success = await fetch(API[CURRENT_PROFILE] + 'User/PasswordUpdate', {
       method: 'post',
       headers: {
         'Accept': 'application/json',
@@ -44,7 +45,7 @@ export const profile = {
 
   loadPhoto: thunk(async (actions, payload, { dispatch, getStoreState }) => {
 
-    const success = await fetch(process.env.REACT_APP_API + 'User/UpdatePhoto', {
+    const success = await fetch(API[CURRENT_PROFILE] + 'User/UpdatePhoto', {
       method: 'post',
       headers: {
         'Accept': 'application/json',
@@ -88,7 +89,7 @@ export const profile = {
       "instagramUrl": payload.socialInsta,
       "facebookUrl": payload.socialFb
     }
-    const success = await fetch(process.env.REACT_APP_API + 'User/UpdateProfile', {
+    const success = await fetch(API[CURRENT_PROFILE] + 'User/UpdateProfile', {
       method: 'post',
       headers: {
         'Accept': 'application/json',
@@ -120,7 +121,7 @@ export const profile = {
 
 
   commentUser: thunk(async (actions, payload, { getStoreState }) => {
-    const data = await fetch(process.env.REACT_APP_API + `User/AddReview?TargetUserId=${payload.id}&Text=${payload.reviewText}`, {
+    const data = await fetch(API[CURRENT_PROFILE] + `User/AddReview?TargetUserId=${payload.id}&Text=${payload.reviewText}`, {
       method: 'post',
       headers: {
         'Accept': 'application/json',
@@ -135,7 +136,7 @@ export const profile = {
   }),
 
   getUserById: thunk(async (actions, payload, { getStoreState }) => {
-    const data = await fetch(process.env.REACT_APP_API + `User/Details?id=${payload}`, {
+    const data = await fetch(API[CURRENT_PROFILE] + `User/Details?id=${payload}`, {
       method: 'get',
       headers: {
         'Accept': 'application/json',
@@ -153,7 +154,7 @@ export const profile = {
   }),
 
   getUser: thunk(async (actions, payload, { getStoreState, dispatch }) => {
-    const status = await fetch(process.env.REACT_APP_API + 'User/Profile', {
+    const status = await fetch(API[CURRENT_PROFILE] + 'User/Profile', {
       method: 'get',
       headers: {
         'Accept': 'application/json',
@@ -177,7 +178,7 @@ export const profile = {
 
   getUserList: thunk(async (actions, payload, { getStoreState }) => {
     const page = payload || 1
-    const status = await fetch(process.env.REACT_APP_API + `User/List?page=${page}&count=20`, {
+    const status = await fetch(API[CURRENT_PROFILE] + `User/List?page=${page}&count=20`, {
       method: 'get',
       headers: {
         'Accept': 'application/json',
@@ -196,7 +197,7 @@ export const profile = {
   }),
 
   getFilterUserList: thunk(async (actions, payload, { getStoreState }) => {
-    const status = await fetch(process.env.REACT_APP_API +
+    const status = await fetch(API[CURRENT_PROFILE] +
       `User/List?page=1&count=1000${payload.hobbies ? `&hobby=${payload.hobbies}` : ''}${payload.suggests ? `&utility=${payload.suggests}` : ''}${payload.competences ? `&competence=${payload.competences}` : ''}${payload.graduationYear ? `&graduationYear=${payload.graduationYear}` : ''}${payload.name ? `&name=${payload.name}` : ''}`, {
         method: 'get',
         headers: {
@@ -231,7 +232,7 @@ export const profile = {
   }),
 
   getSuggestsList: thunk(async (actions, payload) => {
-    const status = await fetch(process.env.REACT_APP_API + 'utilities', {
+    const status = await fetch(API[CURRENT_PROFILE] + 'utilities', {
       method: 'get',
       headers: {
         'Accept': 'application/json',
@@ -252,7 +253,7 @@ export const profile = {
   }),
 
   getHobbiesList: thunk(async (actions, payload) => {
-    const status = await fetch(process.env.REACT_APP_API + 'hobbies', {
+    const status = await fetch(API[CURRENT_PROFILE] + 'hobbies', {
       method: 'get',
       headers: {
         'Accept': 'application/json',
@@ -273,7 +274,7 @@ export const profile = {
   }),
 
   getCompetencesList: thunk(async (actions, payload) => {
-    const status = await fetch(process.env.REACT_APP_API + 'competencies', {
+    const status = await fetch(API[CURRENT_PROFILE] + 'competencies', {
       method: 'get',
       headers: {
         'Accept': 'application/json',

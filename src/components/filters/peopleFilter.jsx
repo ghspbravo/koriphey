@@ -24,7 +24,7 @@ export default function peopleFilter(
         </option>)}
       </select>
 
-      <p className="big">Польза</p>
+      <p className="big">Помощь</p>
       <select className="w-100" {...suggestsBind}>
         <option value="0">Выберите категорию</option>
         {fetchedSuggestsList.map((suggest, index) => <option key={index} value={suggest.id}>

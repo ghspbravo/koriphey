@@ -14,7 +14,7 @@ import location from '../../components/location/location';
 import hobbiesEdit from '../../components/hobbies/hobbiesEdit';
 import competencesEdit from '../../components/competences/competencesEdit';
 
-export default function Register(router) {
+export default function SocialsRegister(router) {
 
   const ROLE = {
     GRADUATE: 0,
@@ -27,6 +27,7 @@ export default function Register(router) {
 
   const { value: role, bind: roleBind } = useInput(ROLE.GRADUATE, 'number');
   const [roleError, roleErrorSet] = useState('')
+
 
   // add input mask
   useEffect(() => {
@@ -60,14 +61,43 @@ export default function Register(router) {
     validateFirstStep() && currentStepSet(currentStep + 1)
   }
 
+  let provider = useRef();
+  let loginKey = useRef();
+
+  const [hasEmail, hasEmailSet] = useState(true);
+
+  // get info from url
+  useEffect(() => {
+    if (router.location && router.location.search) {
+      const redirectedSearch = router.location.search
+
+      const formated = decodeURIComponent(redirectedSearch)
+
+      const params = formated.slice(1).split('&').reduce((result, url) => {
+        const urlParts = url.split("=")
+        return ({ ...result, [urlParts[0]]: urlParts[1] })
+      }, {})
+
+      if (!params.email) {
+        hasEmailSet(false);
+      }
+
+      setEmail(params.email || "");
+      setName(params.firstname || "");
+      setSurname(params.lastname || "");
+      provider.current = params.provider;
+      loginKey.current = params.loginkey;
+    }
+  }, [])
+
 
   // STEP 1 
 
-  const { value: name, bind: nameBind } = useInput('');
+  const { value: name, bind: nameBind, setValue: setName } = useInput('');
   const [nameError, nameErrorSet] = useState('')
-  const { value: surname, bind: surnameBind } = useInput('');
+  const { value: surname, bind: surnameBind, setValue: setSurname } = useInput('');
   const [surnameError, surnameErrorSet] = useState('')
-  const { value: email, bind: emailBind } = useInput('');
+  const { value: email, bind: emailBind, setValue: setEmail } = useInput('');
   const [emailError, emailErrorSet] = useState('')
 
   const { value: birthdate, bind: birthdateBind } = useInput('');
@@ -75,9 +105,9 @@ export default function Register(router) {
   const { value: graduationYear, bind: graduationYearBind } = useInput('');
   const [graduationYearError, graduationYearErrorSet] = useState('')
 
-  const { value: password, bind: passwordBind } = useInput('');
-  const [passwordError, passwordErrorSet] = useState('')
-  const { value: repeatPassword, bind: repeatPasswordBind } = useInput('');
+  // const { value: password, bind: passwordBind } = useInput('');
+  // const [passwordError, passwordErrorSet] = useState('')
+  // const { value: repeatPassword, bind: repeatPasswordBind } = useInput('');
 
   const { value: workingYear, bind: workingYearBind } = useInput('');
   const [workingYearError, workingYearErrorSet] = useState('')
@@ -95,9 +125,9 @@ export default function Register(router) {
     if (role === ROLE.GRADUATE && graduationYear === '') { graduationYearErrorSet('Выберите год выпуска'); isValid = false }
     if (role === ROLE.TEACHER && workingYear === '') { workingYearErrorSet('Заполните год начала работы'); isValid = false }
 
-    if (password === '') { passwordErrorSet('Заполните пароль'); isValid = false }
-    else if (password.length < 8) { passwordErrorSet('Пароль должен быть не меньше 8 символов'); isValid = false }
-    if (password !== repeatPassword) isValid = false
+    // if (password === '') { passwordErrorSet('Заполните пароль'); isValid = false }
+    // else if (password.length < 8) { passwordErrorSet('Пароль должен быть не меньше 8 символов'); isValid = false }
+    // if (password !== repeatPassword) isValid = false
 
     return isValid
   }
@@ -119,7 +149,7 @@ export default function Register(router) {
   // const [photoError, photoErrorSet] = useState('')
 
 
-  const register = useActions(actions => actions.register.register)
+  const register = useActions(actions => actions.socialsAuth.externalRegister)
 
   const user = useStore(store => store.profile.user)
   const [processing, processingSet] = useState(false)
@@ -152,7 +182,11 @@ export default function Register(router) {
     myFormData.append("surname", surname);
     myFormData.append("email", email.trim().toLowerCase());
     myFormData.append("birthDate", payload.birthdate);
-    myFormData.append("password", password);
+
+    myFormData.append("Provider", provider.current);
+    myFormData.append("LoginKey", loginKey.current);
+
+    myFormData.append("password", "qwertyuiop");
 
     role === ROLE.GRADUATE && myFormData.append("graduationYear", payload.graduationYear);
 
@@ -223,8 +257,9 @@ export default function Register(router) {
                         <div className="form-error">{surnameError}</div>
                       </div>
 
-                      <div className="form-group mb-1">
-                        <input {...emailBind} onBlur={() => emailErrorSet('')} name="email" className="w-100" placeholder="Email*" type="email" />
+                      <div className={`form-group ${!hasEmail ? "mb-1" : ""}`}>
+                        {!hasEmail &&
+                          <input {...emailBind} onBlur={() => emailErrorSet('')} name="email" className="w-100" placeholder="Email*" type="email" />}
                         <div className="form-error">{emailError}</div>
                       </div>
 
@@ -261,7 +296,7 @@ export default function Register(router) {
                           <div className="form-error">{workingYearError}</div>
                         </div>}
 
-                      <div className="form-group mb-1">
+                      {/* <div className="form-group mb-1">
                         <input {...passwordBind} onBlur={() => passwordErrorSet('')} className="w-100" name='password' placeholder="Придумайте пароль*" type="password" />
                         <div className="form-hint">Пароль должен быть не менее 8 символов</div>
                         <div className="form-error">{passwordError}</div>
@@ -270,7 +305,7 @@ export default function Register(router) {
                       <div className="form-group mb-1">
                         <input {...repeatPasswordBind} className="w-100" placeholder="Повторите пароль*" type="password" />
                         <span className="form-error">{password !== repeatPassword && 'Пароли не совпадают'}</span>
-                      </div>
+                      </div> */}
 
                       <div className="d-md-none form-group">
                         <div className="row no-gutters align-items-center">

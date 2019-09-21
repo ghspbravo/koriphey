@@ -1,10 +1,10 @@
-import { thunk } from 'easy-peasy'
+import { action, thunk } from 'easy-peasy'
 import { API, CURRENT_PROFILE } from '../constants'
 
-export const register = {
+export const socialsAuth = {
 
-  register: thunk(async (actions, payload, { dispatch }) => {
-    const success = await fetch(API[CURRENT_PROFILE] + 'Account/Register', {
+  externalRegister: thunk(async (actions, payload, { dispatch }) => {
+    const success = await fetch(API[CURRENT_PROFILE] + 'Account/ExternalRegister', {
       method: 'post',
       headers: {
         'Accept': 'application/json',
@@ -31,6 +31,7 @@ export const register = {
     return success
   })
 
+
 }
 
-export default register
+export default socialsAuth

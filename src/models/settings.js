@@ -1,10 +1,11 @@
 import { action, thunk } from 'easy-peasy'
+import { API, CURRENT_PROFILE } from '../constants'
 
 export const settings = {
   projectDescription: '',
 
   projectDescriptionLoad: thunk(async (actions, payload) => {
-    const success = await fetch(process.env.REACT_APP_API + 'Settings/GetProjectDescription', {
+    const success = await fetch(API[CURRENT_PROFILE] + 'Settings/GetProjectDescription', {
       method: 'get',
       headers: {
         'Accept': 'application/json',

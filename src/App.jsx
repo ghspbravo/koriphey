@@ -25,6 +25,9 @@ import NotFound from './pages/404';
 import MyProfile from './pages/profile/myProfile';
 import Recover from './pages/auth/recover';
 import Footer from './components/footer/footer';
+import SocialsRegister from './pages/auth/socialsRegister';
+import Policy from './pages/policy';
+import SocialAuth from './pages/auth/socialAuth';
 
 function App(router) {
   const isAuth = useStore(store => store.auth.isAuth)
@@ -60,10 +63,10 @@ function App(router) {
     moment.locale('ru');
   }, [loadStatistics, statistics])
 
-  const redirectIfUserNotAuth = () => (!['/login', '/register', '/recover', '/welcome'].includes(router.location.pathname)
+  const redirectIfUserNotAuth = () => (!['/login', '/register', '/recover', '/welcome', '/auth', '/auth/sucess', '/policy'].includes(router.location.pathname)
     && !isAuth) && router.history.replace('/welcome')
 
-  const redirectIfUserNotAccepted = () => (!['/welcome'].includes(router.location.pathname)
+  const redirectIfUserNotAccepted = () => (!['/welcome', '/policy'].includes(router.location.pathname)
     && isAuth && user.status !== 1) && router.history.replace('/welcome')
 
   const redirectIfUserAccepted = () => (['/login', '/register', '/recover', '/welcome'].includes(router.location.pathname)
@@ -95,6 +98,9 @@ function App(router) {
           <Route exact path="/register" component={Register} />
           <Route exact path="/recover" component={Recover} />
 
+          <Route exact path="/auth" component={SocialsRegister} />
+          <Route exact path="/auth/sucess" component={SocialAuth} />
+
           <Route exact path="/" component={home} />
           <Route exact path="/welcome" component={Welcome} />
 
@@ -116,6 +122,8 @@ function App(router) {
           <Route exact path="/profile/:id" component={Profile} />
 
           <Route path="/demo" component={demo} />
+
+          <Route excat path="/policy" component={Policy} />
 
           <Route component={NotFound} />
 

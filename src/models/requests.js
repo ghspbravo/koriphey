@@ -1,4 +1,5 @@
 import { action, thunk } from 'easy-peasy'
+import { API, CURRENT_PROFILE } from '../constants'
 
 export const requests = {
   requestList: [],
@@ -9,7 +10,7 @@ export const requests = {
 
   createRequest: thunk(async (actions, payload, { getStoreState, dispatch }) => {
 
-    const success = await fetch(process.env.REACT_APP_API + 'Request/Create', {
+    const success = await fetch(API[CURRENT_PROFILE] + 'Request/Create', {
       method: 'post',
       headers: {
         'Accept': 'application/json',
@@ -32,7 +33,7 @@ export const requests = {
   }),
 
   loadCategories: thunk(async (actions, payload) => {
-    const success = await fetch(process.env.REACT_APP_API + 'Request/Categories', {
+    const success = await fetch(API[CURRENT_PROFILE] + 'Request/Categories', {
       method: 'get',
       headers: {
         'Accept': 'application/json',
@@ -49,7 +50,7 @@ export const requests = {
 
   loadRequests: thunk(async (actions, payload, { getStoreState }) => {
     const page = payload || 1
-    const success = await fetch(process.env.REACT_APP_API + `Request/List?page=${page}&count=20`, {
+    const success = await fetch(API[CURRENT_PROFILE] + `Request/List?page=${page}&count=20`, {
       method: 'get',
       headers: {
         'Accept': 'application/json',
@@ -67,7 +68,7 @@ export const requests = {
   }),
 
   loadFilterRequests: thunk(async (actions, payload, { getStoreState }) => {
-    const data = await fetch(process.env.REACT_APP_API
+    const data = await fetch(API[CURRENT_PROFILE]
       + `Request/List?page=1&count=100${payload.countryId ? `&country=${payload.countryId}` : ''}${payload.cityId ? `&city=${payload.cityId}` : ''}${payload.categoryId ? `&categoryId=${payload.categoryId}` : ''}${payload.competence ? `&competenceId=${payload.competence}` : ''}${payload.hobbie ? `&hobbyId=${payload.hobbie}` : ''}${payload.suggest ? `&utilityId=${payload.suggest}` : ''}${payload.searchQuery ? `&searchString=${payload.searchQuery}` : ''}`, {
         method: 'get',
         headers: {
@@ -86,7 +87,7 @@ export const requests = {
   }),
 
   loadUserRequests: thunk(async (actions, payload, { getStoreState }) => {
-    const response = await fetch(process.env.REACT_APP_API + 'Request/UserList?page=1&count=20', {
+    const response = await fetch(API[CURRENT_PROFILE] + 'Request/UserList?page=1&count=20', {
       method: 'get',
       headers: {
         'Accept': 'application/json',
@@ -103,7 +104,7 @@ export const requests = {
   }),
 
   loadRequestItem: thunk(async (actions, payload, { getStoreState }) => {
-    const response = await fetch(process.env.REACT_APP_API + `Request/Details?id=${payload}`, {
+    const response = await fetch(API[CURRENT_PROFILE] + `Request/Details?id=${payload}`, {
       method: 'get',
       headers: {
         'Accept': 'application/json',
@@ -120,7 +121,7 @@ export const requests = {
   }),
 
   loadSimilarRequests: thunk(async (actions, payload, { getStoreState }) => {
-    const response = await fetch(process.env.REACT_APP_API + `Request/Similar?id=${payload}&count=3`, {
+    const response = await fetch(API[CURRENT_PROFILE] + `Request/Similar?id=${payload}&count=3`, {
       method: 'get',
       headers: {
         'Accept': 'application/json',

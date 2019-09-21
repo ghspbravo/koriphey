@@ -9,6 +9,7 @@ import { useStore, useActions } from 'easy-peasy';
 
 import logo from './logo.svg'
 import SearchInput from '../searchInput/searchInput';
+import { isKoriphey, isDla8 } from '../../constants';
 export default function Header(props) {
 
   const profileControls = useRef()
@@ -85,16 +86,17 @@ export default function Header(props) {
           )}
 
           <div className={`header__logo ${isAuth ? "mx-auto" : ""} mx-md-0`}>
-            <img className="not-responsive" src={logo} alt="logo" />
-            {/* <span style={{
+            {isKoriphey && <img className="not-responsive" src={logo} alt="logo" />}
+            {isDla8 && <span style={{
               display: 'block',
               color: 'white',
               fontSize: '2rem',
               paddingTop: '10px'
-            }}>{"ЛНИП "}<span className="d-none d-md-inline-block" style={{
+            }}>{"DLA8"}
+            {/* <span className="d-none d-md-inline-block" style={{
                 fontSize: '1rem'
-              }}>г. Королев</span>
-            </span> */}
+              }}>г. Королев</span> */}
+            </span>}
             <Link to="/" className="expanded" />
           </div>
 

@@ -1,10 +1,11 @@
 import { action, thunk } from 'easy-peasy'
+import { API, CURRENT_PROFILE } from '../constants'
 
 export const statistics = {
   statistics: {},
 
   loadStatistics: thunk(async (actions, payload) => {
-    const success = await fetch(process.env.REACT_APP_API + 'Statistic/Get', {
+    const success = await fetch(API[CURRENT_PROFILE] + 'Statistic/Get', {
       method: 'get',
       headers: {
         'Accept': 'application/json',

@@ -21,11 +21,13 @@ import location from '../../components/location/location';
 
 import userThumb from '../../components/userThumb.png'
 import graduationYearOptions from '../../components/graduationYear/graduationYearOptions';
-import PhotoEdit from '../../components/photoEdit/photoEdit';
 import Work from '../../components/work/work';
 import useWork from '../../hooks/useWork';
 import Education from '../../components/education/education';
 import useEducation from '../../hooks/useEducation';
+
+import 'cropperjs/dist/cropper.css';
+import Cropper from 'cropperjs';
 
 export default function ProfileEdit() {
   const ROLE = {
@@ -361,6 +363,39 @@ export default function ProfileEdit() {
     // eslint-disable-next-line
   }, [user])
 
+  const cropper = useRef();
+
+  const photoEdit = useRef();
+  // TODO cropOptions to submit
+  const rotation = useRef(0),
+    cropOptions = useRef({});
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (cropper.current) {
+        cropper.current.destroy();
+      }
+
+      cropper.current = new Cropper(photoEdit.current, {
+        autoCrop: false,
+        zoomable: false,
+        checkCrossOrigin: false,
+        checkOrientation: false,
+
+        crop(event) {
+          rotation.current = event.detail.rotate;
+          cropOptions.current = {
+            x: event.detail.x,
+            y: event.detail.y,
+            width: event.detail.width,
+            height: event.detail.height,
+          };
+        },
+      });
+
+    }, 300)
+
+  }, [photoFile])
 
   // HOBBIES
   const [hobbiesError, hobbiesErrorSet] = useState('')
@@ -382,8 +417,6 @@ export default function ProfileEdit() {
 
   // EDUCATION
   const { educations, educationsSet, addEducationHandler, changeHandler: changeEducationHandler } = useEducation()
-
-  const [rotation, rotationSet] = useState(0)
 
   // SUBMIT
   const updatePhoto = useActions(actions => actions.profile.loadPhoto)
@@ -455,11 +488,11 @@ export default function ProfileEdit() {
     }
 
     // CHANGE PHOTO
-    if (user.photo !== photo || rotation !== 0) {
+    if (user.photo !== photo || rotation.current !== 0) {
       let photoFormData = new FormData();
 
       if (user.photo !== photo) photoFormData.append("photo", photoFile);
-      photoFormData.append("angle", rotation);
+      photoFormData.append("angle", rotation.current);
       updatePhoto(photoFormData)
     }
 
@@ -645,9 +678,14 @@ export default function ProfileEdit() {
                   <div className="order-1 order-xl-2 col-xl-6">
                     <div>
                       <div className="photo">
-                        {/* <img src={photo} alt="" /> */}
-                        {PhotoEdit(photo, rotation, rotationSet)}
+                        <img crossOrigin id="photo-edit" style={{ maxWidth: '100%' }} ref={photoEdit} src={photo} alt="" />
 
+                      </div>
+                      <div className="row justify-content-center mt-1">
+                        <div>
+                          <button type="button" onClick={() => cropper.current.rotate(-90)} className="fas fa-chevron-circle-left"></button>
+                          <button type="button" onClick={() => cropper.current.rotate(90)} className="fas fa-chevron-circle-right ml-2"></button>
+                        </div>
                       </div>
                       <label style={{ fontWeight: 'normal' }} className="link" htmlFor="person-photo">Изменить фото</label>
                       <p className="small">Друзьям будет проще узнать Вас, если Вы загрузите свою настоящую фотографию, на которой отчетливо будет видно лицо.</p>

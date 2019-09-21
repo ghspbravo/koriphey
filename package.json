@@ -5,6 +5,7 @@
   "dependencies": {
     "chart.js": "^2.8.0",
     "chartjs-plugin-datalabels": "^0.6.0",
+    "cropperjs": "^1.5.5",
     "easy-peasy": "^2.1.6",
     "html-react-parser": "^0.7.1",
     "imask": "^5.1.5",

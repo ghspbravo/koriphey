@@ -1,4 +1,5 @@
 import { action, thunk } from 'easy-peasy'
+import { API, CURRENT_PROFILE } from '../constants'
 
 export const news = {
   newsList: [],
@@ -6,7 +7,7 @@ export const news = {
 
   loadNews: thunk(async (actions, payload, { getStoreState }) => {
     const page = payload || 1
-    const success = await fetch(process.env.REACT_APP_API + `News/List?count=10&page=${page}`, {
+    const success = await fetch(API[CURRENT_PROFILE] + `News/List?count=10&page=${page}`, {
       method: 'get',
       headers: {
         'Accept': 'application/json',
@@ -25,7 +26,7 @@ export const news = {
 
   loadNewsItem: thunk(async (actions, payload, { getStoreState }) => {
 
-    const newsContent = await fetch(process.env.REACT_APP_API + `News/Details?id=${payload}`, {
+    const newsContent = await fetch(API[CURRENT_PROFILE] + `News/Details?id=${payload}`, {
       method: 'get',
       headers: {
         'Accept': 'application/json',
@@ -66,7 +67,7 @@ export const news = {
   }),
 
   toggleLike: thunk(async (actions, payload, { getStoreState, getState }) => {
-    const success = await fetch(process.env.REACT_APP_API + `News/AddRemoveLike?newsId=${payload}`, {
+    const success = await fetch(API[CURRENT_PROFILE] + `News/AddRemoveLike?newsId=${payload}`, {
       method: 'post',
       headers: {
         'Accept': 'application/json',
@@ -91,7 +92,7 @@ export const news = {
   }),
 
   commentNews: thunk(async (actions, payload, { getStoreState }) => {
-    const success = await fetch(process.env.REACT_APP_API + `News/AddComment/?newsId=${payload.newsId}&text=${payload.comment}`, {
+    const success = await fetch(API[CURRENT_PROFILE] + `News/AddComment/?newsId=${payload.newsId}&text=${payload.comment}`, {
       method: 'post',
       headers: {
         'Accept': 'application/json',

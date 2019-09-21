@@ -1,11 +1,12 @@
 import { action, thunk } from 'easy-peasy'
+import { API, CURRENT_PROFILE } from '../constants'
 
 export const auth = {
   isAuth: undefined,
   access: '',
 
   requestChangePassword: thunk(async (actions, payload) => {
-    const success = await fetch(process.env.REACT_APP_API + `Account/ResetPassword?email=${payload}`, {
+    const success = await fetch(API[CURRENT_PROFILE] + `Account/ResetPassword?email=${payload}`, {
       method: 'get',
       headers: {
         'Accept': 'application/json',
@@ -26,7 +27,7 @@ export const auth = {
       password: payload.password
     }
 
-    const success = await fetch(process.env.REACT_APP_API + 'Account/Login', {
+    const success = await fetch(API[CURRENT_PROFILE] + 'Account/Login', {
       method: 'post',
       headers: {
         'Accept': 'application/json',
