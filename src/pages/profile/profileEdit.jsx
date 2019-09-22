@@ -393,9 +393,9 @@ export default function ProfileEdit() {
         },
       });
 
-    }, 300)
+    }, 1000)
 
-  }, [photoFile])
+  }, [photo])
 
   // HOBBIES
   const [hobbiesError, hobbiesErrorSet] = useState('')
@@ -488,11 +488,19 @@ export default function ProfileEdit() {
     }
 
     // CHANGE PHOTO
-    if (user.photo !== photo || rotation.current !== 0) {
+    if (user.photo !== photo || rotation.current !== 0 || cropOptions.current != {}) {
       let photoFormData = new FormData();
 
       if (user.photo !== photo) photoFormData.append("photo", photoFile);
-      photoFormData.append("angle", rotation.current);
+      if (rotation.current) {
+        photoFormData.append("angle", rotation.current.toString());
+      }
+      if (cropOptions.current != {} && cropOptions.current.width) {
+        photoFormData.append("xoffset", Math.round(cropOptions.current.x).toString());
+        photoFormData.append("yoffset", Math.round(cropOptions.current.y).toString());
+        photoFormData.append("height", Math.round(cropOptions.current.height).toString());
+        photoFormData.append("width", Math.round(cropOptions.current.width).toString());
+      }
       updatePhoto(photoFormData)
     }
 
@@ -678,7 +686,7 @@ export default function ProfileEdit() {
                   <div className="order-1 order-xl-2 col-xl-6">
                     <div>
                       <div className="photo">
-                        <img crossOrigin id="photo-edit" style={{ maxWidth: '100%' }} ref={photoEdit} src={photo} alt="" />
+                        <img id="photo-edit" style={{ maxWidth: '100%' }} ref={photoEdit} src={photo} alt="" />
 
                       </div>
                       <div className="row justify-content-center mt-1">

@@ -13,14 +13,17 @@ export const useFileInput = (initialValue, initialPhoto) => {
     bind: {
       // value,
       onChange: event => {
-        setValue(event.target.files[0]);
-        const fr = new FileReader();
-        fr.onload = function () {
-          try {
-            setPreviewFile(fr.result)
-          } catch { }
-        }
-        fr.readAsDataURL(event.target.files[0]);
+        try {
+
+          setValue(event.target.files[0]);
+          const fr = new FileReader();
+          fr.onload = function () {
+            try {
+              setPreviewFile(fr.result)
+            } catch { }
+          }
+          fr.readAsDataURL(event.target.files[0]);
+        } catch (e) { /* no file attached */ }
       }
     }
   };
