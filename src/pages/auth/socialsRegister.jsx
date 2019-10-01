@@ -68,6 +68,7 @@ export default function SocialsRegister(router) {
 
   // get info from url
   useEffect(() => {
+
     if (router.location && router.location.search) {
       const redirectedSearch = router.location.search
 
@@ -83,8 +84,8 @@ export default function SocialsRegister(router) {
       }
 
       setEmail(params.email || "");
-      setName(params.firstname || "");
-      setSurname(params.lastname || "");
+      setName(params.firstName || "");
+      setSurname(params.lastName || "");
       provider.current = params.provider;
       loginKey.current = params.loginkey;
     }
