@@ -13,6 +13,8 @@ import useHobbies from '../../hooks/useHobbies';
 import location from '../../components/location/location';
 import hobbiesEdit from '../../components/hobbies/hobbiesEdit';
 import competencesEdit from '../../components/competences/competencesEdit';
+import { isKoriphey } from '../../constants';
+import { socialVkontakte, socialFacebook, socialGoogle } from '../../components/socials/socials';
 
 export default function Register(router) {
 
@@ -350,6 +352,32 @@ export default function Register(router) {
                     }
                   </div>
                 </div>
+
+                {isKoriphey &&
+                  <div className="mt-3">
+                    <p>Или авторизоваться  с помощью соцсетей: </p>
+                    <div className="row no-gutters">
+
+                      <div className="mr-1">
+                        {socialVkontakte("http://koriphey.us-east-2.elasticbeanstalk.com/api/v1/Account/ExternalLogin?provider=Vkontakte", {
+                          useBlank: false
+                        })}
+                      </div>
+
+                      <div className="mr-1">
+                        {socialFacebook("http://koriphey.us-east-2.elasticbeanstalk.com/api/v1/Account/ExternalLogin?provider=Facebook", {
+                          useBlank: false
+                        })}
+                      </div>
+
+                      <div className="mr-1">
+                        {socialGoogle("http://koriphey.us-east-2.elasticbeanstalk.com/api/v1/Account/ExternalLogin?provider=Google", {
+                          useBlank: false
+                        })}
+                      </div>
+
+                    </div>
+                  </div>}
 
               </div>
 
