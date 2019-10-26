@@ -11,6 +11,7 @@ export default function CityStatsMap() {
 
   const geocode = async (ymaps) => {
     console.log('geocoder requests')
+    console.log(ymaps);
     await ymaps.loadModule('geocode')
 
     statistics.cityCount.filter(city => city.city !== null && city.city !== 'Другие').forEach(city => {
@@ -25,7 +26,7 @@ export default function CityStatsMap() {
   }
 
   return statistics && statistics.cityCount && (
-    <YMaps >
+    <YMaps query={{ apikey: 'd50b3c2f-0580-417a-9fdf-b9acf70de975' }} >
       <div style={{ width: '100%' }}>
         <Map onLoad={ymaps => geocode(ymaps)} style={{
           width: '100%',
