@@ -5,7 +5,7 @@ export const settings = {
   projectDescription: '',
 
   projectDescriptionLoad: thunk(async (actions, payload) => {
-    const success = await fetch(API[CURRENT_PROFILE] + 'Settings/GetProjectDescription', {
+    const success = await fetch(API[CURRENT_PROFILE] + 'Settings/GetSettings', {
       method: 'get',
       headers: {
         'Accept': 'application/json',
@@ -13,7 +13,7 @@ export const settings = {
       },
     }).then(response => response.json())
       .then(data => {
-        actions.projectDescriptionSet(data)
+        actions.projectDescriptionSet(data.ProjectDescription);
       })
       .catch(console.error)
 
