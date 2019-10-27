@@ -6,19 +6,16 @@ import cardBlock from '../components/cardBlock/cardBlock';
 import cityStats from '../components/cityStats/cityStats';
 import cityStatsMap from '../components/cityStats/cityStatsMap';
 
-import { useStore, useActions } from 'easy-peasy';
+import { useStore } from 'easy-peasy';
 
 import { WorkDoughnutChart, HobbiesDoughnutChart } from '../components/charts/charts'
-import useFetch from '../hooks/useFetch';
 import RegisteredStats from '../components/registeredStats/registeredStats';
 
 export default function Welcome() {
   const isAuth = useStore(store => store.auth.isAuth)
   const user = useStore(store => store.profile.user)
 
-  const projectDescriptionRaw = useStore(store => store.settings.projectDescription)
-  const projectDescriptionLoad = useActions(actions => actions.settings.projectDescriptionLoad)
-  useFetch(projectDescriptionRaw, projectDescriptionLoad)
+  const projectDescriptionRaw = useStore(store => store.settings.ProjectDescription);
 
   return (
     <div className="container">
@@ -35,7 +32,7 @@ export default function Welcome() {
         <div className="col-xl-4">
           {cardBlock(
             <h2>Клуб выпускников</h2>,
-            parse(projectDescriptionRaw)
+            parse(projectDescriptionRaw || "")
           )}
         </div>
 

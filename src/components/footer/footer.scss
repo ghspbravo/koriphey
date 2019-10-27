@@ -25,4 +25,13 @@
       text-align: center;
     }
   }
+
+  .sources {
+    display: grid;
+    grid-template-columns: 33% 33% 33%;
+
+    @media (max-width: $m-sm-max) {
+      grid-template-columns: 100%;
+    }
+  }
 }

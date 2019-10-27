@@ -2,7 +2,6 @@ import { action, thunk } from 'easy-peasy'
 import { API, CURRENT_PROFILE } from '../constants'
 
 export const settings = {
-  projectDescription: '',
 
   projectDescriptionLoad: thunk(async (actions, payload) => {
     const success = await fetch(API[CURRENT_PROFILE] + 'Settings/GetSettings', {
@@ -13,15 +12,18 @@ export const settings = {
       },
     }).then(response => response.json())
       .then(data => {
-        actions.projectDescriptionSet(data.ProjectDescription);
+        actions.settingsSet(data);
       })
       .catch(console.error)
 
     return success
   }),
 
-  projectDescriptionSet: action((state, payload) => {
-    state.projectDescription = payload
+  settingsSet: action((state, payload) => {
+    return {
+      ...state,
+      ...payload
+    }
   }),
 
 }

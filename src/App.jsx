@@ -28,6 +28,7 @@ import Footer from './components/footer/footer';
 import SocialsRegister from './pages/auth/socialsRegister';
 import Policy from './pages/policy';
 import SocialAuth from './pages/auth/socialAuth';
+import useFetch from './hooks/useFetch';
 
 function App(router) {
   const isAuth = useStore(store => store.auth.isAuth)
@@ -46,6 +47,10 @@ function App(router) {
 
   const statistics = useStore(store => store.statistics.statistics)
   const loadStatistics = useActions(actions => actions.statistics.loadStatistics)
+
+  const projectDescriptionRaw = useStore(store => store.settings.ProjectDescription)
+  const projectDescriptionLoad = useActions(actions => actions.settings.projectDescriptionLoad)
+  useFetch(projectDescriptionRaw, projectDescriptionLoad)
 
   useEffect(() => {
     if (!isAuth) return

@@ -5,7 +5,7 @@ import { useEffect } from "react";
  */
 export default function useFetch(storeValue, fetchAction) {
   useEffect(() => {
-    if (storeValue === '' || storeValue.length === 0 || storeValue === {})
+    if (storeValue === undefined || storeValue === '' || storeValue.length === 0 || Object.keys(storeValue).length === 0)
       fetchAction()
   }, [storeValue, fetchAction])
 }
