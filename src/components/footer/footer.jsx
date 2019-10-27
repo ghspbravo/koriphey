@@ -18,34 +18,33 @@ export default function Footer() {
   return (
     <div className="footer mt-3">
       <div className="container">
-        {isKoriphey &&
-          <div className="mb-1 row">
-            <div className="col-lg-10 col-md-9">
-              <span className='footer-title'>Наши ресурсы: </span>
-              <div className="sources">
-                {resources && resources.map(source => <div key={source.id} className="sources-item">
-                  <a className="social-item" href={source.link} target="_blank" rel="noopener noreferrer">{source.name}</a>
-                </div>)}
-              </div>
+        <div className="mb-1 row">
+          <div className="col-lg-10 col-md-9">
+            <span className='footer-title'>Наши ресурсы: </span>
+            <div className="sources">
+              {resources && resources.map(source => <div key={source.id} className="sources-item">
+                <a className="social-item" href={source.link} target="_blank" rel="noopener noreferrer">{source.name}</a>
+              </div>)}
             </div>
-            <div className="col-lg-2 col-md-3">
-              <span className='footer-title'>Мы в соц. сетях:</span>
-              <div className="row justify-content-center justify-content-md-start no-gutters mt-2">
-                {socials_vk &&
-                  <div className="mr-1">
-                    {socialVkontakte(socials_vk)}
-                  </div>}
-                {socials_fb &&
-                  <div className="mr-1">
-                    {socialFacebook(socials_fb)}
-                  </div>}
-                {socials_insta &&
-                  <div className="mr-1">
-                    {socialInstagram(socials_insta)}
-                  </div>}
-              </div>
+          </div>
+          <div className="col-lg-2 col-md-3">
+            <span className='footer-title'>Мы в соц. сетях:</span>
+            <div className="row justify-content-center justify-content-md-start no-gutters mt-2">
+              {socials_vk &&
+                <div className="mr-1">
+                  {socialVkontakte(socials_vk)}
+                </div>}
+              {socials_fb &&
+                <div className="mr-1">
+                  {socialFacebook(socials_fb)}
+                </div>}
+              {socials_insta &&
+                <div className="mr-1">
+                  {socialInstagram(socials_insta)}
+                </div>}
             </div>
-          </div>}
+          </div>
+        </div>
 
         <div className="mt-1">
           <p style={{ textAlign: 'center' }} className="m-0">
