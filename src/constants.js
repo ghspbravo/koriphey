@@ -10,27 +10,6 @@ export const API = {
   DLA8: (isDevelop && process.env.REACT_APP_API) || "http://dla8.us-east-2.elasticbeanstalk.com/api/v1/",
 };
 
-export const FAVICONS = {
-  KORIPHEY: "favicon_koriphey.png",
-  DLA8: "favicon_dla8.ico"
-}
-
-export const TITLES = {
-  KORIPHEY: "Koriphey app",
-  DLA8: "DLA8 community"
-}
-
-export const ORG_NAME = {
-  KORIPHEY: "ООО Корифей",
-  DLA8: "ООО DLA8"
-}
-
-export const ADMIN_MALE = {
-  KORIPHEY: "koriphey@gmail.com",
-  DLA8: "dla8@gmail.com"
-}
-
-
 
 // ================ DEFINE CURRENT PROFILE ===============
 /** @type {string} */
@@ -48,7 +27,3 @@ if (/dla8/.test(currentBase) || (isDevelop && process.env.REACT_APP_PROJECT === 
   CURRENT_PROFILE = PROFILES.DLA8;
   isDla8 = true;
 }
-
-/** @type {HTMLLinkElement} */
-document.getElementById('shortcut').href = FAVICONS[CURRENT_PROFILE];
-document.title = TITLES[CURRENT_PROFILE];

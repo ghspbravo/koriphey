@@ -48,9 +48,9 @@ function App(router) {
   const statistics = useStore(store => store.statistics.statistics)
   const loadStatistics = useActions(actions => actions.statistics.loadStatistics)
 
-  const projectDescriptionRaw = useStore(store => store.settings.ProjectDescription)
-  const projectDescriptionLoad = useActions(actions => actions.settings.projectDescriptionLoad)
-  useFetch(projectDescriptionRaw, projectDescriptionLoad)
+  const settings = useStore(store => store.settings)
+  const loadSettings = useActions(actions => actions.settings.loadSettings)
+  useFetch(settings, loadSettings)
 
   useEffect(() => {
     if (!isAuth) return
@@ -61,6 +61,13 @@ function App(router) {
     !Object.values(userList).length && getUserList()
     // eslint-disable-next-line
   }, [isAuth])
+
+  useEffect(() => {
+    if (!settings) return;
+
+    document.getElementById('shortcut').href = settings.SiteIco;
+    document.title = `${settings.ProjectName || ""} community`;
+  }, [settings])
 
   useEffect(() => {
     !Object.values(statistics).length && loadStatistics()

@@ -7,9 +7,7 @@ import MobileNavigation from '../mobileNavigation/mobileNavigation';
 
 import { useStore, useActions } from 'easy-peasy';
 
-import logo from './logo.svg'
 import SearchInput from '../searchInput/searchInput';
-import { isKoriphey, isDla8 } from '../../constants';
 export default function Header(props) {
 
   const profileControls = useRef()
@@ -50,11 +48,15 @@ export default function Header(props) {
   const [isMobileMenuOpened, setMobileMenuOpened] = useState(false)
 
   const isAuth = useStore(store => store.auth.isAuth)
-
+  
   const logout = useActions(actions => actions.auth.logout)
   const logoutHandler = () => {
     logout()
   }
+  
+  const logo = useStore(store => store.settings.Logo);
+  const logoAlt = useStore(store => store.settings.LogoAlt);
+
 
   const user = useStore(store => store.profile.user)
 
@@ -86,13 +88,13 @@ export default function Header(props) {
           )}
 
           <div className={`header__logo ${isAuth ? "mx-auto" : ""} mx-md-0`}>
-            {isKoriphey && <img className="not-responsive" src={logo} alt="logo" />}
-            {isDla8 && <span style={{
+            {logo && <img className="not-responsive" src={logo} alt={logoAlt} />}
+            {!logo && <span style={{
               display: 'block',
               color: 'white',
               fontSize: '2rem',
               paddingTop: '10px'
-            }}>{"DLA8"}
+            }}>{logoAlt}
             {/* <span className="d-none d-md-inline-block" style={{
                 fontSize: '1rem'
               }}>г. Королев</span> */}

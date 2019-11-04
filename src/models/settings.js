@@ -3,7 +3,7 @@ import { API, CURRENT_PROFILE } from '../constants'
 
 export const settings = {
 
-  projectDescriptionLoad: thunk(async (actions, payload) => {
+  loadSettings: thunk(async (actions, payload) => {
     const success = await fetch(API[CURRENT_PROFILE] + 'Settings/GetSettings', {
       method: 'get',
       headers: {

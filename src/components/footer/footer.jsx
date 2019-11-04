@@ -4,12 +4,13 @@ import vsvoiLogo from './vsvoi.svg'
 import './footer.scss'
 
 import { Link } from "react-router-dom";
-import { isKoriphey, isDla8 } from '../../constants';
 import { useStore } from 'easy-peasy';
 
 export default function Footer() {
 
   const resources = useStore(store => store.settings.Recources);
+
+  const companyName = useStore(store => store.settings.Footer);
 
   const socials_fb = useStore(store => store.settings.Fb);
   const socials_insta = useStore(store => store.settings.Insta);
@@ -49,8 +50,7 @@ export default function Footer() {
         <div className="mt-1">
           <p style={{ textAlign: 'center' }} className="m-0">
             Сервис Клуба выпускников
-            {isKoriphey && " Гимназии “Корифей”"}
-            {isDla8 && " Лицея им. С.П. Дягилева"}
+            {` ${companyName || ""} `}
             <br className="d-sm-none" /> размещен на платформе
               <a className="ml-1" href="https://vsvoi.ru" target='_blank' rel="noopener noreferrer">VСВОИ <img style={{ marginBottom: '-10px' }} className="ml-1 not-responsive" width={30} height={30} src={vsvoiLogo} alt="vsvoi logo" /></a>
 
