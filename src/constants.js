@@ -6,7 +6,7 @@ export const PROFILES = {
 };
 
 export const API = {
-  KORIPHEY: (isDevelop && process.env.REACT_APP_API) || "https://koriphey.us-east-2.elasticbeanstalk.com/api/v1/",
+  KORIPHEY: (isDevelop && process.env.REACT_APP_API) || "https://backend.koriphey.ru/api/v1/",
   DLA8: (isDevelop && process.env.REACT_APP_API) || "http://dla8.us-east-2.elasticbeanstalk.com/api/v1/",
 };
 

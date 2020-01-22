@@ -4,7 +4,7 @@ import { socialVkontakte, socialFacebook, socialGoogle } from '../../components/
 
 import { useActions } from 'easy-peasy';
 import useInput from '../../hooks/useInput';
-import { isKoriphey } from '../../constants';
+import { isKoriphey, API, PROFILES } from '../../constants';
 
 export default function Login() {
   const login = useActions(actions => actions.auth.requestToken)
@@ -63,19 +63,19 @@ export default function Login() {
               <div className="row no-gutters">
 
                 <div className="mr-1">
-                  {socialVkontakte("http://koriphey.us-east-2.elasticbeanstalk.com/api/v1/Account/ExternalLogin?provider=Vkontakte", {
+                  {socialVkontakte(`${API[PROFILES.KORIPHEY]}Account/ExternalLogin?provider=Vkontakte`, {
                     useBlank: false
                   })}
                 </div>
 
                 <div className="mr-1">
-                  {socialFacebook("http://koriphey.us-east-2.elasticbeanstalk.com/api/v1/Account/ExternalLogin?provider=Facebook", {
+                  {socialFacebook(`${API[PROFILES.KORIPHEY]}Account/ExternalLogin?provider=Facebook`, {
                     useBlank: false
                   })}
                 </div>
 
                 <div className="mr-1">
-                  {socialGoogle("http://koriphey.us-east-2.elasticbeanstalk.com/api/v1/Account/ExternalLogin?provider=Google", {
+                  {socialGoogle(`${API[PROFILES.KORIPHEY]}Account/ExternalLogin?provider=Google`, {
                     useBlank: false
                   })}
                 </div>

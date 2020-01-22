@@ -10,8 +10,6 @@ export default function CityStatsMap() {
   const [coords, coordsSet] = useState([])
 
   const geocode = async (ymaps) => {
-    console.log('geocoder requests')
-    console.log(ymaps);
     await ymaps.loadModule('geocode')
 
     statistics.cityCount.filter(city => city.city !== null && city.city !== 'Другие').forEach(city => {
