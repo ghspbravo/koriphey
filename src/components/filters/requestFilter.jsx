@@ -62,11 +62,11 @@ export default function requestFilter(
       </div> */}
 
       <div className="row no-gutters mt-1">
-        <button className="ml-auto">Искать</button>
+        <button className="w-100">Искать</button>
       </div>
 
       <div className="row no-gutters mt-1">
-        <button type="button" onClick={resetHandler} className="ml-auto button_secondary">Сбросить</button>
+        <button type="button" onClick={resetHandler} className="w-100 button_secondary">Сбросить</button>
       </div>
 
     </form>

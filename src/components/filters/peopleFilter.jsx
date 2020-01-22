@@ -48,11 +48,11 @@ export default function peopleFilter(
 
 
       <div className="row no-gutters mt-1">
-        <button className="ml-auto">Искать</button>
+        <button className="w-100">Искать</button>
       </div>
 
       <div className="row no-gutters mt-1">
-        <button type="button" onClick={resetHandler} className="button_secondary ml-auto">Сбросить</button>
+        <button type="button" onClick={resetHandler} className="button_secondary w-100">Сбросить</button>
       </div>
 
     </form>
