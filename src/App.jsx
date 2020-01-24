@@ -29,6 +29,7 @@ import SocialsRegister from './pages/auth/socialsRegister';
 import Policy from './pages/policy';
 import SocialAuth from './pages/auth/socialAuth';
 import useFetch from './hooks/useFetch';
+import graduates from './pages/people/graduates';
 
 function App(router) {
   const isAuth = useStore(store => store.auth.isAuth)
@@ -122,6 +123,7 @@ function App(router) {
           <Route exact path="/requests/:id/edit" component={requestEdit} />
 
           <Route exact path="/people" component={peoples} />
+          <Route exact path="/graduates" component={graduates} />
 
           <Route exact path="/news" component={news} />
           <Route exact path="/news/:id" component={newsSingle} />

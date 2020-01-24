@@ -112,7 +112,7 @@ export default function Header(props) {
             </div>,
 
             <nav key={1} className="header__navigation d-none d-md-block navigation ml-xl-4 ml-md-2">
-              <NavLink className="navigation-item no-style" to='/people'>Сообщество</NavLink>
+              <NavLink className="navigation-item no-style" to='/graduates'>Выпускники</NavLink>
               <NavLink className="navigation-item no-style" to='/requests'>Запросы</NavLink>
               <NavLink className="navigation-item no-style" to='/news'>Новости</NavLink>
             </nav>,

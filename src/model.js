@@ -8,6 +8,7 @@ import statistics from './models/statistics'
 import settings from './models/settings'
 import search from './models/search'
 import socialsAuth from './models/socialsAuth'
+import graduates from './models/graduates'
 
 export const model = {
 	auth,
@@ -19,5 +20,6 @@ export const model = {
 	statistics,
 	settings,
 	search,
-	socialsAuth
+  socialsAuth,
+  graduates
 }

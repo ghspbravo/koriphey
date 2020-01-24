@@ -11,13 +11,13 @@ import './cardBlock.scss'
 export default function cardBlock(header, body) {
   return (
     <div className="card-block">
-      <div className="card-block__header">
+      {header && <div className="card-block__header">
         {header}
-      </div>
+      </div>}
 
-      <div className="card-block__inner">
+      {body && <div className="card-block__inner">
         {body}
-      </div>
+      </div>}
     </div>
   )
 }
